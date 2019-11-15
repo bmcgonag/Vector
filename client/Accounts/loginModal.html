@@ -1,0 +1,10 @@
+<template name="loginModal">
+    {{#if $not currentUser}}
+        <div id="signInModal" class="signInModal">
+            <div class="modal-content">
+                <span><i class="fa fa-close close-login"></i></span>
+                {{> atForm}}
+            </div>
+        </div>
+    {{/if}}
+</template>

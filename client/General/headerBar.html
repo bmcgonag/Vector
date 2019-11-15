@@ -1,0 +1,28 @@
+<template name="headerBar">
+    <nav>
+        <div class="nav-wrapper blue darken-4">
+          <a href="#" class="brand-logo center">Vector</a>
+          <ul id="nav-mobile" class="left">
+            {{#if currentUser}}
+            <li>{{> menuBtn}}</li>
+            {{else}}
+            <li id="signIn" class="padMe myPointer">Sign In</li>
+            {{/if}}
+          </ul>
+          {{#if currentUser}}
+            <ul class="right">
+              {{#if $eq hasNotifications true}}<li class="padMe"><span class="badge red darken-2 myPointer"><strong>{{noOfUnreadNotifications}}</strong></span></li>{{/if}}
+              <li claaa="padMe"><i class="material-icons notify-list myPointer {{#if $eq hasNotifications true}}icon-red{{/if}}">notifications</i></li>
+              <li class="padMe">{{emailAdd}}</li>
+            </ul>
+          {{/if}}
+        </div>
+      </nav>
+      {{#if isInRole 'Admin'}}
+          {{#if $eq needsConfig false}}
+            {{> needConfig}}
+          {{/if}}
+      {{/if}}
+      {{> navMain}}
+      {{> notificationList}}
+</template>

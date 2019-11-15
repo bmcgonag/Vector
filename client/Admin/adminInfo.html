@@ -1,0 +1,50 @@
+<template name="adminInfo">
+    <h4>Admin Info Dashboard</h4>
+    <div class="row">
+        <div id="totalUsersCard" class="col s12 m6 l3">
+          <div class="card blue-grey darken-2">
+            <div class="card-content white-text center">
+              <span class="card-title">Total Users Registered</span>
+              <h5>{{totalNoUsers}}</h5>
+            </div>
+          </div>
+        </div>
+        <div id="totalURLsCard" class="col s12 m6 l3">
+            <div class="card blue-grey darken-2">
+            <div class="card-content white-text center">
+                <span class="card-title">Total URLs Checking</span>
+                <h5>{{totalURLs}}</h5>
+            </div>
+            </div>
+        </div>
+        <div id="totalURLsUpCard" class="col s12 m6 l3">
+            <div class="card {{#if $eq downColor false}}green darken-2{{else}}blue-grey darken-2{{/if}}">
+            <div class="card-content white-text center">
+                <span class="card-title">Total URLs in Up Status</span>
+                <h5>{{upURLCount}}</h5>
+            </div>
+            </div>
+        </div>
+        <div id="totalURLsDownCard" class="col s12 m6 l3">
+            <div class="card {{#if $eq downColor true}}red darken-2{{else}}blue-grey darken-2{{/if}}">
+            <div class="card-content white-text center">
+                <span class="card-title">Total URLs Not Up</span>
+                <h5>{{downURLCount}}</h5>
+            </div>
+            </div>
+        </div>
+    </div>
+    {{#if $eq adminDashGrid "userInfo"}}
+        {{> allUsers}}
+    {{/if}}
+    {{#if $eq adminDashGrid "allUrls"}}
+        {{> allUrls}}
+    {{/if}}
+    {{#if $eq adminDashGrid "allUpUrls"}}
+
+    {{/if}}
+    {{#if $eq adminDashGrid "allDownUrls"}}
+
+    {{/if}}
+
+</template>
