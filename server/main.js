@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Configuration } from '../imports/api/configuration.js';
+import ShellJS from 'shelljs';
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -16,7 +17,7 @@ Meteor.startup(() => {
 
     // need to add a check for the existence of wireguard on the server
     // if it doesn't exist, then tell the user.
-    
+
   } catch (error) {
       console.log("Error caught in server/main.js: " + error);
   }
