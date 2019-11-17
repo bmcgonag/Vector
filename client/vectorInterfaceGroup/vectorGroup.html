@@ -1,0 +1,24 @@
+<template name="vectorGroup">
+    <div class="row">
+        <div class="col s12">
+            <h4>Add Interface Groups</h4>
+            <p class="flow-text">Interface Groups can help you keep your devices organized by grouping them together (e.g. Work, Home, Gaming, Private, Team, etc).</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l6 m6 s12 input-field">
+            <input type="text" class="groupName" id="groupName" />
+            <label for="groupName">Group Name</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light orange btn cancelGroup" id="cancelGroup">Cancel</a>
+        </div>
+        <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light green right btn saveGroup" id="saveGroup">Save Group</a>
+        </div>
+    </div>
+    <hr />
+    {{> vectorGroupGrid}}
+</template>

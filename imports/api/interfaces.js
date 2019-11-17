@@ -29,6 +29,8 @@ Meteor.methods({
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
         }
 
+        myId = this.userId;
+
         Interfaces.insert({
             interfaceName: interfaceName,
             interfaceDevice: interfaceDevice,
@@ -43,6 +45,7 @@ Meteor.methods({
             interfaceDNSv62: interfaceDNSv62,
             addedOn: new Date(),
             interfaceUser: Meteor.user().emails[0].address,
+            interfaceUserId: myId,
         });
     },
     'edit.interface' (interfaceId, interfaceName, interfaceDevice, interfaceOS, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS1, interfaceDNS2, interfaceDNSv61, interfaceDNSv62) {
@@ -77,7 +80,6 @@ Meteor.methods({
                 interfaceDNSv61: interfaceDNSv61,
                 interfaceDNSv62: interfaceDNSv62,
                 updatedOn: new Date(),
-                interfaceUser: Meteor.user().emails[0].address,
             }
         });
     },

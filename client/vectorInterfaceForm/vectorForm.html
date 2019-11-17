@@ -1,0 +1,52 @@
+<template name="vectorForm">
+    {{#if Template.subscriptionsReady}}
+    <div class="row">
+        <div class="col l3 m6 s12 input-field">
+            <input type="text" class="deviceName" id="deviceName" />
+            <label for="deviceName">Device Name</label>
+        </div>
+        <div class="col l3 m6 s12 input-field">
+            <select name="deviceOS" id="deviceOS" class="deviceOS">
+                <option value="Windows">Windows</option>
+                <option value="Mac OS">Mac OS</option>
+                <option value="Linux">Linux</option>
+                <option value="BSD / Unix">BSD / Unix</option>
+                <option value="iOS">iOS</option>
+                <option value="iPad OS">iPad OS</option>
+                <option value="Android">Android</option>
+                <option value="Other">Other</option>
+            </select>
+            <label for="deviceOS">Device OS</label>
+        </div>
+        <div class="col l3 m6 s12 input-field">
+            <select name="deviceGroup" id="deviceGroup" class="deviceGroup">
+                <option value="" disabled selected></option>
+                {{#each myGroups}}
+                    <option value="{{groupName}}">{{groupName}}</option>
+                {{/each}}
+            </select>
+            <label for="deviceGroup">Device Group</label>
+        </div>
+        <div class="col l3 m6 s12 input-field">
+            <input type="Number" class="ipAdd" id="ipAdd" />
+            <label for="ipAdd">IPv4 Address (1 to 255)</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light orange btn cancelInterface" id="cancelInterface">Cancel</a>
+        </div>
+        <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light green right btn saveInterface" id="saveInterface">Add Interface</a>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col s12">
+            
+        </div>
+    </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
+</template>

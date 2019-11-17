@@ -5,19 +5,20 @@ import ShellJS from 'shelljs';
 Meteor.startup(() => {
   // code to run on server at startup
   try {
-    let msgSettings = Configuration.findOne({});
-    if (typeof msgSettings.emailUser == 'undefined' || msgSettings.emailUser == null || msgSettings.emailUser == "") {
-      // msg settings not set, route user to setup for message settings.
-      // console.log("Didn't find email settings.");
-    } else {
-        let user = msgSettings.emailUser;
-        // console.log("Found User: " + user);
-        Meteor.call('setEmailFromServer', msgSettings);
-    }
-
     // need to add a check for the existence of wireguard on the server
     // if it doesn't exist, then tell the user.
 
+
+    // check to see if the message settings are set, adn if not, notify the end user admin.
+    let msgSettings = Configuration.findOne({});
+    if (typeof msgSettings.emailUser == 'undefined' || msgSettings.emailUser == null || msgSettings.emailUser == "") {
+      // msg settings not set, route user to setup for message settings.
+      console.log("Didn't find email settings.");
+    } else {
+        let user = msgSettings.emailUser;
+        console.log("Found User: " + user);
+        Meteor.call('setEmailFromServer', msgSettings);
+    }
   } catch (error) {
       console.log("Error caught in server/main.js: " + error);
   }

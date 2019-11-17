@@ -1,13 +1,15 @@
 <template name="MainLayout">
     {{> headerBar}}
-    <div class="main" id="main">
-        {{#if currentUser}}
-            {{> Template.dynamic template=main}}
-        {{else}}
-            {{> pleaseLogin}}
-        {{/if}}
+    <div class="container">
+        <div class="main" id="main">
+            {{#if currentUser}}
+                {{> Template.dynamic template=main}}
+            {{else}}
+                {{> pleaseLogin}}
+            {{/if}}
+        </div>
+        {{> snackbar}}
+        {{> loginModal}}
+        {{> myModal}}
     </div>
-    {{> snackbar}}
-    {{> loginModal}}
-    {{> myModal}}
 </template>
