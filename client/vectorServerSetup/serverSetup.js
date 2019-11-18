@@ -6,11 +6,23 @@ Template.serverSetup.onCreated(function() {
 
 Template.serverSetup.onRendered(function() {
     Session.set("showManualSetup", false);
+    Session.set("adjustServer", false);
 });
 
 Template.serverSetup.helpers({
     showManual: function() {
         return Session.get("showManualSetup");
+    },
+    serverExists: function() {
+        let infoExists = ServerInfo.findOne({});
+        if (typeof infoExists == 'undfined' || infoExists == "" || infoExists == null) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+    adjustServer: function() {
+        return Session.get("adjustServer");
     },
 });
 
@@ -38,5 +50,9 @@ Template.serverSetup.events({
     "click #hideManualSetup" (event) {
         event.preventDefault();
         Session.set("showManualSetup", false);
-    }
+    },
+    "click #adjustServer" (event) {
+        event.preventDefault();
+        Session.set("adjustServer", true);
+    },
 });

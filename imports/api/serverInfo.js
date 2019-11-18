@@ -20,26 +20,66 @@ Meteor.methods({
         check(publicKey, String);
 
         if (!this.userId) {
-            throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
+            throw new Meteor.Error('User is not allowed to add server info, make sure you are logged in.');
         }
 
-        let myId = this.userId;
+        let infoExists = ServerInfo.findOne({});
 
-        return ServerInfo.insert({
-            ipAddress: ipAddress,
-            serverInterfaceName: interfaceName,
-            port: port,
-            privateKey: privateKey,
-            publicKey: publicKey,
-            serverUserId: myId,
-            addedOn: new Date(),
-            serverUser: Meteor.user().emails[0].address,
+        if (typeof infoExists == 'undefined' || infoExists == null || infoExists == "") {
+            // need to call the update method instead.
+            let infoId = infoExists._id;
+            Meteor.call("edit.serverInfo", infoId, ipAddress, interfaceName, port, privateKey, publicKey, function(err, result) {
+                if (err) {
+                    console.log("Error calling update from add server info: " + err);
+                }
+            });
+        } else {
+            let myId = this.userId;
+
+            return ServerInfo.insert({
+                ipAddress: ipAddress,
+                serverInterfaceName: interfaceName,
+                port: port,
+                privateKey: privateKey,
+                publicKey: publicKey,
+                serverUserId: myId,
+                addedOn: new Date(),
+                serverUser: Meteor.user().emails[0].address,
+            });
+        }
+    },
+    'edit.serverInfo' (infoId, ipAddress, interfaceName, port, privateKey, publicKey) {
+        check(infoId, String);
+        check(ipAddress, String);
+        check(interfaceName, String);
+        check(port, String);
+        check(privateKey, String);
+        check(publicKey, String);
+
+        if (!this.userId) {
+            throw new Meteor.Error('User is not allowed to edit server info, make sure you are logged in.');
+        }
+
+        return ServerInfo.update({ _id: infoId }, {
+            $set: {
+                ipAddress: ipAddress,
+                serverInterfaceName: interfaceName,
+                port: port,
+                privateKey: privateKey,
+                publicKey: publicKey,
+                updatedByUserId: myId,
+                updatedOn: new Date(),
+                updatedByUser: Meteor.user().emails[0].address,
+            }
         });
     },
-    'edit.serverInfo' (infoId, ipAddress, interfaceName) {
-
-    },
     'delete.serverInfo' (infoId) {
+        check(infoId, String);
 
-    }
+        if (!this.userId) {
+            throw new Meteor.Error('User is not allowed to delete server info, make sure you are logged in.');
+        }
+
+        return ServerInfo.remove({ _id: infoId });
+    },
 });

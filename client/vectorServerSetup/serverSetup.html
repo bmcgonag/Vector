@@ -1,25 +1,45 @@
 <template name="serverSetup">
-    <div class="row">
-        <div class="col s12">
-            <h4>Setup your Wireguard Server</h4>
+    {{#if $eq serverExists true}}
+        {{#if $eq adjustServer false}}
+        <div class="row">
+            <div style="background: red; color: white;" class="col l12 m12 s12">
+                <p class="flow-text">
+                    Server Appears to Exist - Changing server interface data can have serious consequences!
+                </p>
+                <p class="flow-text">Are you sure you want to adjust your server interface settings?</p>
+                <div class="row">
+                    <div class="col s12">
+                        <a class="waves-effect waves-light btn adjustServer" id="adjustServer">Yes, Continue to Adjust</a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col l6 m6 s12">
-            <a class="waves-effect waves-light btn autoSetup" id="autoSetup">Automatic</a>
+        {{/if}}
+    {{/if}}
+
+    {{#if adjustServer}}
+        <div class="row">
+            <div class="col s12">
+                <h4>Setup your Wireguard Server</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l6 m6 s12">
+                <a class="waves-effect waves-light btn autoSetup" id="autoSetup">Automatic</a>
+            </div>
+            {{#if $eq showManual true}}
+                <div class="col l6 m6 s12">
+                    <a class="waves-effect waves-light btn hide-manualSetup" id="hideManualSetup">Hide Manual Setup</a>
+                </div>
+            {{else}}
+                <div class="col l6 m6 s12">
+                    <a class="waves-effect waves-light btn manualSetup" id="manualSetup">Manual Setup</a>
+                </div>
+            {{/if}}
         </div>
         {{#if $eq showManual true}}
-            <div class="col l6 m6 s12">
-                <a class="waves-effect waves-light btn hide-manualSetup" id="hideManualSetup">Hide Manual Setup</a>
-            </div>
-        {{else}}
-            <div class="col l6 m6 s12">
-                <a class="waves-effect waves-light btn manualSetup" id="manualSetup">Manual Setup</a>
-            </div>
+            <hr />
+            {{> manualForm}}
         {{/if}}
-    </div>
-    {{#if $eq showManual true}}
-        <hr />
-        {{> manualForm}}
     {{/if}}
 </template>
