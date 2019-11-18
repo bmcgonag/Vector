@@ -19,7 +19,7 @@ Meteor.methods({
             throw new Meteor.Error('User is not allowed to setup interface groups, make sure you are logged in.');
         }
 
-        myId = this.userId;
+        let myId = this.userId;
 
         return InterfaceGroups.insert({
             groupName: groupName,

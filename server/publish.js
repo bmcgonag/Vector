@@ -1,6 +1,8 @@
 import { Interfaces } from '../imports/api/interfaces.js';
 import { Configuration } from '../imports/api/configuration.js';
 import { InterfaceGroups } from '../imports/api/interfaceGroups.js';
+import { ServerInfo } from '../imports/api/serverInfo.js';
+import { Control } from '../imports/api/control.js';
 
 Meteor.publish("myInterfaces", function() {
     try {
@@ -24,4 +26,12 @@ Meteor.publish("myGroups", function() {
     } catch(err) {
         console.log("Error publishing Groups: " + err);
     } 
+});
+
+Meteor.publish("myServerInfo", function() {
+    try {
+        return ServerInfo.find({});
+    } catch (err) {
+        console.log("Error publishing Server Info: " + err);
+    }
 });

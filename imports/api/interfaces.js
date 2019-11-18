@@ -29,7 +29,7 @@ Meteor.methods({
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
         }
 
-        myId = this.userId;
+        let myId = this.userId;
 
         Interfaces.insert({
             interfaceName: interfaceName,

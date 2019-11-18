@@ -1,14 +1,31 @@
 import { Meteor } from 'meteor/meteor';
 import { Configuration } from '../imports/api/configuration.js';
 import ShellJS from 'shelljs';
+import { WGInstalled } from '../imports/api/wgInstalled.js';
 
 Meteor.startup(() => {
   // code to run on server at startup
   try {
-    // need to add a check for the existence of wireguard on the server
-    // if it doesn't exist, then tell the user.
-
-
+    // need to check to see if wireguard appears to be installed.
+    let installed;
+    let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
+    console.log("----    Is Installed: " + isInstalled.stdout);
+    let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
+    console.log(isthere);
+    Meteor.setTimeout(function() {
+      if (isthere == "Directory found") {
+        installed = true;
+      } else {
+        installed = false;
+      }
+  
+      Meteor.call('add.wgInstalled', installed, function(err, result) {
+        if (err) {
+          console.log("Error adding installed state: " + err);
+        }
+      });
+    }, 200);
+  
     // check to see if the message settings are set, adn if not, notify the end user admin.
     let msgSettings = Configuration.findOne({});
     if (typeof msgSettings.emailUser == 'undefined' || msgSettings.emailUser == null || msgSettings.emailUser == "") {

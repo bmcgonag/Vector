@@ -1,0 +1,24 @@
+<template name="manualForm">
+    <div class="row">
+        <div class="col l4 m4 s12 input-field">
+            <input type="text" class="serverIPv4" id="serverIPv4" placeholder="ex: 10.100.100.1" />
+            <label for="serverIPv4">Desired IPv4 Address:</label>
+        </div>
+        <div class="col l4 m4 s12 input-field">
+            <input type="text" class="serverIFName" id="serverIFName" />
+            <label for="serverIFName">Server Interface Name (must be unique)</label>
+        </div>
+        <div class="col l4 m4 s12 input-field">
+            <input type="text" class="listenPort" id="listenPort" placeholder="ex: 51820" />
+            <label for="listenPort">Listen Port (must be unique)</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light orange btn cancelServer" id="cancelServer">Cancel</a>
+        </div>
+        <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light green right btn saveServer" id="saveServer">Save</a>
+        </div>
+    </div>
+</template>
