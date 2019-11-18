@@ -8,8 +8,18 @@
         <div class="col l6 m6 s12">
             <a class="waves-effect waves-light btn autoSetup" id="autoSetup">Automatic</a>
         </div>
-        <div class="col l6 m6 s12">
-            <a class="waves-effect waves-light btn manualSetup" id="manualSetup">Manual Setup</a>
-        </div>
+        {{#if $eq showManual true}}
+            <div class="col l6 m6 s12">
+                <a class="waves-effect waves-light btn hide-manualSetup" id="hideManualSetup">Hide Manual Setup</a>
+            </div>
+        {{else}}
+            <div class="col l6 m6 s12">
+                <a class="waves-effect waves-light btn manualSetup" id="manualSetup">Manual Setup</a>
+            </div>
+        {{/if}}
     </div>
+    {{#if $eq showManual true}}
+        <hr />
+        {{> manualForm}}
+    {{/if}}
 </template>

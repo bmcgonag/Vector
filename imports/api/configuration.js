@@ -12,14 +12,12 @@ Configuration.allow({
 });
 
 Meteor.methods({
-    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, maxNoOfSitesFree, defaultFreq) {
+    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
         check(emailSmtpServer, String);
         check(emailSmtpPort, String);
-        check(maxNoOfSitesFree, Number);
-        check(defaultFreq, Number);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup admin values, make sure you are logged in.');
@@ -31,20 +29,17 @@ Meteor.methods({
             emailPassword: emailPassword,
             emailSmtpServer: emailSmtpServer,
             emailSmtpPort: emailSmtpPort,
-            maxNoOfSitesFree: maxNoOfSitesFree,
-            defaultFreq: defaultFreq,
             addedOn: new Date(),
             addedBy: Meteor.user().emails[0].address,
         });
     },
-    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, maxNoOfSitesFree, defaultFreq) {
+    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
         check(emailSmtpServer, String);
         check(emailSmtpPort, String);
-        check(maxNoOfSitesFree, Number);
-        check(defaultFreq, Number);
+
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup admin values, make sure you are logged in.');
@@ -61,8 +56,6 @@ Meteor.methods({
                 emailPassword: emailPassword,
                 emailSmtpServer: emailSmtpServer,
                 emailSmtpPort: emailSmtpPort,
-                maxNoOfSitesFree: maxNoOfSitesFree,
-                defaultFreq: defaultFreq,
                 addedOn: new Date(),
                 addedBy: Meteor.user().emails[0].address,
             }

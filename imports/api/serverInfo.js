@@ -12,9 +12,12 @@ ServerInfo.allow({
 });
 
 Meteor.methods({
-    'add.serverInfo' (ipAddress, interfaceName) {
+    'add.serverInfo' (ipAddress, interfaceName, port, privateKey, publicKey) {
         check(ipAddress, String);
         check(interfaceName, String);
+        check(port, String);
+        check(privateKey, String);
+        check(publicKey, String);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
@@ -25,6 +28,9 @@ Meteor.methods({
         return ServerInfo.insert({
             ipAddress: ipAddress,
             serverInterfaceName: interfaceName,
+            port: port,
+            privateKey: privateKey,
+            publicKey: publicKey,
             serverUserId: myId,
             addedOn: new Date(),
             serverUser: Meteor.user().emails[0].address,

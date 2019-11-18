@@ -1,14 +1,17 @@
+import { ServerInfo } from '../../imports/api/serverInfo.js';
 
 Template.serverSetup.onCreated(function() {
-
+    this.subscribe("myServerInfo");
 });
 
 Template.serverSetup.onRendered(function() {
-
+    Session.set("showManualSetup", false);
 });
 
 Template.serverSetup.helpers({
-
+    showManual: function() {
+        return Session.get("showManualSetup");
+    },
 });
 
 Template.serverSetup.events({
@@ -30,6 +33,10 @@ Template.serverSetup.events({
         // expose a form to gather necessary information for setting
         // up the Wireguard server for the user with their proeffered
         // IPv4 Address
-        
+        Session.set("showManualSetup", true);
     },
+    "click #hideManualSetup" (event) {
+        event.preventDefault();
+        Session.set("showManualSetup", false);
+    }
 });

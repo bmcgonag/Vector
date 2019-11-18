@@ -2,15 +2,10 @@
     <div class="container">
         <h3>Administrative Configuration</h3>
         <hr />
-        <h4>Host Status Checks Configuration</h4>
         <div class="row">  
-            <div class="input-field col s6">
-                <input type="number" class="maxNoOfSitesPerUser" id="maxNoOfSitesPerUser" value="{{#if $eq configMode 'edit'}}{{configExists.maxNoOfSitesFree}}{{/if}}" />
-                <label for="maxNoOfSitesPerUser" class="{{#if $eq configMode 'edit'}}active{{/if}}">Maximum Number of Free Sites per User</label>
-            </div>
-            <div class="input-field col s6">
-                <input type="number" class="standardFreq" id="standardFreq" value="{{#if $eq configMode 'edit'}}{{configExists.defaultFreq}}{{/if}}" />
-                <label for="standardFreq" class="{{#if $eq configMode 'edit'}}active{{/if}}">Standard / Default Time Between Checks</label>
+            <div class="input-field col l6 m6 s12">
+                <input type="password" class="sudoPwd" id="sudoPwd" />
+                <label for="sudoPwd">Sudo Password for Server System</label>
             </div>
         </div>
         <hr />
@@ -44,13 +39,13 @@
         <br />
         <div class="row">
             <div class="col s6">
-                <a id="cancelConfig" class="waves-effect waves-light btn cancelBtn">Cancel</a>
+                <a id="cancelConfig" class="waves-effect waves-light orange btn cancelBtn">Cancel</a>
             </div>
             <div class="col s6">
                 {{#if $eq configMode "edit"}}
-                    <a class="waves-effect waves-light btn saveChangeBtn submitBtn" id="saveChangedConfig">Save Changes</a>
+                    <a class="waves-effect waves-light btn green right saveChangeBtn submitBtn" id="saveChangedConfig">Save Changes</a>
                 {{else}}
-                    <a class="waves-effect waves-light btn submitBtn" id="submitConfig">Save</a>
+                    <a class="waves-effect waves-light btn green right submitBtn" id="submitConfig">Save</a>
                 {{/if}}
             </div>
         </div>
