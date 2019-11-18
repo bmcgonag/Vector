@@ -12,10 +12,10 @@ Interfaces.allow({
 });
 
 Meteor.methods({
-    'add.interface' (interfaceName, interfaceDevice, interfaceOS, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS1, interfaceDNS2, interfaceDNSv61, interfaceDNSv62) {
+    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS1, interfaceDNS2, interfaceDNSv61, interfaceDNSv62) {
         check(interfaceName, String);
-        check(interfaceDevice, String);
         check(interfaceOS, String);
+        check(interfaceGroup, String);
         check(interfaceIP, String);
         check(interfaceIPv6, String);
         check(interfacePrivateKey, String);
@@ -33,8 +33,8 @@ Meteor.methods({
 
         Interfaces.insert({
             interfaceName: interfaceName,
-            interfaceDevice: interfaceDevice,
             interfaceOS: interfaceOS,
+            interfaceGroup: interfaceGroup,
             interfaceIP: interfaceIP,
             interfaceIPv6: interfaceIPv6,
             interfacePrivateKey: interfacePrivateKey,

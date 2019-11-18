@@ -1,11 +1,11 @@
 <template name="vectorForm">
     {{#if Template.subscriptionsReady}}
     <div class="row">
-        <div class="col l3 m6 s12 input-field">
+        <div class="col l6 m6 s12 input-field">
             <input type="text" class="deviceName" id="deviceName" />
             <label for="deviceName">Device Name</label>
         </div>
-        <div class="col l3 m6 s12 input-field">
+        <div class="col l6 m6 s12 input-field">
             <select name="deviceOS" id="deviceOS" class="deviceOS">
                 <option value="Windows">Windows</option>
                 <option value="Mac OS">Mac OS</option>
@@ -18,7 +18,7 @@
             </select>
             <label for="deviceOS">Device OS</label>
         </div>
-        <div class="col l3 m6 s12 input-field">
+        <div class="col l6 m6 s12 input-field">
             <select name="deviceGroup" id="deviceGroup" class="deviceGroup">
                 <option value="" disabled selected></option>
                 {{#each myGroups}}
@@ -27,16 +27,23 @@
             </select>
             <label for="deviceGroup">Device Group</label>
         </div>
-        <div class="col l3 m6 s12 input-field">
-            <input type="Number" class="ipAdd" id="ipAdd" />
-            <label for="ipAdd">IPv4 Address (1 to 255)</label>
+        <div class="col l6 m6 s12 input-field">
+            <input type="text" class="ipAdd" id="ipAdd" value="{{suggestedIp}}" />
+            <label for="ipAdd">IPv4 Address - Server IP Is: {{currentServerIP}}</label>
         </div>
     </div>
+    {{#if $neq currentServerIP "No Server IP Found"}}
     <div class="row">
         <div class="col l6 m6 s12">
+            <a class="waves-effect waves-light btn autoIp" id="autoIp">autoIp</a>
+        </div>
+    </div>
+    {{/if}}
+    <div class="row">
+        <div class="col l6 m12 s12">
             <a class="waves-effect waves-light orange btn cancelInterface" id="cancelInterface">Cancel</a>
         </div>
-        <div class="col l6 m6 s12">
+        <div class="col l6 m12 s12">
             <a class="waves-effect waves-light green right btn saveInterface" id="saveInterface">Add Interface</a>
         </div>
     </div>
