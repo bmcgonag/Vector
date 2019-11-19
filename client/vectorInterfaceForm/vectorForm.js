@@ -14,6 +14,9 @@ Template.vectorForm.onRendered(function() {
         $("select").material_select();
         materialize.updateTextFields()
     }, 200);
+    Session.set("fullIp", "");
+    Session.set("duplicateIp", false);
+    Session.set("duplicateName", false);
 });
 
 Template.vectorForm.helpers({
@@ -39,7 +42,10 @@ Template.vectorForm.helpers({
 Template.vectorForm.events({
     "click #autoIp" (event) {
         event.preventDefault();
-        checkIP();
+        Session.set("fullIp", "");
+        setTimeout(function() {
+            checkIP();
+        }, 100);
     },
     "click #saveInterface" (event) {
         event.preventDefault();
@@ -48,8 +54,8 @@ Template.vectorForm.events({
         let deviceName = $("#deviceName").val();
         let deviceGroup = $("#deviceGroup").val();
         let ipAdd = $("#ipAdd").val();
-        let duplicateIp = false;
-        let duplicateName = false;
+        Session.set("duplicateIp", false);
+        Session.set("duplicateName", false);;
 
         let lastInterface = Interfaces.find({}).fetch();
 
@@ -62,15 +68,10 @@ Template.vectorForm.events({
                 console.log("Creating an IP - not filled in.");
                 checkIP();
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd);
-                if (duplicateIp == true) {
-                    showSnackbar("The Selected IP Appears to be a Duplicate!", "red");
-                    return;
-                } else if (duplicateName == true) {
-                    showSnackbar("The Selected Interface Name Appears to be a Duplicate", "red");
-                    return;
-                } else {
-                    writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd);
-                }
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd);
+            } else {
+                checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd);
             }
         }
     },
@@ -113,38 +114,58 @@ checkIP = function() {
         let ip4thOctet = ipclientParts[3];
         let ip4th = parseInt(ip4thOctet);
         let newIP4th = ip4th + 1;
-        let newIP = threeOcts + newIP4th;
-        console.log("New IP: " + newIP);
+        let ipAdd = threeOcts + newIP4th;
+        console.log("New IP: " + ipAdd);
         console.log("-----------------------");
-        Session.set("fullIp", newIP);
-        return newIP;
+        Session.set("fullIp", ipAdd);
+        return ipAdd;
     }
 }
 
 checkDuplicates = function(deviceName, deviceOS, deviceGroup, ipAdd) {
+    let lastInterface = Interfaces.find({}).fetch();
     if (typeof lastInterface != 'undefined') {
         let noInterfaces = lastInterface.length;
         for (i=0; i<noInterfaces; i++) {
             if (lastInterface[i].interfaceIP == ipAdd) {
-                duplicateIp = true;
-                return;
+                Session.set("duplicateIp", true);
             }
             if (lastInterface[i].interfaceName == deviceName) {
-                duplicateName = true;
-                return;
+                Session.set("duplicateName", true);
             }
         }
     }
+    return;
 }
 
 writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd) {
-    Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, function(err, result) {
-        if (err) {
-            console.log("Error adding interface to db: " + err);
-            showSnackbar("Error Adding Interface", "red");
-        } else {
-            showSnackbar("Interface Added.", "green");
-            Session.set("showForm", false);
-        }
-    });
+    // for the record I hate this approach, and will change it when I come up
+    // with a better way.
+    let duplicateName = Session.get("duplicateName");
+    let duplicateIp = Session.get("duplicateIp");
+    if (ipAdd == null || ipAdd == "") {
+        ipAdd = Session.get("fullIp");
+    }
+    if (duplicateName == true) {
+        showSnackbar("Duplicate Device Name - Please Fix It!", "orange");
+        return;
+    } else if (duplicateIp == true) {
+        showSnackbar("Duplicate IP Address - Please Fix It!", "orange");
+        return;
+    } else {
+        setTimeout(function() {
+            console.log("At Write - IP Address is: " + ipAdd)
+            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, function(err, result) {
+                if (err) {
+                    console.log("Error adding interface to db: " + err);
+                    showSnackbar("Error Adding Interface", "red");
+                } else {
+                    showSnackbar("Interface Added.", "green");
+                    $("#ipAdd").val("");
+                    $("#deviceName").val("");
+                    Session.set("showForm", false);
+                }
+            });
+        }, 250);
+    }
 }
