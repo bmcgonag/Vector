@@ -1,12 +1,17 @@
 <template name="vectorMain">
     <div class="row">
-        <div class="col s12">
+        <div class="col m8 l10 s12">
             <h4>Create a new client connection</h4>
         </div>
+        <div class="col m4 l2 s12">
+                <a class="btn-floating btn-large waves-effect waves-light blue" id="addInterfaceClient"><i class="material-icons">add</i></a>
+        </div>
     </div>
+    {{#if $eq showForm true}}
     <div class="row">
         <div class="col s12">
             {{> vectorForm}}
         </div>
     </div>
+    {{/if}}
 </template>

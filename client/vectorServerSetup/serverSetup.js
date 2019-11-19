@@ -6,7 +6,16 @@ Template.serverSetup.onCreated(function() {
 
 Template.serverSetup.onRendered(function() {
     Session.set("showManualSetup", false);
-    Session.set("adjustServer", true);
+    setTimeout(function(){
+        let infoExists = ServerInfo.findOne({});
+        if (typeof infoExists == 'undefined' || infoExists == "" || infoExists == null) {
+            console.log("didn't find server info");
+            Session.set("adjustServer", true);
+        } else {
+            console.log("found server info");
+            Session.set("adjustServer", false);
+        }
+    }, 200);
 });
 
 Template.serverSetup.helpers({
@@ -15,7 +24,7 @@ Template.serverSetup.helpers({
     },
     serverExists: function() {
         let infoExists = ServerInfo.findOne({});
-        if (typeof infoExists == 'undfined' || infoExists == "" || infoExists == null) {
+        if (typeof infoExists == 'undefined' || infoExists == "" || infoExists == null) {
             return false;
         } else {
             return true;

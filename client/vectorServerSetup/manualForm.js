@@ -32,12 +32,13 @@ Template.manualForm.events({
             portNo = "51820";
         }
 
-        Meteor.call("createServer.Interface", manual, ipv4, interfaceName, portNo, function(err, result) {
+        Meteor.call("createServer.Interface", "manual", ipv4, interfaceName, portNo, function(err, result) {
             if (err) {
                 console.log("Error creating server interface file manually: " + err);
                 showSnackbar("Error Creating Server Interface!", "red");
             } else {
                 showSnackbar("Creating Server Interface!", "green");
+                Session.set("showManualSetup", false);
             }
         });
     }

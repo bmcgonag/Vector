@@ -25,7 +25,7 @@ Meteor.methods({
 
         let infoExists = ServerInfo.findOne({});
 
-        if (typeof infoExists == 'undefined' || infoExists == null || infoExists == "") {
+        if (typeof infoExists != 'undefined' && infoExists != null && infoExists != "") {
             // need to call the update method instead.
             let infoId = infoExists._id;
             Meteor.call("edit.serverInfo", infoId, ipAddress, interfaceName, port, privateKey, publicKey, function(err, result) {
