@@ -1,6 +1,7 @@
 import { Meter } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { ServerInfo } from './serverInfo.js';
 
 export const Interfaces = new Mongo.Collection('interfaces');
 
@@ -31,12 +32,17 @@ Meteor.methods({
 
         let myId = this.userId;
 
+        let serverInfo = ServerInfo.findOne({});
+
+        let port = serverInfo.port;
+
         Interfaces.insert({
             interfaceName: interfaceName,
             interfaceOS: interfaceOS,
             interfaceGroup: interfaceGroup,
             interfaceIP: interfaceIP,
             interfaceIPv6: interfaceIPv6,
+            interfacePort: port,
             interfacePrivateKey: interfacePrivateKey,
             interfacePublicKey: interfacePublicKey,
             interfaceDNS1: interfaceDNS1,
