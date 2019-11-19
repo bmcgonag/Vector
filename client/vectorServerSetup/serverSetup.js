@@ -6,7 +6,7 @@ Template.serverSetup.onCreated(function() {
 
 Template.serverSetup.onRendered(function() {
     Session.set("showManualSetup", false);
-    Session.set("adjustServer", false);
+    Session.set("adjustServer", true);
 });
 
 Template.serverSetup.helpers({
