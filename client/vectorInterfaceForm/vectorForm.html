@@ -30,6 +30,16 @@
             <input type="text" class="ipAdd" id="ipAdd" value="{{suggestedIp}}" />
             <label for="ipAdd">IPv4 Address - Server IP Is: {{currentServerIP}}</label>
         </div>
+        <div class="col l6 m6 s12 input-field">
+            <select name="dnsPref" id="dnsPref" class="dnsPref">
+                <option value="208.67.222.222,208.67.220.220">Open DNS</option>
+                <option value="1.1.1.1,1.0.0.1">Cloud Flare</option>
+                <option value="8.8.8.8,8.8.4.4">Google</option>
+                <option value="9.9.9.9,149.112.112.112">Quad9</option>
+                <option value="64.6.64.6,64.6.65.6">Verisign</option>
+                <option value="custom">Custom</option>
+            </select>
+        </div>
     </div>
     {{#if $neq currentServerIP "No Server IP Found"}}
     <div class="row">

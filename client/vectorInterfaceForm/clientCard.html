@@ -7,16 +7,29 @@
             <div class="card-stacked">
                 <div class="card-content">
                     <span class="card-title">{{interfaceName}}</span>
-                    <p>
-                        {{interfaceIP}} : {{interfacePort}}
-                    </p>
+                    <div class="row">
+                        <div class="col l4 m4 s6">
+                            IP:
+                        </div>
+                        <div class="col l8 m8 s6">
+                            {{interfaceIP}} : {{interfacePort}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col l4 m4 s6">
+                            DNS:
+                        </div>
+                        <div class="col l8 m8 s6">
+                            {{interfaceDNS}}
+                        </div>
+                    </div>
                     <p>
                         <strong>Public Key:</strong> 
                     </p>
                     {{interfacePublicKey}}
                 </div>
                 <div class="card-action">
-                    <a href="#">Download Interface File</a>
+                    <a href="#" id="downloadInterface">Download Interface File</a>
                 </div>
             </div>
         </div>

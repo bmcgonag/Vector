@@ -13,7 +13,7 @@ Interfaces.allow({
 });
 
 Meteor.methods({
-    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS1, interfaceDNS2, interfaceDNSv61, interfaceDNSv62) {
+    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6) {
         check(interfaceName, String);
         check(interfaceOS, String);
         check(interfaceGroup, String);
@@ -21,10 +21,8 @@ Meteor.methods({
         check(interfaceIPv6, String);
         check(interfacePrivateKey, String);
         check(interfacePublicKey, String);
-        check(interfaceDNS1, String);
-        check(interfaceDNS2, String);
-        check(interfaceDNSv61, String);
-        check(interfaceDNSv62, String);
+        check(interfaceDNS, String);
+        check(interfaceDNSv6, String);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
@@ -45,16 +43,14 @@ Meteor.methods({
             interfacePort: port,
             interfacePrivateKey: interfacePrivateKey,
             interfacePublicKey: interfacePublicKey,
-            interfaceDNS1: interfaceDNS1,
-            interfaceDNS2: interfaceDNS2,
-            interfaceDNSv61: interfaceDNSv61,
-            interfaceDNSv62: interfaceDNSv62,
+            interfaceDNS: interfaceDNS,
+            interfaceDNSv6: interfaceDNSv6,
             addedOn: new Date(),
             interfaceUser: Meteor.user().emails[0].address,
             interfaceUserId: myId,
         });
     },
-    'edit.interface' (interfaceId, interfaceName, interfaceDevice, interfaceOS, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS1, interfaceDNS2, interfaceDNSv61, interfaceDNSv62) {
+    'edit.interface' (interfaceId, interfaceName, interfaceDevice, interfaceOS, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6) {
         check(interfaceId, String);
         check(interfaceName, String);
         check(interfaceDevice, String);
@@ -63,10 +59,8 @@ Meteor.methods({
         check(interfaceIPv6, String);
         check(interfacePrivateKey, String);
         check(interfacePublicKey, String);
-        check(interfaceDNS1, String);
-        check(interfaceDNS2, String);
-        check(interfaceDNSv61, String);
-        check(interfaceDNSv62, String);
+        check(interfaceDNS, String);
+        check(interfaceDNSv6, String);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to edit interfaces, make sure you are logged in.');
@@ -81,10 +75,8 @@ Meteor.methods({
                 interfaceIPv6: interfaceIPv6,
                 interfacePrivateKey: interfacePrivateKey,
                 interfacePublicKey: interfacePublicKey,
-                interfaceDNS1: interfaceDNS1,
-                interfaceDNS2: interfaceDNS2,
-                interfaceDNSv61: interfaceDNSv61,
-                interfaceDNSv62: interfaceDNSv62,
+                interfaceDNS: interfaceDNS,
+                interfaceDNSv6: interfaceDNSv6,
                 updatedOn: new Date(),
             }
         });

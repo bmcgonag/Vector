@@ -62,11 +62,12 @@ Meteor.methods({
             }
         });
     },
-    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4) {
+    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, dnsPref) {
         check(deviceName, String);
         check(deviceOS, String);
         check(deviceGroup, String);
         check(ipv4, String);
+        check(dnsPref, String);
 
         // let's create our client private key and client public key
         ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
@@ -80,7 +81,7 @@ Meteor.methods({
             console.log("    ****    ERROR: Unable to make Client Private / Public Key for Wireguard client " + deviceName);
             return;
         } else {
-            Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, "f0:34:3425:a54d6:00:fc", myPrivKey, myPubKey, "208.67.222.222", "208.67.220.220", "0::0", "0::0", function(err, result) {
+            Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, "fd00::10:97:2", myPrivKey, myPubKey, dnsPref, "0::0", "0::0", function(err, result) {
                 if (err) {
                     console.log("Error adding client interface: " + err);
                 } else {

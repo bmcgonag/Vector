@@ -9,9 +9,12 @@ Meteor.startup(() => {
     // need to check to see if wireguard appears to be installed.
     let installed;
     let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
-    console.log("----    Is Installed: " + isInstalled.stdout);
+    // console.log("----    Is Installed: " + isInstalled.stdout);
     let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
-    console.log(isthere);
+    // console.log(isthere);
+
+    // ****    we wait for 200 milliseconds to give the command time to complete, then check
+    // ****    and set the value appropriately
     Meteor.setTimeout(function() {
       if (isthere == "Directory found") {
         installed = true;
@@ -25,7 +28,14 @@ Meteor.startup(() => {
         }
       });
     }, 200);
-  
+
+    // get the hostname of the server
+    let myhost = location.hostname;
+    console.log("");
+    console.log("--------------------------");
+    console.log("hostname: " + myhost);
+    console.log("");
+
     // check to see if the message settings are set, adn if not, notify the end user admin.
     let msgSettings = Configuration.findOne({});
     if (typeof msgSettings.emailUser == 'undefined' || msgSettings.emailUser == null || msgSettings.emailUser == "") {
