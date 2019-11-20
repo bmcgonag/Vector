@@ -89,6 +89,24 @@ Meteor.methods({
             }
         });
     },
+    'edit.InterfacePorts' (interfaceId) {
+        check(interfaceId, String);
+
+        if (!this.userId) {
+            throw new Meteor.Error('User is not allowed to edit interfaces, make sure you are logged in.');
+        }
+
+        let serverInfo = ServerInfo.findOne({});
+
+        let port = serverInfo.port;
+
+        // update all interface ports to this value - basically if the Server port is changed.
+        return Interfaces.update({ _id: interfaceId }, {
+            $set: {
+                interfacePort: port,
+            }
+        }, { multi: true });
+    },
     'delete.interface' (interfaceId) {
         check(interfaceId, String);
 

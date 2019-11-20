@@ -1,25 +1,19 @@
 <template name="clientCard">
-    <div class="col s12 m7">
+    <div class="col s12">
         <div class="card horizontal">
             <div class="card-image">
-                <img src="{{clientCardImg}}">
+                <img src="/images/{{interfaceOS}}.png">
             </div>
             <div class="card-stacked">
                 <div class="card-content">
-                    <div class="row">
-                        <div class="col s12">
-                            <h4>{{clientData.interfaceName}}</h4>
-                        </div>
-                        <div class="col s12.m6.l6">
-                            {{clientData.interfaceIP}}
-                        </div>
-                        <div class="col s12 m6 l6">
-                            {{clientData.port}}
-                        </div>
-                        <div class="col s12">
-                            <strong>Public Key:</strong> {{clientData.interfacePublicKey}}
-                        </div>
-                    </div>
+                    <span class="card-title">{{interfaceName}}</span>
+                    <p>
+                        {{interfaceIP}} : {{interfacePort}}
+                    </p>
+                    <p>
+                        <strong>Public Key:</strong> 
+                    </p>
+                    {{interfacePublicKey}}
                 </div>
                 <div class="card-action">
                     <a href="#">Download Interface File</a>

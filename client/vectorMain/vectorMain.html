@@ -14,4 +14,27 @@
         </div>
     </div>
     {{/if}}
+
+    <div class="row">
+        <div class="col s12">
+            <ul class="collapsible" data-collapsible="expandable">
+                {{#each clientGroups}}
+                    <li>
+                        <div class="collapsible-header" style="width: 100%;">
+                            <h5>{{groupName}}</h5><span class="badge"><h5>{{noMachines}}</h5></span>
+                        </div>
+                        <div class="collapsible-body">
+                            <ul>
+                                {{#each clients}}
+                                    <li>
+                                        {{> clientCard}}
+                                    </li>   
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
 </template>
