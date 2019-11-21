@@ -15,6 +15,7 @@ Template.vectorForm.onRendered(function() {
         materialize.updateTextFields()
     }, 200);
     Session.set("fullIp", "");
+    Session.set("fullIp6" , "");
     Session.set("duplicateIp", false);
     Session.set("duplicateName", false);
 });
@@ -54,6 +55,7 @@ Template.vectorForm.events({
         let deviceName = $("#deviceName").val();
         let deviceGroup = $("#deviceGroup").val();
         let ipAdd = $("#ipAdd").val();
+        let ip6Add = "";
         let dnsPref = $("#dnsPref").val();
         Session.set("duplicateIp", false);
         Session.set("duplicateName", false);;
@@ -69,10 +71,10 @@ Template.vectorForm.events({
                 console.log("Creating an IP - not filled in.");
                 checkIP();
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref);
             } else {
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref);
             }
         }
     },
@@ -101,17 +103,23 @@ checkIP = function() {
     // - check and make sure that IP isn't already in use.
     // - repeat as neded.
 
+    let ip6Pattern = Session.get("ip6pattern");
+
     let lastInterface = Interfaces.findOne({}, {sort: {addedOn: -1, limit: 1}});
     if (typeof lastInterface == 'undefined') {
         // no interfaces exist.
         let ipAdd = threeOcts + "2";
+        let ip6Add = "fd00::10:10:2";
         console.log("Full IP is new and will be: " + ipAdd);
         Session.set("fullIp", ipAdd);
-        return ipAdd;
+        Session.set("fullIp6", ip6Add);
+        return (ipAdd, ip6Add);
     } else {
         console.dir(lastInterface);
         let lastIp = lastInterface.interfaceIP;
+        let lastIp6 = lastInterface.interfaceIPv6;
         console.log("Last IP: " + lastIp);
+        console.log("last IPv6: " + lastIp6);
 
         // now split the last IP by the periods
         let ipclientParts = lastIp.split(".");
@@ -119,10 +127,21 @@ checkIP = function() {
         let ip4th = parseInt(ip4thOctet);
         let newIP4th = ip4th + 1;
         let ipAdd = threeOcts + newIP4th;
+
+        // now do similarly with ipv6 address but with colons
+        let ipv6parts = lastIp6.split(":");
+        let ipv6final = ipv6parts.pop();
+        console.log("ipv6final: " + ipv6final);
+        let ip6th = parseInt(ipv6final);
+        let ip6thNew = ip6th + 1;
+        let ip6Add = ip6Pattern + newIPv6;
+
+        console.log("New IPv6: " + ip6Add);
         console.log("New IP: " + ipAdd);
         console.log("-----------------------");
+        Session.set("fullIp6", ip6Add);
         Session.set("fullIp", ipAdd);
-        return ipAdd;
+        return (ipAdd, ip6Add);
     }
 }
 
@@ -142,14 +161,14 @@ checkDuplicates = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref) {
     return;
 }
 
-writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref) {
+writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref) {
     // for the record I hate this approach, and will change it when I come up
     // with a better way.
     let duplicateName = Session.get("duplicateName");
     let duplicateIp = Session.get("duplicateIp");
-    if (ipAdd == null || ipAdd == "") {
-        ipAdd = Session.get("fullIp");
-    }
+    ipAdd = Session.get("fullIp");
+    ip6Add = Session.get("fullIp6");
+    
     if (duplicateName == true) {
         showSnackbar("Duplicate Device Name - Please Fix It!", "orange");
         return;
@@ -158,8 +177,11 @@ writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref)
         return;
     } else {
         setTimeout(function() {
-            console.log("At Write - IP Address is: " + ipAdd)
-            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, dnsPref, function(err, result) {
+            console.log("At Write - IP Address is: " + ipAdd);
+            console.log("At Write - IPv6 Address is: " + ip6Add);
+            console.log("---   ***   ***   ***   ---");
+            //    **** method call below is in /server/methods.js
+            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, function(err, result) {
                 if (err) {
                     console.log("Error adding interface to db: " + err);
                     showSnackbar("Error Adding Interface", "red");
