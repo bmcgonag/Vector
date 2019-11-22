@@ -28,4 +28,7 @@ Template.MainLayout.events({
     "click .fixMPW" (event) {
         FlowRouter.go('/configSystem');
     },
+    "click .fixServer" (event) {
+        FlowRouter.go('/serverConfig');
+    },
 });
