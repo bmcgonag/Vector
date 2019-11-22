@@ -1,32 +1,41 @@
 <template name="clientCard">
-    <div class="col s12">
+        <div class="col s12">
         <div class="card horizontal">
             <div class="card-image">
                 <img src="/images/{{interfaceOS}}.png">
             </div>
             <div class="card-stacked">
                 <div class="card-content">
-                    <span class="card-title">{{interfaceName}}</span>
                     <div class="row">
-                        <div class="col l4 m4 s6">
-                            IP:
+                        <div class="col s8">
+                            <span class="card-title">{{interfaceName}}</span>
+                            <div class="row">
+                                <div class="col l4 m4 s6">
+                                    IP:
+                                </div>
+                                <div class="col l8 m8 s6">
+                                    {{interfaceIP}} : {{interfacePort}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col l4 m4 s6">
+                                    DNS:
+                                </div>
+                                <div class="col l8 m8 s6">
+                                    {{interfaceDNS}}
+                                </div>
+                            </div>
+                            <p>
+                                <strong>Public Key:</strong> 
+                            </p>
+                            {{interfacePublicKey}}
                         </div>
-                        <div class="col l8 m8 s6">
-                            {{interfaceIP}} : {{interfacePort}}
+                        <div class="col s4">
+                            {{#if Template.subscriptionsReady}}
+                                <div id="QR{{_id}}">{{> qrcode text=clientQR size=150}}</div>
+                            {{/if}}
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col l4 m4 s6">
-                            DNS:
-                        </div>
-                        <div class="col l8 m8 s6">
-                            {{interfaceDNS}}
-                        </div>
-                    </div>
-                    <p>
-                        <strong>Public Key:</strong> 
-                    </p>
-                    {{interfacePublicKey}}
                 </div>
                 <div class="card-action">
                     <a href="#" id="downloadInterface">Download Interface File</a>

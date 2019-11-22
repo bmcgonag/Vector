@@ -9,32 +9,34 @@ Meteor.startup(() => {
     // need to check to see if wireguard appears to be installed.
     let installed;
     let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
+    let isSnap = ShellJS.exec("[ -d /var/snap/wireguard-ammp/common ] && echo 'Snap found' || echo 'Snap not found'");
     // console.log("----    Is Installed: " + isInstalled.stdout);
+    let isthereSnap = isSnap.stdout.replace(/(\r\n|\n|\r)/gm, "");
     let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
     // console.log(isthere);
+    let typeInstall;
 
     // ****    we wait for 200 milliseconds to give the command time to complete, then check
     // ****    and set the value appropriately
     Meteor.setTimeout(function() {
-      if (isthere == "Directory found") {
+      if (isthere == "Directory found" || isthereSnap == "Snap found") {
         installed = true;
       } else {
         installed = false;
       }
+      
+      if (isthere == "Directory found") {
+        typeInstall = "apt";
+      } else if (isthereSnap == "Snap found") {
+        typeInstall = "snap";
+      }
   
-      Meteor.call('add.wgInstalled', installed, function(err, result) {
+      Meteor.call('add.wgInstalled', installed, typeInstall, function(err, result) {
         if (err) {
           console.log("Error adding installed state: " + err);
         }
       });
     }, 200);
-
-    // get the hostname of the server
-    let myhost = location.hostname;
-    console.log("");
-    console.log("--------------------------");
-    console.log("hostname: " + myhost);
-    console.log("");
 
     // check to see if the message settings are set, adn if not, notify the end user admin.
     let msgSettings = Configuration.findOne({});

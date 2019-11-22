@@ -12,18 +12,20 @@ WGInstalled.allow({
 });
 
 Meteor.methods({
-    'add.wgInstalled' (installed) {
+    'add.wgInstalled' (installed, typeInstall) {
         check(installed, Boolean);
+        check(typeInstall, String);
 
         let installedId = WGInstalled.findOne({});
 
         if (typeof installedId == 'undefined' || installedId == null || installedId == "") {
             return WGInstalled.insert({
                 wgInstalled: installed,
+                typeInstall: typeInstall,
                 checkedOn: new Date(),
             });
         } else {
-            Meteor.call("update.wgInstalled", installed, function(err, result) {
+            Meteor.call("update.wgInstalled", installed, typeInstall, function(err, result) {
                 if (err) {
                     console.log("Error calling update method from add method: " + err);
                 } else {
@@ -32,14 +34,16 @@ Meteor.methods({
             });
         }
     },
-    'update.wgInstalled' (installed) {
+    'update.wgInstalled' (installed, typeInstall) {
         check(installed, Boolean);
+        check(typeInstall, String);
 
         let installedId = WGInstalled.findOne({})._id;
 
         return WGInstalled.update({ _id: installedId }, {
             $set: {
                 wgInstalled: installed,
+                typeInstall: typeInstall,
                 checkedOn: new Date(),
             }
         });

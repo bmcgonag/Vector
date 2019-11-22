@@ -2,6 +2,7 @@ import { Interfaces } from '../../imports/api/interfaces.js';
 import { ServerInfo } from '../../imports/api/serverInfo.js';
 import { saveAs } from 'file-saver';
 
+
 Template.clientCard.onCreated(function() {
     this.subscribe("myInterfaces");
     this.subscribe("myServerInfo");
@@ -19,6 +20,20 @@ Template.clientCard.onRendered(function() {
 Template.clientCard.helpers({
     clientData: function() {
         return Interfaces.find({});
+    },
+    clientQR: function() {
+        let interfaceId = this._id;
+        let thisInterface;
+        // console.log("Interface ID: " + interfaceId);
+
+        let myhost = location.hostname;
+
+        let interfaceInfo = Interfaces.findOne({ _id: interfaceId });
+        let serverInfo = ServerInfo.findOne({});
+
+        let blob = "[Interface]\nPrivateKey = " + interfaceInfo.interfacePrivateKey + "\nDNS = " + interfaceInfo.interfaceDNS + "\n" + "Address = " + interfaceInfo.interfaceIP + "/22," + interfaceInfo.interfaceIPv6 +"/112\n\n[Peer]\nPublicKey = " + serverInfo.publicKey + "\nEndpoint = " + myhost + ":" + interfaceInfo.interfacePort + "\nAllowedIPs = 0.0.0.0/0, ::/0";
+
+        return blob;
     },
 });
 

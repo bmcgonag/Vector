@@ -38,3 +38,4 @@ alanning:roles
 underscore@1.0.10
 # fourseven:scss@4.5.4        # necessary for materialize css
 appworkshop:materialize
+panter:qrcode

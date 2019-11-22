@@ -69,3 +69,8 @@ textarea {
 .myPointer {
 	cursor: pointer;
 }
+
+.noWGWarning {
+    background: red;
+    color: white;
+}

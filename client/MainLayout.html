@@ -1,5 +1,19 @@
 <template name="MainLayout">
     {{> headerBar}}
+    {{#if $eq wgInstall.wgInstalled false}}
+    <div class="row">
+        <div class="col s12 noWGWarning">
+            <p>It appears that Wireguard is not yet installed, you must install it, then restart this server.</p>
+        </div>
+    </div>
+    {{/if}}
+    {{#if $eq controlExists.exists false}}
+        <div class="row">
+            <div class="col s12 noWGWarning">
+                <p>You will need to enter the system users sudo password in order for Vector to work properly. <a class="waves-effect waves-light btn fixMPW">Fix It</a></p>
+            </div>
+        </div>
+    {{/if}}
     <div class="container">
         <div class="main" id="main">
             {{#if currentUser}}

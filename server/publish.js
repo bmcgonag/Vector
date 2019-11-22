@@ -3,6 +3,7 @@ import { Configuration } from '../imports/api/configuration.js';
 import { InterfaceGroups } from '../imports/api/interfaceGroups.js';
 import { ServerInfo } from '../imports/api/serverInfo.js';
 import { Control } from '../imports/api/control.js';
+import { WGInstalled } from '../imports/api/wgInstalled.js';
 
 Meteor.publish("myInterfaces", function() {
     try {
@@ -33,5 +34,21 @@ Meteor.publish("myServerInfo", function() {
         return ServerInfo.find({});
     } catch (err) {
         console.log("Error publishing Server Info: " + err);
+    }
+});
+
+Meteor.publish("wgInstall", function() {
+    try {
+        return WGInstalled.find({});
+    } catch (err) {
+        console.log("Error publishing WG Install Status: " + err);
+    }
+});
+
+Meteor.publish("myControl", function() {
+    try {
+        return Control.find({}, {_id: 1, exists: 1});
+    } catch (err) {
+        console.log("Error publishign whether control exists: " + err);
     }
 });
