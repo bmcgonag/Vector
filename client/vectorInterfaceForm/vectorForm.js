@@ -133,7 +133,7 @@ checkIP = function() {
         let ipv6final = ipv6parts.pop();
         console.log("ipv6final: " + ipv6final);
         let ip6th = parseInt(ipv6final);
-        console.log("IPv6final as a NumbeR: " + ip6th);
+        console.log("IPv6final as a Number: " + ip6th);
         let newIPv6 = ip6th + 1;
         let ip6Add = ip6Pattern + newIPv6;
 
