@@ -40,7 +40,7 @@ Template.serverSetup.events({
         event.preventDefault();
         // setup the wg0.conf file with default settings for a
         // Wireguard server with full NAT through the server
-        Meteor.call("createServer.Interface", "auto", "10.100.100.1", "wg0-test", "51820", function(err, result) {
+        Meteor.call("createServer.Interface", "auto", "10.100.100.1", "wg0", "51820", function(err, result) {
             if (err) {
                 console.log("Error auto creating the server interface: " + err);
                 showSnackbar("Error Auto Creating Server Interface!", "red");

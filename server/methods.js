@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import ShellJS from 'shelljs';
 import { Control } from '../imports/api/control.js';
+import { WGInstalled } from '../imports/api/wgInstalled.js';
 
 Meteor.methods({
     'delete.User' (userId) {
@@ -18,6 +19,8 @@ Meteor.methods({
     'createServer.Interface' (mode, ipv4, interfaceName, port) {
         // We need to create our Public and Private keys
         let mpw = Control.findOne({}).mpw;
+        let installed = WGInstalled.findOne({});
+
         console.log("mpw: " + mpw);
 
         ShellJS.exec("umask 077");
@@ -44,7 +47,19 @@ Meteor.methods({
             ShellJS.exec("echo ' ' >> ~/" + interfaceName + ".conf");
     
             // now copy the file to /etc/wireguard (requires root / sudo access)
-            ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            // if Wireguard is installed with apt, we need to put this in /etc/wireguard,
+            // but if it's installed with snap, we need to put it in /var/snap/wireguard-ammp/common/
+            if (installed.typeInstall == "apt") {
+                myWgLocation = "/etc/wireguard/";
+            } else if (installed.typeInstall == "snap") {
+                myWgLocation = "/var/snap/wireguard-ammp/common/"
+            }
+            ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf " + myWgLocation);
+
+            // bring up the wireguard interface we just created.
+            Meteor.setTimeout(function() {
+                ShellJS.exec("echo " + mpw + " | sudo -S wg-quick up " + interfaceName);
+            }, 1500);
     
             Meteor.call("add.serverInfo", ipv4, interfaceName, port, myPrivKey, myPubKey, function(err, result) {
                 if (err) {
