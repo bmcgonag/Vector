@@ -29,6 +29,8 @@ Meteor.startup(() => {
         typeInstall = "apt";
       } else if (isthereSnap == "Snap found") {
         typeInstall = "snap";
+      } else {
+        typeInstall = "none";
       }
   
       Meteor.call('add.wgInstalled', installed, typeInstall, function(err, result) {

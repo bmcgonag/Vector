@@ -108,4 +108,8 @@ Meteor.methods({
             });
         }
     },
+    "install.wg" () {
+        // we will attempt to install wireguard using a snap isntall first.
+
+    },
 });
