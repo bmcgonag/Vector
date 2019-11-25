@@ -21,8 +21,6 @@ Meteor.methods({
         let mpw = Control.findOne({}).mpw;
         let installed = WGInstalled.findOne({});
 
-        console.log("mpw: " + mpw);
-
         ShellJS.exec("umask 077");
         ShellJS.exec("wg genkey | tee ~/privatekey | wg pubkey > ~/publickey");
         let privKey = ShellJS.exec("cat ~/privatekey");
@@ -110,6 +108,8 @@ Meteor.methods({
     },
     "install.wg" () {
         // we will attempt to install wireguard using a snap isntall first.
+        let mpw = Control.findOne({}).mpw;
 
+        return ShellJS.exec("echo " + mpw + " | sudo -S snap install wireguard-ammp");
     },
 });
