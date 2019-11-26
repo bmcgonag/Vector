@@ -53,10 +53,14 @@ Meteor.methods({
                 console.log("Error - WG Does not aappear to be installed.");
             }
             console.log("About to copy the server interface file to /etc/wireguard/");
+            console.log("------------------------------------------");
+            console.log("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
             ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
+                console.log("**** ---- ****");
+                console.log("echo " + mpw + " | sudo -S wg-quick up " + interfaceName);
                 ShellJS.exec("echo " + mpw + " | sudo -S wg-quick up " + interfaceName);
             }, 1500);
     
