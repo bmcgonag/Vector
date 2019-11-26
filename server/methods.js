@@ -42,17 +42,18 @@ Meteor.methods({
             ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
             ShellJS.exec("echo 'ListenPort = " + port +"' ~/" + interfaceName + ".conf");
             ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo ' ' >> ~/" + interfaceName + ".conf");
+            ShellJS.exec("echo '' >> ~/" + interfaceName + ".conf");
     
             // now copy the file to /etc/wireguard (requires root / sudo access)
             // if Wireguard is installed with apt, we need to put this in /etc/wireguard,
-            // but if it's installed with snap, we need to put it in /var/snap/wireguard-ammp/common/
+        
             if (installed.typeInstall == "apt") {
                 myWgLocation = "/etc/wireguard/";
-            } else if (installed.typeInstall == "snap") {
-                myWgLocation = "/var/snap/wireguard-ammp/common/"
+            } else {
+                console.log("Error - WG Does not aappear to be installed.");
             }
-            ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf " + myWgLocation);
+            console.log("About to copy the server interface file to /etc/wireguard/");
+            ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
@@ -110,6 +111,6 @@ Meteor.methods({
         // we will attempt to install wireguard using a snap isntall first.
         let mpw = Control.findOne({}).mpw;
 
-        return ShellJS.exec("echo " + mpw + " | sudo -S snap install wireguard-ammp");
+        return ShellJS.exec("echo " + mpw + " | sudo -S add-apt-repository ppa:wireguard/wireguard; echo " + mpw + " | sudo -S apt install wireguard -y");
     },
 });

@@ -9,9 +9,7 @@ Meteor.startup(() => {
     // need to check to see if wireguard appears to be installed.
     let installed;
     let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
-    let isSnap = ShellJS.exec("[ -d /var/snap/wireguard-ammp/common ] && echo 'Snap found' || echo 'Snap not found'");
     // console.log("----    Is Installed: " + isInstalled.stdout);
-    let isthereSnap = isSnap.stdout.replace(/(\r\n|\n|\r)/gm, "");
     let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
     // console.log(isthere);
     let typeInstall;
@@ -19,7 +17,7 @@ Meteor.startup(() => {
     // ****    we wait for 200 milliseconds to give the command time to complete, then check
     // ****    and set the value appropriately
     Meteor.setTimeout(function() {
-      if (isthere == "Directory found" || isthereSnap == "Snap found") {
+      if (isthere == "Directory found") {
         installed = true;
       } else {
         installed = false;
@@ -27,8 +25,6 @@ Meteor.startup(() => {
       
       if (isthere == "Directory found") {
         typeInstall = "apt";
-      } else if (isthereSnap == "Snap found") {
-        typeInstall = "snap";
       } else {
         typeInstall = "none";
       }
