@@ -34,7 +34,7 @@ Meteor.startup(() => {
           console.log("Error adding installed state: " + err);
         }
       });
-    }, 200);
+    }, 750);
 
     // check to see if the message settings are set, adn if not, notify the end user admin.
     let msgSettings = Configuration.findOne({});
