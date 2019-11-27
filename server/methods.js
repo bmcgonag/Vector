@@ -34,15 +34,26 @@ Meteor.methods({
             return;
         } else {
             // here we'll make the automated interface for the server.
-            ShellJS.exec("echo '[Interface]' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = " + ipv4 + "' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'SaveConfig = true' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'ListenPort = " + port +"' ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo '' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo '[Interface]' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'Address = " + ipv4 + "' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'SaveConfig = true' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'ListenPort = " + port +"' ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> ~/" + interfaceName + ".conf");
+            // ShellJS.exec("echo '' >> ~/" + interfaceName + ".conf");
+
+            ShellJS.exec("echo " + mpw + " | sudo -S su");
+            ShellJS.exec("echo '[Interface]' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'Address = " + ipv4 + "' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'SaveConfig = true' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'ListenPort = " + port +"' /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> /etc/wireguard/" + interfaceName + ".conf");
+            ShellJS.exec("echo '' >> /etc/wireguard/" + interfaceName + ".conf");
     
             // now copy the file to /etc/wireguard (requires root / sudo access)
             // if Wireguard is installed with apt, we need to put this in /etc/wireguard,
@@ -52,14 +63,14 @@ Meteor.methods({
             } else {
                 console.log("Error - WG Does not aappear to be installed.");
             }
-            console.log("About to copy the server interface file to /etc/wireguard/");
-            console.log("------------------------------------------");
-            console.log("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
-            ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            // console.log("About to copy the server interface file to /etc/wireguard/");
+            // console.log("------------------------------------------");
+            // console.log("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            // ShellJS.exec("echo " + mpw + " | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
-                console.log("**** ---- ****");
+                console.log("**** ---- ---- ---- ---- ---- ****");
                 console.log("echo " + mpw + " | sudo -S wg-quick up " + interfaceName);
                 ShellJS.exec("echo " + mpw + " | sudo -S wg-quick up " + interfaceName);
             }, 1500);
