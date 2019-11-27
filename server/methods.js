@@ -61,7 +61,7 @@ Meteor.methods({
             Meteor.setTimeout(function() {
                 console.log("**** ---- ---- ---- ---- ---- ****");
                 console.log("echo ************ | sudo -S wg-quick up " + interfaceName);
-                ShellJS.exec("echo " + mpw + " | sudo -S wg-quick up " + interfaceName);
+                ShellJS.exec("echo '" + mpw + "' | sudo -S wg-quick up " + interfaceName);
             }, 1500);
     
             Meteor.call("add.serverInfo", ipv4, interfaceName, port, myPrivKey, myPubKey, function(err, result) {
