@@ -90,6 +90,28 @@ Meteor.methods({
 
         // let's create our client private key and client public key
         ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
+        Meteor.setTimeout(function() {
+            let privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
+            let pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
+            let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
+            let myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
+    
+            if (typeof privKey == "undefined" || privKey == null || privKey == "" || typeof pubKey == "undefined" || pubKey == null || pubKey == "") {
+                // report the error, and go back.
+                console.log("    ****    ERROR: Unable to make Client Private / Public Key for Wireguard client " + deviceName);
+                return;
+            } else {
+                Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", function(err, result) {
+                    if (err) {
+                        console.log("Error adding client interface: " + err);
+                    } else {
+                        console.log("Inteface for " + interfaceName + " added Successfully.");
+                        // now add the interface to the server
+                        ShellJS.exec('sudo wg set wg0 peer ' + myPubKey + ' allowed-ips ' + ipv4 + '/24,fd00::10:97:2/64');
+                    }
+                });
+            }
+        }, 500);
         let privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
         let pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
         let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
