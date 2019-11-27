@@ -52,13 +52,15 @@ Template.vectorForm.events({
         event.preventDefault();
 
         let deviceOS = $("#deviceOS").val();
-        let deviceName = $("#deviceName").val();
+        let deviceNameInitial = $("#deviceName").val();
         let deviceGroup = $("#deviceGroup").val();
         let ipAdd = $("#ipAdd").val();
         let ip6Add = "";
         let dnsPref = $("#dnsPref").val();
         Session.set("duplicateIp", false);
-        Session.set("duplicateName", false);;
+        Session.set("duplicateName", false);
+
+        let deviceName = deviceNameInitial.split(' ').join('_');
 
         let lastInterface = Interfaces.find({}).fetch();
 

@@ -111,7 +111,7 @@ Meteor.methods({
                     }
                 });
             }
-        }, 500);
+        }, 250);
         let privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
         let pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
         let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
