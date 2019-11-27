@@ -34,15 +34,15 @@ Meteor.methods({
             return;
         } else {
             // here we'll make the automated interface for the server.
-            ShellJS.exec("echo '[Interface]' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = " + ipv4 + "' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'SaveConfig = true' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'ListenPort = " + port + "' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> ~/" + interfaceName + ".conf");
-            ShellJS.exec("echo '' >> ~/" + interfaceName + ".conf");
+            ShellJS.exec("echo '[Interface]' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'Address = " + ipv4 + "' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'SaveConfig = true' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'ListenPort = " + port + "' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo '' >> $HOME/" + interfaceName + ".conf");
     
             // now copy the file to /etc/wireguard (requires root / sudo access)
             // if Wireguard is installed with apt, we need to put this in /etc/wireguard,
