@@ -55,7 +55,7 @@ Meteor.methods({
             console.log("About to copy the server interface file to /etc/wireguard/");
             console.log("------------------------------------------");
             console.log("echo ************ | sudo -S mv ~/" + interfaceName + ".conf /etc/wireguard/");
-            ShellJS.exec("echo " + mpw + " | sudo -S mv $HOME/" + interfaceName + ".conf /etc/wireguard/");
+            ShellJS.exec("echo '" + mpw + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
