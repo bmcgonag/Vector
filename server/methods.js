@@ -42,7 +42,6 @@ Meteor.methods({
             ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
             ShellJS.exec("echo 'ListenPort = " + port + "' >> $HOME/" + interfaceName + ".conf");
             ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo '' >> $HOME/" + interfaceName + ".conf");
     
             // now copy the file to /etc/wireguard (requires root / sudo access)
             // if Wireguard is installed with apt, we need to put this in /etc/wireguard,
@@ -56,7 +55,7 @@ Meteor.methods({
             console.log("About to copy the server interface file to /etc/wireguard/");
             console.log("------------------------------------------");
             console.log("echo ************ | sudo -S mv ~/" + interfaceName + ".conf /etc/wireguard/");
-            ShellJS.exec("echo " + mpw + " | sudo -S mv ~/" + interfaceName + ".conf /etc/wireguard/");
+            ShellJS.exec("echo " + mpw + " | sudo -S mv $HOME/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
