@@ -33,7 +33,7 @@ Meteor.methods({
                 mpw: mpw,
                 exists: true,
                 addedOn: new Date(),
-                addedBy: this.userId,
+                addedBy: Meteor.userId(),
             });
         }
     },

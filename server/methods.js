@@ -88,6 +88,22 @@ Meteor.methods({
         check(ipv6, String);
         check(dnsPref, String);
 
+        if (!this.userId) {
+            throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
+        }
+
+        let myId = Meteor.userId();
+        console.log("-------------------------------------");
+        console.log("");
+        console.log("User's ID reported as: " + myId);
+        console.log("-------------------------------------");
+        console.log("");
+        console.log("");
+        // let's get the first three octets from our IPv4 string
+        let ipParts = ipv4.split(".");
+        let threeOcts = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".";
+
+        let mpw = Control.findOne({}).mpw;
         // let's create our client private key and client public key
         ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
         Meteor.setTimeout(function() {
@@ -101,37 +117,23 @@ Meteor.methods({
                 console.log("    ****    ERROR: Unable to make Client Private / Public Key for Wireguard client " + deviceName);
                 return;
             } else {
-                Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", function(err, result) {
+                Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", myId, function(err, result) {
                     if (err) {
                         console.log("Error adding client interface: " + err);
                     } else {
-                        console.log("Inteface for " + interfaceName + " added Successfully.");
+                        console.log("Inteface for " + deviceName + " added Successfully.");
+                        console.log("");
+                        console.log("---------------------------------------------------");
+                        console.log('echo <user sudo password here> | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
+                        console.log("");
+
                         // now add the interface to the server
-                        ShellJS.exec('sudo wg set wg0 peer ' + myPubKey + ' allowed-ips ' + ipv4 + '/24,fd00::10:97:2/64');
+                        ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
+                        ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick save wg0');
                     }
                 });
             }
         }, 250);
-        let privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
-        let pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
-        let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
-        let myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
-
-        if (privKey == null || privKey == "" || pubKey == null || pubKey == "") {
-            // report the error, and go back.
-            console.log("    ****    ERROR: Unable to make Client Private / Public Key for Wireguard client " + deviceName);
-            return;
-        } else {
-            Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", function(err, result) {
-                if (err) {
-                    console.log("Error adding client interface: " + err);
-                } else {
-                    console.log("Inteface for " + interfaceName + " added Successfully.");
-                    // now add the interface to the server
-                    ShellJS.exec('sudo wg set wg0 peer ' + myPubKey + ' allowed-ips ' + ipv4 + '/24,fd00::10:97:2/64');
-                }
-            });
-        }
     },
     "install.wg" () {
         // we will attempt to install wireguard using a snap isntall first.
