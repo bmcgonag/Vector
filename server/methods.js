@@ -129,7 +129,9 @@ Meteor.methods({
 
                         // now add the interface to the server
                         ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
-                        ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick save wg0');
+                        Meteor.setTimeout(function() {
+                            ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick save wg0');
+                        }, 250);
                     }
                 });
             }
