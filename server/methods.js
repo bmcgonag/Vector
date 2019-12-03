@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import ShellJS from 'shelljs';
 import { Control } from '../imports/api/control.js';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
+import { ServerInfo } from '../imports/api/serverInfo.js';
 
 Meteor.methods({
     'delete.User' (userId) {
@@ -92,6 +93,8 @@ Meteor.methods({
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
         }
 
+        let serverInfo = ServerInfo.findOne({});
+
         let myId = Meteor.userId();
         console.log("-------------------------------------");
         console.log("");
@@ -122,16 +125,23 @@ Meteor.methods({
                         console.log("Error adding client interface: " + err);
                     } else {
                         console.log("Inteface for " + deviceName + " added Successfully.");
-                        console.log("");
-                        console.log("---------------------------------------------------");
-                        console.log('echo <user sudo password here> | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
-                        console.log("");
+                        // console.log("");
+                        // console.log("---------------------------------------------------");
+                        // console.log('echo <user sudo password here> | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
+                        // console.log("");
 
                         // now add the interface to the server
-                        ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
+                        ShellJS.exec('echo ' + mpw + ' sudo -S wg-quick down ' + serverInfo.serverInterfaceName);
                         Meteor.setTimeout(function() {
-                            ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick save wg0');
-                        }, 250);
+                            ShellJS.exec('echo ' + mpw + ' sudo -S echo "[Peer]" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');;
+                            ShellJS.exec('echo ' + mpw + ' sudo -S echo "AddressIPs = ' + threeOcts + '0/24" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
+                            ShellJS.exec('echo ' + mpw + ' sudo -S echo "PublicKey = ' + myPubKey + '" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
+                        }, 500);
+                        
+                        // ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
+                        // Meteor.setTimeout(function() {
+                        //     ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick save wg0');
+                        // }, 250);
                     }
                 });
             }
