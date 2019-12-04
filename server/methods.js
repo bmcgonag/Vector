@@ -19,7 +19,6 @@ Meteor.methods({
     },
     'createServer.Interface' (mode, ipv4, interfaceName, port) {
         // We need to create our Public and Private keys
-        let mpw = Control.findOne({}).mpw;
         let installed = WGInstalled.findOne({});
 
         ShellJS.exec("umask 077");
@@ -127,8 +126,6 @@ Meteor.methods({
         // let's get the first three octets from our IPv4 string
         let ipParts = ipv4.split(".");
         let threeOcts = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".";
-
-        let mpw = Control.findOne({}).mpw;
 
         // let's create our client private key and client public key
         ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
