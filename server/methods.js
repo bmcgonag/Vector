@@ -137,6 +137,10 @@ Meteor.methods({
                             ShellJS.exec('echo ' + mpw + ' | sudo -S echo "AddressIPs = ' + threeOcts + '0/24" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
                             ShellJS.exec('echo ' + mpw + ' | sudo -S echo "PublicKey = ' + myPubKey + '" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
                         }, 500);
+
+                        Meteor.setTimeout(function() {
+                            ShellJS.exec("echo " + mpw + " | sudo -S wg-quick up " + serverInfo.serverInterfaceName);
+                        }, 1000);
                         
                         // ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
                         // Meteor.setTimeout(function() {
