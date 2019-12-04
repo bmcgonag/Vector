@@ -131,11 +131,11 @@ Meteor.methods({
                         // console.log("");
 
                         // now add the interface to the server
-                        ShellJS.exec('echo ' + mpw + ' sudo -S wg-quick down ' + serverInfo.serverInterfaceName);
+                        ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick down ' + serverInfo.serverInterfaceName);
                         Meteor.setTimeout(function() {
-                            ShellJS.exec('echo ' + mpw + ' sudo -S echo "[Peer]" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');;
-                            ShellJS.exec('echo ' + mpw + ' sudo -S echo "AddressIPs = ' + threeOcts + '0/24" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
-                            ShellJS.exec('echo ' + mpw + ' sudo -S echo "PublicKey = ' + myPubKey + '" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
+                            ShellJS.exec('echo ' + mpw + ' | sudo -S echo "[Peer]" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');;
+                            ShellJS.exec('echo ' + mpw + ' | sudo -S echo "AddressIPs = ' + threeOcts + '0/24" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
+                            ShellJS.exec('echo ' + mpw + ' | sudo -S echo "PublicKey = ' + myPubKey + '" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
                         }, 500);
                         
                         // ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
