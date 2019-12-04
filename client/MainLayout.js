@@ -5,6 +5,7 @@ import { ServerInfo } from '../imports/api/serverInfo.js';
 Template.MainLayout.onCreated(function() {
     this.subscribe("wgInstall");
     this.subscribe("myControl");
+    this.subscribe("myServerInfo");
 });
 
 Template.MainLayout.onRendered(function() {
@@ -14,15 +15,6 @@ Template.MainLayout.onRendered(function() {
 Template.MainLayout.helpers({
     wgInstall: function() {
         return WGInstalled.findOne({});
-    },
-    controlExists: function() {
-        let existing = Control.findOne({});
-        if (typeof existing == 'undefined') {
-            Session.set("control", false);
-            return false;
-        } else {
-            return existing.exists;
-        }
     },
     serverSetup: function() {
         let serverSet = ServerInfo.findOne({});

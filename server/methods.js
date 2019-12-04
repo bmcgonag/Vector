@@ -29,6 +29,13 @@ Meteor.methods({
         let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
         let myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
 
+        console.log("=======================================================");
+        console.log("");
+        console.log(ipv4);
+        console.log("");
+        console.log("=======================================================");
+        console.log("");
+
         if (privKey == null || privKey == "" || pubKey == null || pubKey == "") {
             // report the error, and go back.
             console.log("    ****    ERROR: Unable to make Private / Public Key pari for Wireguard server.");
@@ -36,7 +43,7 @@ Meteor.methods({
         } else {
             // here we'll make the automated interface for the server.
             ShellJS.exec("echo '[Interface]' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = " + ipv4 + "' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("echo 'Address = " + ipv4 + "/24' >> $HOME/" + interfaceName + ".conf");
             ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> $HOME/" + interfaceName + ".conf");
             ShellJS.exec("echo 'SaveConfig = true' >> $HOME/" + interfaceName + ".conf");
             ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
@@ -53,16 +60,35 @@ Meteor.methods({
                 console.log("Error - WG Does not aappear to be installed.");
             }
 
-            console.log("About to copy the server interface file to /etc/wireguard/");
-            console.log("------------------------------------------");
-            console.log("echo ************ | sudo -S mv ~/" + interfaceName + ".conf /etc/wireguard/");
-            ShellJS.exec("echo '" + mpw + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            // console.log("About to copy the server interface file to /etc/wireguard/");
+            // console.log("------------------------------------------");
+            console.log("");
+            console.log("cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            console.log("");
+            ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
                 console.log("**** ---- ---- ---- ---- ---- ****");
-                console.log("echo ************ | sudo -S wg-quick up " + interfaceName);
-                ShellJS.exec("echo '" + mpw + "' | sudo -S wg-quick up " + interfaceName);
+                
+                ShellJS.exec("systemctl start wg-quick@" + interfaceName, function(code, stdout, stderr) {
+                    if (stderr) {
+                        console.log("Error on systemctl start wg-quick: " + stderr);
+                    } else if (stdout) {
+                        console.log("Output of systemctl start wg-quick: " + stdout);
+                    }
+                });
+
+                ShellJS.exec("systemctl enable wg-quick@" + interfaceName, function(code, stdout, stderr) {
+                    if (stderr) {
+                        console.log("Error on systemctl enable wg-quick: " + stderr);
+                    } else if (stdout) {
+                        console.log("Error on systemctl enable wg-quick: " + stdout);
+                    }
+                });
+
+                console.log("systemctl start wg-quick@" + interfaceName);
+                console.log("systemctl enable wg-quick@" + interfaceName);
             }, 1500);
     
             Meteor.call("add.serverInfo", ipv4, interfaceName, port, myPrivKey, myPubKey, function(err, result) {
@@ -93,22 +119,20 @@ Meteor.methods({
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
         }
 
+        // get a few bits of information we'll need for adding our peer.
         let serverInfo = ServerInfo.findOne({});
 
         let myId = Meteor.userId();
-        console.log("-------------------------------------");
-        console.log("");
-        console.log("User's ID reported as: " + myId);
-        console.log("-------------------------------------");
-        console.log("");
-        console.log("");
+        
         // let's get the first three octets from our IPv4 string
         let ipParts = ipv4.split(".");
         let threeOcts = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".";
 
         let mpw = Control.findOne({}).mpw;
+
         // let's create our client private key and client public key
         ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
+
         Meteor.setTimeout(function() {
             let privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
             let pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
@@ -124,28 +148,27 @@ Meteor.methods({
                     if (err) {
                         console.log("Error adding client interface: " + err);
                     } else {
-                        console.log("Inteface for " + deviceName + " added Successfully.");
-                        // console.log("");
-                        // console.log("---------------------------------------------------");
-                        // console.log('echo <user sudo password here> | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
-                        // console.log("");
-
                         // now add the interface to the server
-                        ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick down ' + serverInfo.serverInterfaceName);
+                         
+                        // console.log('wg set wg0 peer ' + myPubKey + ' allowed-ips ' + ipv4 + '/32');
+                        ShellJS.exec('wg set wg0 peer ' + myPubKey + ' allowed-ips ' + ipv4 + '/32', function(code, stdout, stderr) {
+                            if (stderr) {
+                                console.log("error on wg set peer: " + stderr);
+                            } else if (stdout) {
+                                console.log("output from wg set peer: " + stdout);
+                            }
+                        });
                         Meteor.setTimeout(function() {
-                            ShellJS.exec('echo ' + mpw + ' | sudo -S echo "[Peer]" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');;
-                            ShellJS.exec('echo ' + mpw + ' | sudo -S echo "AddressIPs = ' + threeOcts + '0/24" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
-                            ShellJS.exec('echo ' + mpw + ' | sudo -S echo "PublicKey = ' + myPubKey + '" >> /etc/wireguard/' + serverInfo.serverInterfaceName + '.conf');
-                        }, 500);
-
-                        Meteor.setTimeout(function() {
-                            ShellJS.exec("echo " + mpw + " | sudo -S wg-quick up " + serverInfo.serverInterfaceName);
-                        }, 1000);
-                        
-                        // ShellJS.exec('echo ' + mpw + ' | sudo -S wg set wg0 peer ' + myPubKey + ' allowed-ips ' + threeOcts + '0/24');
-                        // Meteor.setTimeout(function() {
-                        //     ShellJS.exec('echo ' + mpw + ' | sudo -S wg-quick save wg0');
-                        // }, 250);
+                            // console.log('wg-quick save wg0');
+                            ShellJS.exec('wg-quick save wg0', function(code, stdout, stderr) {
+                                if (stderr) {
+                                    console.log("Error on wg-quick save: " + stderr);
+                                } else if (stdout) {
+                                    console.log("Output from wg-quick save: " + stdout);
+                                }
+                            });
+                        }, 250);
+                        return;
                     }
                 });
             }
@@ -153,8 +176,6 @@ Meteor.methods({
     },
     "install.wg" () {
         // we will attempt to install wireguard using a snap isntall first.
-        let mpw = Control.findOne({}).mpw;
-
-        return ShellJS.exec("echo " + mpw + " | sudo -S add-apt-repository ppa:wireguard/wireguard; echo " + mpw + " | sudo -S apt install wireguard -y");
+        return ShellJS.exec("add-apt-repository ppa:wireguard/wireguard; apt install wireguard -y");
     },
 });
