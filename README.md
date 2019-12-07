@@ -91,71 +91,143 @@ I do run all of my public servers on Digital Ocean.
 
     https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04
 
-  3. Meteor installed on the server (for the build).  You can go to `https://www.meteor.com/`, or you can use this install script (provided by MeteorJS on their page).
+  3. You'll need to install MongoDB, either on this same server, or on another server, and know how to point to it (it's not hard, really).
 
-    curl https://install.meteor.com/ | sh
-
-  4. You'll need to install git on the server.  For Ubuntu just do this command:
-
-    sudo apt install git
-
-  5. You'll need to install MongoDB, either on this same server, or on another server, and know how to point to it (it's not hard, really).
-
-    https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-18-04
-
-  Again, I'm pointing to a Digital Ocean article, but it's the same for any Ubuntu install essentially.
+    sudo apt install mongodb
 
 <a id="prod-mode-setup" name="prod-mode-setup"></a>
 ### Setup and Install - Production Mode
-  6. Clone the repository from github.  
+  
+  4. Go to the Releases section here on GitHub and get the latest release .tar.gz file, and if you wish, the associated install script. 
 
-    git clone https://github.com/bmcgonag/Vector.git
+  NOTE: the install script is currently geared toward a Ubuntu or Debian based install.  
 
-  7. Change into the directory created by cloning the repo.
+    https://github.com/bmcgonag/Vector/releases/
 
-    cd Vector
+  5. There are two options:  The easiest is to get the bash script and run it. It attempts to install all of the associated softwre needed to run the server including: Vector, MongoDB, Wireguard, NodeJS, NPM, and Forever. If it fails, the end of the script will help you get it running.
 
-  8. Inside the Vecrot directory, you'll want to run the `meteor` command.
+  The other option is to do the setup manually, in which case you need to install the following:
 
-    meteor
+  - NodeJS 8.11.3 and the associated NPM version.
+  - MongoDB
+  - Forever (from npm, globally)
+  - Wireguard from the ppa (the snap version of Wireguard is not supported at this time)
+  - Finally, Vector
 
-  This will get the version of meteor necessary for the build, as well as get the initial packages installed.
+  6. Install NodeJS and NPM
 
-  You'll likely need to `CTRL+C` after it starts, as you'll get some errors in the terminal window.
+  I prefer to use NVM (Node Version Manager) to do this. 
 
-  Not to worry, this is normal.
+  run the following
 
-  9. Run the `meteor npm install` command.
+      curl -sSL https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
 
-    meteor npm install
+  After install, you need to tell the eystem to use the nvm module:
 
-  This will install the necessary npm packages.  
+      source ~/.profile
 
-  You may still get a few errors, where it says to install certain packages using the
+  Now you can use NVM to install NodeJS
 
-    meteor npm install <package name>
+      nvm install 8.11.3
 
-  command, just go with it.
+  then tell nvm to use node 8.11.3
 
-  I used packages for ShellJS.
+      nvm use 8.11.3
 
-  10.  Re-run the `meteor` command.
+  You should get no errors on this, but if you do, just log out, and back in, then try those last 2 commands again.  
 
-    meteor
+  Node should now be installed, and you can confirm this by doing:
 
-  Now you should get output like this
+      node -v
 
-    [[[[[ ~/Vector ]]]]]                          
+  You should get 8.11.3
 
-    => Started proxy.  
-    => Started MongoDB.
-    => Started your app
 
-    => App running at: http://localhost:3000/
+  7.  Now we can install Forever, which keeps the node service up and running for (except after a reboot). 
 
-   11. Test out the basec page loading and functions by going to your server ip or URL at port 3000, for example `10.21.3.41:3000` or `http://mysuperawesomeurl.com:3000`
+  Do the following command:
 
-   12. If everything is working, then use `CTRL+C` to stop the meteor app from running, and let's build.
+      npm i forever -g
+
+  This should install the forever package globally.
+
+ 
+  8.  Next we need to install Wireguard (the whole point of this server, of course)
+
+  Run the following commands to install wireguard.
+
+      sudo apt-add-repository ppa:wireguard/wireguard
+
+      sudo apt update
+
+      sudo apt install wireguard -y
+  
+  Now Wireguard should be installed. You can test it by running the `wg` command.
+
+      wg
+
+  You shouldn't get anything back in the terminal, but you also should not get an error about the command being unrecognized.
+
+  9. Now, we neeed to install MongoDB
+
+  To install MongoDB, just do:
+
+      sudo apt install mongodb -y
+  Make sure Mongo is installed by doing 
+
+  mongo -v
+
+  10.  Finally, we need to install Vector.
+
+  Get the latest release from https://github.com/bmcgoang/vector/releases
+
+  Download the tar.gz of the latest build.  NOTE: this build is for Linux x64 architecture only (today).  
+
+  Unzip the tar.gz file to a folder called Vector-Production in your home directory. 
+
+      tar -xzf Vector.tar.gz --directory ~/Vector-Production
+
+  change into the Vector-Production folder, and go all the way to the directory Vector-Production/bundle/programs/server/, and run an npm install
+
+      cd ~/Vector-Production/bundle/programs/server
+
+      npm install --proeuction
+
+  This will install all of the npm dependencies we need to run Vector.
+
+  Now, go back two directory levels to Vector-Production/bundle
+
+      cd ~/Vector-Production/bundle
+
+  Before we continue, we need to set some environmental variables.  These are important!
+
+  First the Mongo URL, this is the server and database that we want to use for Vector.  If you are running the Mongo DB and Vector application on the same server, then this is what you'll enter.
+
+      export MONGO_URL="mongodb://127.0.0.1:27017/vector"
+
+  Next, we need the Root URL (the main url where your Vector site can be reached).  It's very important that this be an FQDN, and that the server hostname be the same as the FQDN (e.g. vector.<my super great domain>.com, or something like that).  This FQDN is how vector is able to tell your client interface config where to connect to your Wireguard server.
+
+      export ROOT_URL="http://vector.<my super great domain>.com"
+
+  Finally, you need to set the port you want the server to run on.  I recommend just staing with port 5000, but it's really up to you.
+
+      export PORT=5000
+
+  11. We start our server. 
+
+  We will use the Forever NPM package to start our server and keep it up and running for us.  
+
+  Note: Make sure you're in the Vector-Production/bundle directory when you run the following command:
+
+      forever start -l forever.log -o output.log -e error.log main.js
+
+  Finally, a note of warning.  If you reboot the server, or kill the node processes for some reason, please remove the forever.log file from ~/.forever/ before trying to restart the forever service, or it will gripe at you.
+  
+
+
+
+
+
 
 <a id="prod-mode-forever" name="prod-mode-forever"></a>
 ### Production Mode - Run It Forever
