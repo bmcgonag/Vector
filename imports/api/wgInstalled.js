@@ -18,7 +18,7 @@ Meteor.methods({
 
         let installedId = WGInstalled.findOne({});
 
-        if (typeof installedId == 'undefined' || installedId == null || installedId == "") {
+        if (typeof installedId == 'undefined') {
             return WGInstalled.insert({
                 wgInstalled: installed,
                 typeInstall: typeInstall,

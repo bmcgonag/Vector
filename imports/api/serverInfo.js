@@ -34,7 +34,7 @@ Meteor.methods({
                 }
             });
         } else {
-            let myId = this.userId;
+            let myId = Meteor.userId();
 
             return ServerInfo.insert({
                 ipAddress: ipAddress,

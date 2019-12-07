@@ -13,7 +13,7 @@ Interfaces.allow({
 });
 
 Meteor.methods({
-    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6) {
+    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6, myId) {
         check(interfaceName, String);
         check(interfaceOS, String);
         check(interfaceGroup, String);
@@ -23,12 +23,7 @@ Meteor.methods({
         check(interfacePublicKey, String);
         check(interfaceDNS, String);
         check(interfaceDNSv6, String);
-
-        if (!this.userId) {
-            throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
-        }
-
-        let myId = this.userId;
+        check(myId, String);
 
         let serverInfo = ServerInfo.findOne({});
 
@@ -46,7 +41,6 @@ Meteor.methods({
             interfaceDNS: interfaceDNS,
             interfaceDNSv6: interfaceDNSv6,
             addedOn: new Date(),
-            interfaceUser: Meteor.user().emails[0].address,
             interfaceUserId: myId,
         });
     },
@@ -61,10 +55,6 @@ Meteor.methods({
         check(interfacePublicKey, String);
         check(interfaceDNS, String);
         check(interfaceDNSv6, String);
-
-        if (!this.userId) {
-            throw new Meteor.Error('User is not allowed to edit interfaces, make sure you are logged in.');
-        }
 
         Interfaces.update({ _id: interfaceId }, {
             set: {
@@ -84,10 +74,6 @@ Meteor.methods({
     'edit.InterfacePorts' (interfaceId) {
         check(interfaceId, String);
 
-        if (!this.userId) {
-            throw new Meteor.Error('User is not allowed to edit interfaces, make sure you are logged in.');
-        }
-
         let serverInfo = ServerInfo.findOne({});
 
         let port = serverInfo.port;
@@ -101,10 +87,6 @@ Meteor.methods({
     },
     'delete.interface' (interfaceId) {
         check(interfaceId, String);
-
-        if (!this.userId) {
-            throw new Meteor.Error('User is not allowed to delete interfaces, make sure you are logged in.');
-        }
 
         Interfaces.remove({ _id: interfaceId });
     },
