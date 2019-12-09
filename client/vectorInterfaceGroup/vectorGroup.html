@@ -1,4 +1,5 @@
 <template name="vectorGroup">
+    {{#if isInRole 'Admin'}}
     <div class="row">
         <div class="col s12">
             <h4>Add Interface Groups</h4>
@@ -21,4 +22,7 @@
     </div>
     <hr />
     {{> vectorGroupGrid}}
+    {{else}}
+        <p class="flow-text">You appear to have reached a page that does not exist, or that you don't have permission to access. Please make sure you are logged in, then re-enter your URL if needed.</p>
+    {{/if}}
 </template>

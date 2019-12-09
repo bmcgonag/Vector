@@ -1,52 +1,56 @@
 <template name="serverSetup">
-    {{#if $eq serverExists true}}
-        <div class="row">
-            <div style="background: red; color: white;" class="col l12 m12 s12">
-                <p class="flow-text">
-                    Server Appears to Exist - Changing server interface data can have serious consequences!
-                </p>
-                <p class="flow-text">Are you sure you want to adjust your server interface settings?</p>
-                <div class="row">
-                    <div class="col l6 m6s12">
-                        <a class="waves-effect waves-light btn adjustServer" id="adjustServer">Yes, Continue to Adjust</a>
-                    </div>
-                    <div class="col l6 m6 s12">
-                        <a class="waves-effect waves-light btn right recreateServer" id="recreateServer">Re-create My Current Server</a>
+    {{#if isInRole 'Admin'}}
+        {{#if $eq serverExists true}}
+            <div class="row">
+                <div style="background: red; color: white;" class="col l12 m12 s12">
+                    <p class="flow-text">
+                        Server Appears to Exist - Changing server interface data can have serious consequences!
+                    </p>
+                    <p class="flow-text">Are you sure you want to adjust your server interface settings?</p>
+                    <div class="row">
+                        <div class="col l6 m6s12">
+                            <a class="waves-effect waves-light btn adjustServer" id="adjustServer">Yes, Continue to Adjust</a>
+                        </div>
+                        <div class="col l6 m6 s12">
+                            <a class="waves-effect waves-light btn right recreateServer" id="recreateServer">Re-create My Current Server</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {{/if}}
+        {{/if}}
 
-    {{#if $eq adjustServer true}}
-        <div class="row">
-            <div class="col s12">
-                <h4>Setup your Wireguard Server</h4>
+        {{#if $eq adjustServer true}}
+            <div class="row">
+                <div class="col s12">
+                    <h4>Setup your Wireguard Server</h4>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col l6 m6 s12">
-                <a class="waves-effect waves-light btn autoSetup" id="autoSetup">Automatic</a>
+            <div class="row">
+                <div class="col l6 m6 s12">
+                    <a class="waves-effect waves-light btn autoSetup" id="autoSetup">Automatic</a>
+                </div>
+                {{#if $eq showManual true}}
+                    <div class="col l6 m6 s12">
+                        <a class="waves-effect waves-light btn hide-manualSetup" id="hideManualSetup">Hide Manual Setup</a>
+                    </div>
+                {{else}}
+                    <div class="col l6 m6 s12">
+                        <a class="waves-effect waves-light btn manualSetup" id="manualSetup">Manual Setup</a>
+                    </div>
+                {{/if}}
             </div>
             {{#if $eq showManual true}}
-                <div class="col l6 m6 s12">
-                    <a class="waves-effect waves-light btn hide-manualSetup" id="hideManualSetup">Hide Manual Setup</a>
-                </div>
-            {{else}}
-                <div class="col l6 m6 s12">
-                    <a class="waves-effect waves-light btn manualSetup" id="manualSetup">Manual Setup</a>
-                </div>
+                <hr />
+                {{> manualForm}}
             {{/if}}
-        </div>
-        {{#if $eq showManual true}}
-            <hr />
-            {{> manualForm}}
         {{/if}}
-    {{/if}}
 
-    {{#if $eq serverExists true}}
-        <hr />
-        <br />
-        {{> serverInfoCard}}
+        {{#if $eq serverExists true}}
+            <hr />
+            <br />
+            {{> serverInfoCard}}
+        {{/if}}
+    {{else}}
+        <p class="flow-text">You appear to have reached a page that does not exist, or that you do not have permission to access. Please make sure you are logged in, and re-enter your URL if needed.</p>
     {{/if}}
 </template>
