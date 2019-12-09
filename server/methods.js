@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import ShellJS from 'shelljs';
-import { Control } from '../imports/api/control.js';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
 import { ServerInfo } from '../imports/api/serverInfo.js';
 
@@ -98,13 +97,6 @@ Meteor.methods({
                 }
             });
         }  
-    },
-    'add.mpd' (mpd) {
-        Meteor.call("add.control", mpd, function(err, result) {
-            if (err) {
-                console.log("Error adding mpd to db: " + err);
-            }
-        });
     },
     'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS) {
         check(deviceName, String);
