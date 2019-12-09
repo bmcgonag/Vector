@@ -18,6 +18,7 @@ Template.vectorForm.onRendered(function() {
     Session.set("fullIp6" , "");
     Session.set("duplicateIp", false);
     Session.set("duplicateName", false);
+    Session.set("customSelection", false);
 });
 
 Template.vectorForm.helpers({
@@ -38,6 +39,9 @@ Template.vectorForm.helpers({
     suggestedIp: function() {
         return Session.get("fullIp");
     },
+    customSel: function() {
+        return Session.get("customSelection");
+    },
 });
 
 Template.vectorForm.events({
@@ -57,6 +61,7 @@ Template.vectorForm.events({
         let ipAdd = $("#ipAdd").val();
         let ip6Add = "";
         let dnsPref = $("#dnsPref").val();
+        let customDNS = $("#customDNS").val();
         Session.set("duplicateIp", false);
         Session.set("duplicateName", false);
 
@@ -68,15 +73,19 @@ Template.vectorForm.events({
             showSnackbar("Device Name is Required!", "red");
             $("#deviceName").focus();
             return;
+        } else if (dnsPref == "Custom" && (customDNS == "" || customDNS == null)) {
+            showSnackbar("You Selected Custom DNS - But No DNS is Provided!", "red");
+            $("#customDNS").focus();
+            return;
         } else {
             if (ipAdd == "" || ipAdd == null) {
                 console.log("Creating an IP - not filled in.");
                 checkIP();
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS);
             } else {
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS);
             }
         }
     },
@@ -90,7 +99,12 @@ Template.vectorForm.events({
         Session.set("showForm", false);
     },
     "change #dnsPref" (event) {
-
+        let dnsPref = $("#dnsPref").val();
+        if (dnsPref == "Custom") {
+            Session.set("customSelection", true);
+        } else {
+            Session.set("customSelection", false);
+        }
     },
 });
 
@@ -164,7 +178,7 @@ checkDuplicates = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref) {
     return;
 }
 
-writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref) {
+writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS) {
     // for the record I hate this approach, and will change it when I come up
     // with a better way.
     let duplicateName = Session.get("duplicateName");
@@ -184,7 +198,7 @@ writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, 
             console.log("At Write - IPv6 Address is: " + ip6Add);
             console.log("---   ***   ***   ***   ---");
             //    **** method call below is in /server/methods.js
-            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, function(err, result) {
+            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, function(err, result) {
                 if (err) {
                     console.log("Error adding interface to db: " + err);
                     showSnackbar("Error Adding Interface", "red");

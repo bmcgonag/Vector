@@ -37,8 +37,12 @@
                 <option value="8.8.8.8,8.8.4.4">Google</option>
                 <option value="9.9.9.9,149.112.112.112">Quad9</option>
                 <option value="64.6.64.6,64.6.65.6">Verisign</option>
-                <option value="custom">Custom</option>
+                <option value="Custom">Custom</option>
             </select>
+        </div>
+        <div class="col l6 m6 s12 input-field" style="display: {{#if $eq customSel true}}block{{else}}none{{/if}};">
+            <input type="text" class="customDNS" id="customDNS" placeholder="X.X.X.X,Y.Y.Y.Y" />
+            <label for="customDNS">Custom DNS</label>
         </div>
     </div>
     {{#if $neq currentServerIP "No Server IP Found"}}

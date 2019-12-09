@@ -106,13 +106,14 @@ Meteor.methods({
             }
         });
     },
-    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref) {
+    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS) {
         check(deviceName, String);
         check(deviceOS, String);
         check(deviceGroup, String);
         check(ipv4, String);
         check(ipv6, String);
         check(dnsPref, String);
+        check(customDNS, String);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
@@ -122,6 +123,11 @@ Meteor.methods({
         let serverInfo = ServerInfo.findOne({});
 
         let myId = Meteor.userId();
+
+        if (dnsPref == "Custom") {
+            dnsPref = customDNS;
+            console.log("DNS Preference marekd as Custom with IPs of: " + dnsPref);
+        }
         
         // let's get the first three octets from our IPv4 string
         let ipParts = ipv4.split(".");
