@@ -31,6 +31,7 @@ Meteor.methods({
             emailSmtpPort: emailSmtpPort,
             addedOn: new Date(),
             addedBy: Meteor.user().emails[0].address,
+            addedBy: this.userId,
         });
     },
     'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort) {

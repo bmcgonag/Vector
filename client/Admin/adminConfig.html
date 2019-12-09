@@ -1,56 +1,58 @@
 <template name="adminConfig">
-    
-    <div class="container">
-        <h3>Administrative Configuration</h3>
-        <hr />
-        <form autocomplete="off">
-        <div class="row">  
-            <div class="input-field col l6 m6 s12">
-                <input type="password" class="sudoPwd" id="sudoPwd" />
-                <label for="sudoPwd">Sudo Password for Server System</label>
-            </div>
-        </div>
-        </form>
-        <hr />
-        <h4>Notification Config</h4>
+    {{#if isInRole 'Admin'}}
+        <h4>Administrative Configuration</h4>
         <div class="row">
-            <div class="input-field col s6">
-                <input type="text" class="emailHost" id="emailHost" value="{{#if $eq configMode 'edit'}}{{configExists.emailHost}}{{/if}}" />
-                <label for="emailHost" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Host Description</label>
-            </div>
-        </div> 
-        <div class="row">
-            <div class="input-field col s6">
-                <input type="text" class="emailUser" id="emailUser" value="{{#if $eq configMode 'edit'}}{{configExists.emailUser}}{{/if}}" />
-                <label for="emailUser" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email User Name</label>
-            </div>
-            <div class="input-field col s6">
-                <input type="password" class="emailPass" id="emailPass" value="{{#if $eq configMode 'edit'}}{{configExists.emailPassword}}{{/if}}" />
-                <label for="emailPass" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Password</label>
-            </div>
+            <div class="col s12">
+                <div class="card">
+                  <div class="card-content">
+                    <span class="card-title">Email Setup</span>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input type="text" class="emailHost" id="emailHost" value="{{#if $eq configMode 'edit'}}{{configExists.emailHost}}{{/if}}" />
+                            <label for="emailHost" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Host Description</label>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input type="text" class="emailUser" id="emailUser" value="{{#if $eq configMode 'edit'}}{{configExists.emailUser}}{{/if}}" />
+                            <label for="emailUser" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email User Name</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input type="password" class="emailPass" id="emailPass" value="{{#if $eq configMode 'edit'}}{{configExists.emailPassword}}{{/if}}" />
+                            <label for="emailPass" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input type="text" class="emailServer" id="emailServer" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpServer}}{{/if}}" />
+                            <label for="emailServer" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP URI</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input type="text" class="emailPort" id="emailPort" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpPort}}{{/if}}" />
+                            <label for="emailPort" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP Port</label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col s6">
+                            <a id="cancelConfig" class="waves-effect waves-light orange btn cancelBtn">Cancel</a>
+                        </div>
+                        <div class="col s6">
+                            {{#if $eq emailHost true}}
+                                <a class="waves-effect waves-light btn testEmail submitBtn" id="testEmail">Test Email</a>
+                            {{/if}}
+                            {{#if $eq configMode "edit"}}
+                                <a class="waves-effect waves-light btn green right saveChangeBtn submitBtn" id="saveChangedConfig">Save Changes</a>
+                            {{else}}
+                                <a class="waves-effect waves-light btn green right submitBtn" id="submitConfig">Save</a>
+                            {{/if}}
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
-        <div class="row">
-            <div class="input-field col s6">
-                <input type="text" class="emailServer" id="emailServer" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpServer}}{{/if}}" />
-                <label for="emailServer" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP URI</label>
-            </div>
-            <div class="input-field col s6">
-                <input type="text" class="emailPort" id="emailPort" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpPort}}{{/if}}" />
-                <label for="emailPort" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP Port</label>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col s6">
-                <a id="cancelConfig" class="waves-effect waves-light orange btn cancelBtn">Cancel</a>
-            </div>
-            <div class="col s6">
-                {{#if $eq configMode "edit"}}
-                    <a class="waves-effect waves-light btn green right saveChangeBtn submitBtn" id="saveChangedConfig">Save Changes</a>
-                {{else}}
-                    <a class="waves-effect waves-light btn green right submitBtn" id="submitConfig">Save</a>
-                {{/if}}
-            </div>
-        </div>
-    </div>
+    {{else}}
+        <p>You appear to have arrived at a page that does not exist, or that you do not have permissions for.  Please ensure that you are logged in, and re-check the URL you entered.</p>
+    {{/if}}
 </template>
