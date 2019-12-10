@@ -37,6 +37,9 @@ Template.vectorForm.helpers({
         }
     },
     suggestedIp: function() {
+        setTimeout(function() {
+            Materialize.updateTextFields(); 
+        }, 250);
         return Session.get("fullIp");
     },
     customSel: function() {
