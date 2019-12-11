@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Configuration } from '../imports/api/configuration.js';
 import ShellJS from 'shelljs';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
+import { Interfaces } from '../imports/api/interfaces.js';
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -13,6 +14,14 @@ Meteor.startup(() => {
     let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
     // console.log(isthere);
     let typeInstall;
+
+    // should I ping for connections?
+    let pingInterfaces = Interfaces.find({ pingMe: true }).count();
+    console.log("Ping Interface count: " + pingInterfaces);
+    if (pingInterfaces > 0) {
+      startPing();
+    }
+
 
     // ****    we wait for 200 milliseconds to give the command time to complete, then check
     // ****    and set the value appropriately
@@ -67,3 +76,10 @@ Meteor.methods({
       }
   },
 });
+
+
+startPing = function() {
+  console.log("    ----    told to start ping");
+  // start out timer, then ping each device listed in Interfaces collection for connectivity
+  
+}

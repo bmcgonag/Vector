@@ -56,4 +56,19 @@ Template.clientCard.events({
         
         saveAs(blob, interfaceInfo.interfaceName + ".conf");
     },
+    "click #removeClient" (event) {
+        event.preventDefault();
+
+        // first remove the client from the DB
+        let clientId = this._id;
+
+        Meteor.call("delete.interface", clientId, function(err, result) {
+            if (err) {
+                console.log("Error removing interface: " + err);
+                showSnackbar("Error Removing Client Interface!", "red");
+            } else {
+                showSnackbar("Client Interface Removed Successfully!", "green");
+            }
+        });
+    }
 });

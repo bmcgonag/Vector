@@ -4,6 +4,7 @@ import { check } from 'meteor/check';
 import ShellJS from 'shelljs';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
 import { ServerInfo } from '../imports/api/serverInfo.js';
+import { Interfaces } from '../imports/api/interfaces.js';
 
 Meteor.methods({
     'delete.User' (userId) {
@@ -173,4 +174,19 @@ Meteor.methods({
         // we will attempt to install wireguard using a snap isntall first.
         return ShellJS.exec("add-apt-repository ppa:wireguard/wireguard; apt install wireguard -y");
     },
+    "remove.wgClient" (clientId) {
+        let interfaceInfo = Interfaces.findOne({ _id: clientID });
+        let serverInfo = ServerInfo.findOne({});
+
+        if (typeof interfaceInfo  != "undefined") {
+            let intPubKey = interfaceInfo.interfacePublicKey;
+            let intName = serverInfo.serverInterfaceName;
+
+            ShellJS.exec("wg set " + intName + " peer " + intPubKey + " remove");
+            return;
+        } else {
+            console.log("Client Information not found in DB for _id " + clientId +" !");
+            return;
+        }
+    }
 });
