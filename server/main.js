@@ -18,7 +18,7 @@ Meteor.startup(() => {
     // should I ping for connections?
     let pingInterfaces = Interfaces.find({ pingMe: true }).count();
     console.log("Ping Interface count: " + pingInterfaces);
-    if (pingInterfaces == 0) {
+    if (pingInterfaces > 0) {
       startPing();
     }
 
