@@ -18,7 +18,7 @@ Meteor.startup(() => {
     // should I ping for connections?
     let pingInterfaces = Interfaces.find({ pingMe: true }).count();
     console.log("Ping Interface count: " + pingInterfaces);
-    if (pingInterfaces > 0) {
+    if (pingInterfaces == 0) {
       startPing();
     }
 
@@ -80,6 +80,29 @@ Meteor.methods({
 
 startPing = function() {
   console.log("    ----    told to start ping");
-  // start out timer, then ping each device listed in Interfaces collection for connectivity
+  // start our timer, then ping each device listed in Interfaces collection for connectivity
+
+  let handle = Meteor.setInterval(function() {
+    let interfaceList = Interfaces.find({}).fetch();
+
+    let interfaceListCount = interfaceList.length;
   
+    // console.log("Interface count: " + interfaceListCount);
+
+    let i = 0;
+
+    if (i < interfaceListCount) {
+      ShellJS.exec("ping -c 2 " + interfaceList[i].interfaceIP, function(code, stdout, stderr) {
+        if (stderr) {
+          console.log("Error attempting to ping " + interfaceList[i].interfaceIP);
+        } else if (stdout) {
+          console.log("----------------------");
+          console.log("Ping StdOut: ");
+          console.log("");
+          console.dir(stdout);
+        }
+      });
+      i = i + 1;
+    }
+  }, 600000); // re-run every 10 minutes
 }
