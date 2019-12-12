@@ -13,7 +13,7 @@ Interfaces.allow({
 });
 
 Meteor.methods({
-    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6, myId) {
+    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6, myId, checkOnline) {
         check(interfaceName, String);
         check(interfaceOS, String);
         check(interfaceGroup, String);
@@ -24,6 +24,7 @@ Meteor.methods({
         check(interfaceDNS, String);
         check(interfaceDNSv6, String);
         check(myId, String);
+        check(checkOnline, Boolean);
 
         let serverInfo = ServerInfo.findOne({});
 
@@ -40,6 +41,7 @@ Meteor.methods({
             interfacePublicKey: interfacePublicKey,
             interfaceDNS: interfaceDNS,
             interfaceDNSv6: interfaceDNSv6,
+            checkOnline: checkOnline,
             addedOn: new Date(),
             interfaceUserId: myId,
         });

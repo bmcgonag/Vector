@@ -12,7 +12,7 @@ Template.vectorForm.onRendered(function() {
     $("select").material_select();
     setTimeout(function() {
         $("select").material_select();
-        materialize.updateTextFields()
+        Materialize.updateTextFields()
     }, 200);
     Session.set("fullIp", "");
     Session.set("fullIp6" , "");
@@ -65,6 +65,8 @@ Template.vectorForm.events({
         let ip6Add = "";
         let dnsPref = $("#dnsPref").val();
         let customDNS = $("#customDNS").val();
+        let checkOnline = $("#checkOnlineStatus").prop('checked');
+
         Session.set("duplicateIp", false);
         Session.set("duplicateName", false);
 
@@ -82,13 +84,13 @@ Template.vectorForm.events({
             return;
         } else {
             if (ipAdd == "" || ipAdd == null) {
-                console.log("Creating an IP - not filled in.");
+                // console.log("Creating an IP - not filled in.");
                 checkIP();
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline);
             } else {
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline);
             }
         }
     },
@@ -181,7 +183,7 @@ checkDuplicates = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref) {
     return;
 }
 
-writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS) {
+writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline) {
     // for the record I hate this approach, and will change it when I come up
     // with a better way.
     let duplicateName = Session.get("duplicateName");
@@ -201,7 +203,7 @@ writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, 
             console.log("At Write - IPv6 Address is: " + ip6Add);
             console.log("---   ***   ***   ***   ---");
             //    **** method call below is in /server/methods.js
-            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, function(err, result) {
+            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, function(err, result) {
                 if (err) {
                     console.log("Error adding interface to db: " + err);
                     showSnackbar("Error Adding Interface", "red");
