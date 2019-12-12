@@ -1,11 +1,11 @@
 <template name="vectorForm">
     {{#if Template.subscriptionsReady}}
     <div class="row">
-        <div class="col l6 m6 s12 input-field">
+        <div class="col l4 m4 s12 input-field">
             <input type="text" class="deviceName" id="deviceName" />
             <label for="deviceName">Device Name</label>
         </div>
-        <div class="col l6 m6 s12 input-field">
+        <div class="col l4 m4 s12 input-field">
             <select name="deviceOS" id="deviceOS" class="deviceOS">
                 <option value="Windows">Windows</option>
                 <option value="MacOS">MacOS</option>
@@ -18,7 +18,13 @@
             </select>
             <label for="deviceOS">Device OS</label>
         </div>
-        <div class="col l6 m6 s12 input-field">
+        <div class="col l4 m4 s12 input-field">
+            <input type="checkbox" class="checkOnlineStatus" id="checkOnlinestatus" />
+            <label for="checkOnlineStatus">Check If Online?</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l4 m4 s12 input-field">
             <select name="deviceGroup" id="deviceGroup" class="deviceGroup">
                 {{#each myGroups}}
                     <option value="{{groupName}}">{{groupName}}</option>
@@ -26,11 +32,11 @@
             </select>
             <label for="deviceGroup">Device Group</label>
         </div>
-        <div class="col l6 m6 s12 input-field">
+        <div class="col l4 m4 s12 input-field">
             <input type="text" class="ipAdd" id="ipAdd" value="{{suggestedIp}}" />
             <label for="ipAdd">IPv4 Address - Server IP Is: {{currentServerIP}}</label>
         </div>
-        <div class="col l6 m6 s12 input-field">
+        <div class="col l4 m4 s12 input-field">
             <select name="dnsPref" id="dnsPref" class="dnsPref">
                 <option value="208.67.222.222,208.67.220.220">Open DNS</option>
                 <option value="1.1.1.1,1.0.0.1">Cloud Flare</option>
@@ -40,7 +46,9 @@
                 <option value="Custom">Custom</option>
             </select>
         </div>
-        <div class="col l6 m6 s12 input-field" style="display: {{#if $eq customSel true}}block{{else}}none{{/if}};">
+    </div>
+    <div class="row">
+        <div class="col l4 m4 s12 input-field" style="display: {{#if $eq customSel true}}block{{else}}none{{/if}};">
             <input type="text" class="customDNS" id="customDNS" placeholder="X.X.X.X,Y.Y.Y.Y" />
             <label for="customDNS">Custom DNS</label>
         </div>
