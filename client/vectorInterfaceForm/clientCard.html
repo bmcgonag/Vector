@@ -47,7 +47,11 @@
                                     <strong>Client Online:</strong>
                                 </div>
                                 <div class="col l8 m8 s6">
-
+                                    {{#if $eq status "online"}}
+                                        <i class="fa fa-wifi green"></i>
+                                    {{else}}
+                                        <i class="fa fa-wifi-slash red"></i>
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>

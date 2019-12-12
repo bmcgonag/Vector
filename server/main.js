@@ -16,11 +16,7 @@ Meteor.startup(() => {
     let typeInstall;
 
     // should I ping for connections?
-    let pingInterfaces = Interfaces.find({ checkOnline: true }).count();
-    console.log("Ping Interface count: " + pingInterfaces);
-    if (pingInterfaces > 0) {
-      startPing();
-    }
+    startPing();
 
 
     // ****    we wait for 200 milliseconds to give the command time to complete, then check
@@ -83,27 +79,58 @@ startPing = function() {
   // start our timer, then ping each device listed in Interfaces collection for connectivity
 
   let handle = Meteor.setInterval(function() {
-    let interfaceList = Interfaces.find({ checkOnline: true }).fetch();
+    let onlineIds = [];
+    let pingInterfaces = Interfaces.find({ checkOnline: true }).count();
+    console.log("Ping Interface count: " + pingInterfaces);
+    if (pingInterfaces > 0) {
+      let interfaceList = Interfaces.find({ checkOnline: true }).fetch();
+      // console.dir(interfaceList[0]);
 
-    let interfaceListCount = interfaceList.length;
-  
-    // console.log("Interface count: " + interfaceListCount);
+      let interfaceListCount = interfaceList.length;
+    
+      // console.log("Interface count: " + interfaceListCount);
 
-    for (i=0; i < interfaceListCount; i++) {
-      ShellJS.exec("ping -c 2 " + interfaceList[i].interfaceIP, function(code, stdout, stderr) {
-        if (stderr) {
-          console.log("Error attempting to ping " + interfaceList[i].interfaceIP);
-        } else if (stdout) {
-          console.log("----------------------");
-          console.log("Ping StdOut: ");
-          console.log("");
-          console.dir(stdout);
-          console.log("");
-          let output = stdout.split("\n");
-          let outputLength = output.length;
-          for (i=0; i<outputLength; i++) {
-            console.log("Output " + i + ": " + output[i]);
+      for (i=0; i < interfaceListCount; i++) {
+        let intId = interfaceList[i]._id;
+        ShellJS.exec("ping -c 2 " + interfaceList[i].interfaceIP, function(code, stdout, stderr) {
+          if (stderr) {
+            console.log("Error attempting to ping " + interfaceList[i].interfaceIP);
+          } else if (stdout) {
+            // console.log("----------------------");
+            // console.log("Ping StdOut: ");
+            // console.log("");
+            // console.dir(stdout);
+            // console.log("");
+            let output = stdout.split(" ");
+            // console.log("");
+            // console.log("============================================")
+            // console.log("Output is:");
+            // console.dir(output);
+            let outputLength = output.length;
+            for (j=0; j<outputLength; j++) {
+              if (output[j] == "received,") {
+                if (parseInt(output[j-1]) > 0) {
+                  pingSuccess = true;
+                } else {
+                  pingSuccess = false;
+                }
+              }
+            }
+            console.log("Ping found: " + pingSuccess);
           }
+        });
+        onlineIds.push(intId);
+      }
+    } else {
+      console.log("No Ping!");
+    }
+
+    if (onlineIds.length > 0) {
+      Meteor.call("markInt.online", onlineIds, function(err, result) {
+        if (err) {
+          console.log("Error adding online to interface: " + err);
+        } else {
+          console.log("Online status should now be set.");
         }
       });
     }

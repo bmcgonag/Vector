@@ -42,6 +42,7 @@ Meteor.methods({
             interfaceDNS: interfaceDNS,
             interfaceDNSv6: interfaceDNSv6,
             checkOnline: checkOnline,
+            status: "offline",
             addedOn: new Date(),
             interfaceUserId: myId,
         });
@@ -110,4 +111,27 @@ Meteor.methods({
             }
         });
     },
+    "markInt.online" (onlineIds) {
+        check(onlineIds, [String]);
+
+        let count = onlineIds.length;
+        // first update the interfaces to all be "offline"
+        // then we'll re-update those that are online.
+
+        Interfaces.update({}, { 
+            $set: {
+                status: "offline",
+            }
+        }, {
+            multi: true
+        });
+
+        for (i=0; i<count; i++) {
+            Interfaces.update({ _id: onlineIds[i] }, {
+                $set: {
+                    status: "online",
+                }
+            });
+        }
+    }
 });
