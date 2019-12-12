@@ -174,19 +174,22 @@ Meteor.methods({
         // we will attempt to install wireguard using a snap isntall first.
         return ShellJS.exec("add-apt-repository ppa:wireguard/wireguard; apt install wireguard -y");
     },
-    "remove.wgClient" (clientId) {
-        let interfaceInfo = Interfaces.findOne({ _id: clientID });
+    "remove.wgClient" (intPubKey, clientIntName) {
         let serverInfo = ServerInfo.findOne({});
 
-        if (typeof interfaceInfo  != "undefined") {
-            let intPubKey = interfaceInfo.interfacePublicKey;
-            let intName = serverInfo.serverInterfaceName;
+        let intName = serverInfo.serverInterfaceName;
+        console.log("Running cmd: ");
+        console.log("wg set " + intName + " peer " + intPubKey + " remove");
+        console.log("");
+        console.log("----------------------------------------------------");
+        ShellJS.exec("wg set " + intName + " peer " + intPubKey + " remove", function(code, stdout, stderr) {
+            if (stderr) {
+                console.log("Error running cmd to remove client interface: " + stderr);
+            } else if (stdout) {
+                console.log("Output from running cmd to remove client interface: " + stdout);
+            }
+        });
+        return;
 
-            ShellJS.exec("wg set " + intName + " peer " + intPubKey + " remove");
-            return;
-        } else {
-            console.log("Client Information not found in DB for _id " + clientId +" !");
-            return;
-        }
     }
 });

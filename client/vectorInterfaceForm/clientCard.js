@@ -11,10 +11,6 @@ Template.clientCard.onCreated(function() {
 Template.clientCard.onRendered(function() {
     // get the hostname of the server
     let myhost = location.hostname;
-    console.log("");
-    console.log("--------------------------");
-    console.log("hostname: " + myhost);
-    console.log("");
 });
 
 Template.clientCard.helpers({

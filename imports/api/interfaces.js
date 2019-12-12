@@ -92,12 +92,19 @@ Meteor.methods({
             throw new Meteor.Error("User is not authorized to delete interfaces. Please make sure you are logged in.");
         }
 
+        let interfaceInfo = Interfaces.findOne({ _id: interfaceId });
+
+        let intPubKey = interfaceInfo.interfacePublicKey;
+        let intName = interfaceInfo.interfaceName;
+
+        Interfaces.remove({ _id: interfaceId });
+
         // now remove the interface from the wg interface
-        Meteor.call("remove.wgClient", clientId, function(err, result) {
+        Meteor.call("remove.wgClient", intPubKey, intName, function(err, result) {
             if (err) {
                 console.log("Error in method 'remove.wgClient' on server: " + err);
             } else {
-                Interfaces.remove({ _id: interfaceId });
+                console.log("Attempted to remove interface " + intName + " from server configuration file.");
             }
         });
     },
