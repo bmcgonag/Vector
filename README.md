@@ -98,6 +98,10 @@ I do run all of my public servers on Digital Ocean.
   5. There are two options:  The easiest is to get the bash script and run it. It attempts to install all of the associated softwre needed to run the server including: Vector, MongoDB, Wireguard, NodeJS, NPM, and Forever. If it fails, the end of the script will help you get it running.
 
   The other option is to do the setup manually, in which case you need to install the following:
+  
+  https://youtu.be/M5ChwB-JD2c
+  
+  A Video Where I run through the install using the script below.
 
   - NodeJS 8.11.3 and the associated NPM version.
   - MongoDB
