@@ -3,6 +3,7 @@ import { Configuration } from '../imports/api/configuration.js';
 import ShellJS from 'shelljs';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
 import { Interfaces } from '../imports/api/interfaces.js';
+import { ServerInfo } from '../imports/api/serverInfo.js';
 
 Meteor.startup(() => {
   // code to run on server at startup
@@ -73,66 +74,77 @@ Meteor.methods({
   },
 });
 
-
-startPing = function() {
+async function startPing() {
   console.log("    ----    told to start ping");
   // start our timer, then ping each device listed in Interfaces collection for connectivity
 
-  let handle = Meteor.setInterval(function() {
+  Meteor.setInterval(async function() {
     let onlineIds = [];
+    let offlineIds = [];
+    let intId;
     let pingInterfaces = Interfaces.find({ checkOnline: true }).count();
     console.log("Ping Interface count: " + pingInterfaces);
     if (pingInterfaces > 0) {
       let interfaceList = Interfaces.find({ checkOnline: true }).fetch();
-      // console.dir(interfaceList[0]);
-
       let interfaceListCount = interfaceList.length;
-    
-      // console.log("Interface count: " + interfaceListCount);
+      
+      await startStatus(intId, interfaceList, interfaceListCount);
 
-      for (i=0; i < interfaceListCount; i++) {
-        let intId = interfaceList[i]._id;
-        ShellJS.exec("ping -c 2 " + interfaceList[i].interfaceIP, function(code, stdout, stderr) {
-          if (stderr) {
-            console.log("Error attempting to ping " + interfaceList[i].interfaceIP);
-          } else if (stdout) {
-            // console.log("----------------------");
-            // console.log("Ping StdOut: ");
-            // console.log("");
-            // console.dir(stdout);
-            // console.log("");
-            let output = stdout.split(" ");
-            // console.log("");
-            // console.log("============================================")
-            // console.log("Output is:");
-            // console.dir(output);
-            let outputLength = output.length;
-            for (j=0; j<outputLength; j++) {
-              if (output[j] == "received,") {
-                if (parseInt(output[j-1]) > 0) {
-                  pingSuccess = true;
-                } else {
-                  pingSuccess = false;
-                }
-              }
-            }
-            console.log("Ping found: " + pingSuccess);
-          }
-        });
-        onlineIds.push(intId);
-      }
+      return true;
     } else {
       console.log("No Ping!");
     }
+  }, 60000); // re-run every 1 minutes
+}
 
-    if (onlineIds.length > 0) {
-      Meteor.call("markInt.online", onlineIds, function(err, result) {
-        if (err) {
-          console.log("Error adding online to interface: " + err);
-        } else {
-          console.log("Online status should now be set.");
-        }
-      });
+async function checkStatus(intId, interfaceList, interfaceListCount) {
+  let onlineIds = [];
+  let offlineIds = [];
+  let results = {};
+  let serverIP = ServerInfo.findOne({});
+  let servIp = serverIP.ipAddress;
+  let ipParts = servIp.split(".");
+  let servIp3Oct = ipParts[0] + "." + ipParts[1] + "." + ipParts[2];
+  let upIps = "not replaced";
+
+  console.log("About to run Shell command.");
+  console.log("3 oct = " + servIp3Oct);
+  console.log("----    ----    ----    ----   ----");
+  var output = ShellJS.exec("nmap -n -sn " + servIp3Oct + ".0/24 -oG - | awk '/Up$/{print $2}'", function(code, stdout, stderr) {
+    console.log("Running nmap search now.");
+  });
+
+  output.stdout.on("data", function(data) {
+    console.log("Got data from stdout: ");
+    console.dir(data);
+
+    // let ips = data.split("Use -d2 if you really want to see them.").pop();
+    let ipsarr = data.split("\n");
+    results.onlineIds = ipsarr;
+    insertResults(results);
+  });
+
+  output.stderr.on("data", function(data) {
+    // console.log("---    ***    ---");
+    // console.log("Error running nmap.");
+    // console.dir(data);
+  });
+}
+
+async function startStatus(intId, interfaceList, interfaceListCount) {
+  let results = await checkStatus(intId, interfaceList, interfaceListCount);
+}
+
+async function insertResults(results) {
+  console.log("Online IDs: ");
+  console.dir(results.onlineIds);
+  console.log("-----------------------------------");
+  
+  Meteor.call("markInt.online", results.onlineIds, function(err, result) {
+    if (err) {
+      console.log("Error adding online to interface: " + err);
+    } else {
+      console.log("Online status should now be set.");
     }
-  }, 30000); // re-run every 10 minutes
+  });
 }

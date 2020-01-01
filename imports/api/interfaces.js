@@ -89,7 +89,7 @@ Meteor.methods({
         }, { multi: true });
     },
     'delete.interface' (interfaceId) {
-        check(interfaceId, String);
+        check(interfaceId, [String]);
 
         if (!this.userId) {
             throw new Meteor.Error("User is not authorized to delete interfaces. Please make sure you are logged in.");
@@ -115,23 +115,28 @@ Meteor.methods({
         check(onlineIds, [String]);
 
         let count = onlineIds.length;
-        // first update the interfaces to all be "offline"
-        // then we'll re-update those that are online.
 
-        Interfaces.update({}, { 
+        let serverInfo = ServerInfo.findOne({});
+
+        Meteor.call("markInt.offline")
+
+        for (i=0; i < count; i++) {
+            if (onlineIds[i] == "" || onlineIds[i] == serverInfo.ipAddress) {
+                // not adding this one.
+            } else {
+                Interfaces.update({ interfaceIP: onlineIds[i]}, {
+                    $set: {
+                        status: "online",
+                    }
+                });
+            }
+        }
+    },
+    "markInt.offline" () {
+        return Interfaces.update({}, {
             $set: {
                 status: "offline",
             }
-        }, {
-            multi: true
-        });
-
-        for (i=0; i<count; i++) {
-            Interfaces.update({ _id: onlineIds[i] }, {
-                $set: {
-                    status: "online",
-                }
-            });
-        }
+        }, { multi: true });
     }
-});
+ });

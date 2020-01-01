@@ -229,7 +229,7 @@ I do run all of my public servers on Digital Ocean.
 
 - I want to add an option to the install script to install Pi-hole as the DNS, and make sure it's an option for Custom in the Vector project.
 - Add the ability to have NginX and LetsEncrypt setup with the script.
-- Offer to show Online / Offline for client machines based on a ping every minute to each IP.
+- [x] Offer to show Online / Offline for client machines based on a ping every minute to each IP.
 
 <a id="contribute" name="contribute"></a>
 ## Contribute
