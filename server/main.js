@@ -72,7 +72,9 @@ Meteor.methods({
           // console.log(process.env.MAIL_URL);
       }
   },
-});
+  async startPing() {
+    console.log("    ----    told to start ping");
+    // start our timer, then ping each device listed in Interfaces collection for connectivity
 
 async function startPing() {
   console.log("    ----    told to start ping");
