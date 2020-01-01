@@ -16,9 +16,7 @@ Meteor.startup(() => {
     // console.log(isthere);
     let typeInstall;
 
-    // should I ping for connections?
     startPing();
-
 
     // ****    we wait for 200 milliseconds to give the command time to complete, then check
     // ****    and set the value appropriately
@@ -71,10 +69,8 @@ Meteor.methods({
           process.env.MAIL_URL = 'smtp://' + encodeURIComponent(smtp.username) + ':' + encodeURIComponent(smtp.password) + '@' + encodeURIComponent(smtp.server) + ':' + smtp.port;
           // console.log(process.env.MAIL_URL);
       }
-  },
-  async startPing() {
-    console.log("    ----    told to start ping");
-    // start our timer, then ping each device listed in Interfaces collection for connectivity
+  }
+});
 
 async function startPing() {
   console.log("    ----    told to start ping");
@@ -84,30 +80,23 @@ async function startPing() {
     let onlineIds = [];
     let offlineIds = [];
     let intId;
-    let pingInterfaces = Interfaces.find({ checkOnline: true }).count();
-    console.log("Ping Interface count: " + pingInterfaces);
     if (pingInterfaces > 0) {
-      let interfaceList = Interfaces.find({ checkOnline: true }).fetch();
-      let interfaceListCount = interfaceList.length;
-      
-      await startStatus(intId, interfaceList, interfaceListCount);
+      await startStatus();
 
       return true;
     } else {
       console.log("No Ping!");
     }
-  }, 60000); // re-run every 1 minutes
+  }, 60000); // re-run every minute
 }
 
-async function checkStatus(intId, interfaceList, interfaceListCount) {
+async function checkStatus() {
   let onlineIds = [];
-  let offlineIds = [];
   let results = {};
   let serverIP = ServerInfo.findOne({});
   let servIp = serverIP.ipAddress;
   let ipParts = servIp.split(".");
   let servIp3Oct = ipParts[0] + "." + ipParts[1] + "." + ipParts[2];
-  let upIps = "not replaced";
 
   console.log("About to run Shell command.");
   console.log("3 oct = " + servIp3Oct);
@@ -120,7 +109,6 @@ async function checkStatus(intId, interfaceList, interfaceListCount) {
     console.log("Got data from stdout: ");
     console.dir(data);
 
-    // let ips = data.split("Use -d2 if you really want to see them.").pop();
     let ipsarr = data.split("\n");
     results.onlineIds = ipsarr;
     insertResults(results);
@@ -146,7 +134,7 @@ async function insertResults(results) {
     if (err) {
       console.log("Error adding online to interface: " + err);
     } else {
-      console.log("Online status should now be set.");
+      // console.log("Online status should now be set.");
     }
   });
 }

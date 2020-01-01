@@ -114,12 +114,19 @@ Meteor.methods({
     "markInt.online" (onlineIds) {
         check(onlineIds, [String]);
 
+        // how many ips do we have to deal with?
         let count = onlineIds.length;
 
+        // let's get our server info so we can avoid
+        // our server ip (it should always be online)
         let serverInfo = ServerInfo.findOne({});
 
+        // now let's set all machines to offline real quick
+        // then we'll set those we found back to online
         Meteor.call("markInt.offline")
 
+        // loop through the onine machine ips, and set them
+        // to an online status.
         for (i=0; i < count; i++) {
             if (onlineIds[i] == "" || onlineIds[i] == serverInfo.ipAddress) {
                 // not adding this one.
