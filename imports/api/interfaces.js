@@ -89,7 +89,7 @@ Meteor.methods({
         }, { multi: true });
     },
     'delete.interface' (interfaceId) {
-        check(interfaceId, [String]);
+        check(interfaceId, String);
 
         if (!this.userId) {
             throw new Meteor.Error("User is not authorized to delete interfaces. Please make sure you are logged in.");
