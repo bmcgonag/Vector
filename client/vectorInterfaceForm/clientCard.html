@@ -1,5 +1,5 @@
 <template name="clientCard">
-        <div class="col s12">
+    <div class="col s12">
         <div class="card horizontal">
             <div class="card-image">
                 <img src="/images/{{interfaceOS}}.png">
@@ -32,7 +32,7 @@
                             </div>
                             <div class="row">
                                 <div class="col l4 m4 s6">
-                                    <strong>Check Online:</strong>
+                                    <strong>Check If Online:</strong>
                                 </div>
                                 <div class="col l8 m8 s6">
                                     {{#if $eq checkOnline true}}
@@ -44,7 +44,7 @@
                             </div>
                             <div class="row">
                                 <div class="col l4 m4 s6">
-                                    <strong>Client Online:</strong>
+                                    <strong>Client Status:</strong>
                                 </div>
                                 <div class="col l8 m8 s6">
                                     {{#if $eq status "online"}}

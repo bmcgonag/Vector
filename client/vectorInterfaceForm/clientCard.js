@@ -20,7 +20,6 @@ Template.clientCard.helpers({
     clientQR: function() {
         let interfaceId = this._id;
         let thisInterface;
-        // console.log("Interface ID: " + interfaceId);
 
         let myhost = location.hostname;
 
@@ -38,7 +37,6 @@ Template.clientCard.events({
         event.preventDefault();
 
         let interfaceId = this._id;
-        // console.log("Interface ID: " + interfaceId);
 
         let myhost = location.hostname;
 
@@ -48,7 +46,6 @@ Template.clientCard.events({
         var blob = new Blob(
             ["[Interface]\nPrivateKey = " + interfaceInfo.interfacePrivateKey + "\nDNS = " + interfaceInfo.interfaceDNS + "\n" + "Address = " + interfaceInfo.interfaceIP + "/22," + interfaceInfo.interfaceIPv6 +"/112\n\n[Peer]\nPublicKey = " + serverInfo.publicKey + "\nEndpoint = " + myhost + ":" + interfaceInfo.interfacePort + "\nAllowedIPs = 0.0.0.0/0, ::/0"], 
             {type: "text/plain;charset=utf-8"});
-        console.dir(blob);
         
         saveAs(blob, interfaceInfo.interfaceName + ".conf");
     },
