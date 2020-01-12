@@ -1,4 +1,5 @@
 <template name="clientCard">
+    {{#if Template.subscriptionsReady}}
     <div class="col s12">
         <div class="card horizontal">
             <div class="card-image">
@@ -34,12 +35,22 @@
                                 <div class="col l4 m4 s6">
                                     <strong>Check If Online:</strong>
                                 </div>
-                                <div class="col l8 m8 s6">
+                                <!-- <div class="col l8 m8 s6">
                                     {{#if $eq checkOnline true}}
                                         Yes
                                     {{else}}
                                         No
                                     {{/if}}
+                                </div> -->
+
+                                <div class="switch">
+                                    <!-- Check if Online -->
+                                    <label>
+                                        No
+                                        <input type="checkbox" id="{{_id}}" checked="{{#if $eq checkOnline true}}checked{{/if}}" >
+                                        <span class="lever"></span>
+                                        Yes
+                                    </label>
                                 </div>
                             </div>
                             <div class="row">
@@ -48,7 +59,7 @@
                                 </div>
                                 <div class="col l8 m8 s6">
                                     {{#if $eq status "online"}}
-                                        Online
+                                        <strong>Online</strong>
                                     {{else}}
                                         Offline
                                     {{/if}}
@@ -56,9 +67,7 @@
                             </div>
                         </div>
                         <div class="col s4">
-                            {{#if Template.subscriptionsReady}}
-                                <div id="QR{{_id}}">{{> qrcode text=clientQR size=150}}</div>
-                            {{/if}}
+                            <div id="QR{{_id}}">{{> qrcode text=clientQR size=150}}</div>
                         </div>
                     </div>
                 </div>
@@ -69,4 +78,5 @@
             </div>
         </div>
     </div>
+    {{/if}}
 </template>

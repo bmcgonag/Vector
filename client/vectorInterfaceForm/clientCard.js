@@ -26,9 +26,9 @@ Template.clientCard.helpers({
         let interfaceInfo = Interfaces.findOne({ _id: interfaceId });
         let serverInfo = ServerInfo.findOne({});
 
-        let blob = "[Interface]\nPrivateKey = " + interfaceInfo.interfacePrivateKey + "\nDNS = " + interfaceInfo.interfaceDNS + "\n" + "Address = " + interfaceInfo.interfaceIP + "/22," + interfaceInfo.interfaceIPv6 +"/112\n\n[Peer]\nPublicKey = " + serverInfo.publicKey + "\nEndpoint = " + myhost + ":" + interfaceInfo.interfacePort + "\nAllowedIPs = 0.0.0.0/0, ::/0";
+        let qrBlob = "[Interface]\nPrivateKey = " + interfaceInfo.interfacePrivateKey + "\nDNS = " + interfaceInfo.interfaceDNS + "\n" + "Address = " + interfaceInfo.interfaceIP + "/22," + interfaceInfo.interfaceIPv6 +"/112\n\n[Peer]\nPublicKey = " + serverInfo.publicKey + "\nEndpoint = " + myhost + ":" + interfaceInfo.interfacePort + "\nAllowedIPs = 0.0.0.0/0, ::/0";
 
-        return blob;
+        return qrBlob;
     },
 });
 
@@ -61,6 +61,20 @@ Template.clientCard.events({
                 showSnackbar("Error Removing Client Interface!", "red");
             } else {
                 showSnackbar("Client Interface Removed Successfully!", "green");
+            }
+        });
+    },
+    "click .switch" (event) {
+        let interfaceId = this._id;
+        let newCheck = $('#'+interfaceId).prop('checked');
+        console.log("new check value is: " + newCheck);
+
+        Meteor.call("changeOnline.check", interfaceId, newCheck, function(err, result) {
+            if (err) {
+                console.log("ERROR:   Error updating the interface for online checking: " + err);
+                showSnackbar("Error Updating Interface!");
+            } else {
+                showSnackbar("Interface Updated Successfully!");
             }
         });
     }

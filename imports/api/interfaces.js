@@ -148,5 +148,18 @@ Meteor.methods({
                 status: "offline",
             }
         }, { multi: true });
-    }
+    },
+    "changeOnline.check" (intId, newCheck) {
+        check(intId, String);
+
+        if (!this.userId) {
+            throw new Meteor.Error('User is not allowed to edit interface information, make sure you are logged in.');
+        }
+
+        return Interfaces.update({ _id: intId }, {
+            $set: {
+                checkOnline: newCheck,
+            }
+        });
+    },
  });
