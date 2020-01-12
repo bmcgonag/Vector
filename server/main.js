@@ -11,9 +11,9 @@ Meteor.startup(() => {
     // need to check to see if wireguard appears to be installed.
     let installed;
     let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
-    // console.log("----    Is Installed: " + isInstalled.stdout);
+    // console.log("INFO:   ----    Is Installed: " + isInstalled.stdout);
     let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
-    // console.log(isthere);
+    // console.log("INFO:   " + isthere);
     let typeInstall;
 
     startPing();
@@ -35,7 +35,7 @@ Meteor.startup(() => {
   
       Meteor.call('add.wgInstalled', installed, typeInstall, function(err, result) {
         if (err) {
-          console.log("Error adding installed state: " + err);
+          console.log("ERROR:   Error adding installed state: " + err);
         }
       });
     }, 750);
@@ -44,14 +44,14 @@ Meteor.startup(() => {
     let msgSettings = Configuration.findOne({});
     if (typeof msgSettings.emailUser == 'undefined' || msgSettings.emailUser == null || msgSettings.emailUser == "") {
       // msg settings not set, route user to setup for message settings.
-      console.log("Didn't find email settings.");
+      // console.log("INFO:   Didn't find email settings.");
     } else {
         let user = msgSettings.emailUser;
-        console.log("Found User: " + user);
+        // console.log("INFO:   Found User: " + user);
         Meteor.call('setEmailFromServer', msgSettings);
     }
   } catch (error) {
-      console.log("Error caught in server/main.js: " + error);
+      console.log("ERROR:   Error caught in server/main.js: " + error);
   }
 });
 
@@ -77,16 +77,11 @@ async function startPing() {
   // start our timer, then ping each device listed in Interfaces collection for connectivity
 
   Meteor.setInterval(async function() {
-    let onlineIds = [];
-    let offlineIds = [];
-    let intId;
-    if (pingInterfaces > 0) {
-      await startStatus();
+    console.log("INFO:   Starting nMap function: ");
+    
+    await startStatus();
 
-      return true;
-    } else {
-      console.log("No Ping!");
-    }
+    return true;
   }, 60000); // re-run every minute
 }
 
@@ -98,15 +93,15 @@ async function checkStatus() {
   let ipParts = servIp.split(".");
   let servIp3Oct = ipParts[0] + "." + ipParts[1] + "." + ipParts[2];
 
-  console.log("About to run Shell command.");
-  console.log("3 oct = " + servIp3Oct);
+  console.log("INFO:   About to run Shell command.");
+  console.log("INFO:   3 oct = " + servIp3Oct);
   console.log("----    ----    ----    ----   ----");
   var output = ShellJS.exec("nmap -n -sn " + servIp3Oct + ".0/24 -oG - | awk '/Up$/{print $2}'", function(code, stdout, stderr) {
-    console.log("Running nmap search now.");
+    console.log("INFO:   Running nmap search now.");
   });
 
   output.stdout.on("data", function(data) {
-    console.log("Got data from stdout: ");
+    console.log("SUCCESS:   Got data from stdout: ");
     console.dir(data);
 
     let ipsarr = data.split("\n");
@@ -116,25 +111,25 @@ async function checkStatus() {
 
   output.stderr.on("data", function(data) {
     // console.log("---    ***    ---");
-    // console.log("Error running nmap.");
+    // console.log("ERROR:   Error running nmap.");
     // console.dir(data);
   });
 }
 
-async function startStatus(intId, interfaceList, interfaceListCount) {
-  let results = await checkStatus(intId, interfaceList, interfaceListCount);
+async function startStatus() {
+  let results = await checkStatus();
 }
 
 async function insertResults(results) {
-  console.log("Online IDs: ");
+  console.log("INFO:   Online IDs: ");
   console.dir(results.onlineIds);
   console.log("-----------------------------------");
   
   Meteor.call("markInt.online", results.onlineIds, function(err, result) {
     if (err) {
-      console.log("Error adding online to interface: " + err);
+      console.log("ERROR:   Error adding online to interface: " + err);
     } else {
-      // console.log("Online status should now be set.");
+      // console.log("INFO:   Online status should now be set.");
     }
   });
 }

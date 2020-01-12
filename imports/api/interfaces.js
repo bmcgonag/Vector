@@ -116,6 +116,7 @@ Meteor.methods({
 
         // how many ips do we have to deal with?
         let count = onlineIds.length;
+        console.log("INFO:   Online IDs count: " + count);
 
         // let's get our server info so we can avoid
         // our server ip (it should always be online)
@@ -123,7 +124,7 @@ Meteor.methods({
 
         // now let's set all machines to offline real quick
         // then we'll set those we found back to online
-        Meteor.call("markInt.offline")
+        Meteor.call("markInt.offline");
 
         // loop through the onine machine ips, and set them
         // to an online status.
@@ -131,6 +132,7 @@ Meteor.methods({
             if (onlineIds[i] == "" || onlineIds[i] == serverInfo.ipAddress) {
                 // not adding this one.
             } else {
+                console.log("INFO:   Placing ID " + onlineIds[i] + " in ONLINE status."); 
                 Interfaces.update({ interfaceIP: onlineIds[i]}, {
                     $set: {
                         status: "online",
@@ -140,6 +142,7 @@ Meteor.methods({
         }
     },
     "markInt.offline" () {
+        console.log("INFO:   Marking Interfaces Offline.");
         return Interfaces.update({}, {
             $set: {
                 status: "offline",
