@@ -99,7 +99,7 @@ Meteor.methods({
             });
         }  
     },
-    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS, checkOnline) {
+    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS, checkOnline, manKeyPub, manKeyPri) {
         check(deviceName, String);
         check(deviceOS, String);
         check(deviceGroup, String);
@@ -107,6 +107,8 @@ Meteor.methods({
         check(ipv6, String);
         check(dnsPref, String);
         check(customDNS, String);
+        check(manKeyPub, String);
+        check(manKeyPri, String);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
@@ -127,15 +129,26 @@ Meteor.methods({
         let threeOcts = ipParts[0] + "." + ipParts[1] + "." + ipParts[2] + ".";
 
         // let's create our client private key and client public key
-        ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
+        if (manKeyPub == null || manKeyPri == null || manKeyPub == "" || manKeyPri == "") {
+            ShellJS.exec("wg genkey | tee ~/" + deviceName + "-privatekey | wg pubkey > ~/" + deviceName + "-publickey");
+        }
 
         Meteor.setTimeout(function() {
-            let privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
-            let pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
-            let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
-            let myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
+            let privKey;
+            let pubkey;
+            let myPrivKey;
+            let myPubKey;
+            if (manKeyPub == null || manKeyPri == null || manKeyPub == "" || manKeyPri == "") {
+                privKey = ShellJS.exec("cat ~/" + deviceName + "-privatekey");
+                pubKey = ShellJS.exec("cat ~/" + deviceName + "-publickey");
+                myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
+                myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
+            } else {
+                myPrivKey = manKeyPri;
+                myPubKey = manKeyPub;
+            }
     
-            if (typeof privKey == "undefined" || privKey == null || privKey == "" || typeof pubKey == "undefined" || pubKey == null || pubKey == "") {
+            if (typeof myPrivKey == "undefined" || myPrivKey == null || myPrivKey == "" || typeof myPubKey == "undefined" || myPubKey == null || myPubKey == "") {
                 // report the error, and go back.
                 console.log("    ****    ERROR: Unable to make Client Private / Public Key for Wireguard client " + deviceName);
                 return;
