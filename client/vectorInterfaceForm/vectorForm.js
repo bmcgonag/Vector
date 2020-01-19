@@ -71,7 +71,6 @@ Template.vectorForm.events({
         let customDNS = $("#customDNS").val();
         let checkOnline = $("#checkOnlineStatus").prop('checked');
         let manPubKey = $("#manPubKey").val();
-        let manPriKey = $("#manPriKey").val();
 
         Session.set("duplicateIp", false);
         Session.set("duplicateName", false);
@@ -81,6 +80,13 @@ Template.vectorForm.events({
 
         // let's get the last interface entered so we can increment the IP apprpriately.
         let lastInterface = Interfaces.find({}).fetch();
+
+        // let's handle the need for generated keys
+        // out method expects a string, so we need to send it one, then check whether it's empty
+        // in the mothod.
+        if (manPubKey == null) {
+            manPubKey = "";
+        }
 
         if (deviceName == null || deviceName == "") {
             showSnackbar("Device Name is Required!", "red");
@@ -95,10 +101,10 @@ Template.vectorForm.events({
                 // console.log("Creating an IP - not filled in.");
                 checkIP();
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey, manPriKey);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey);
             } else {
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey, manPriKey);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey);
             }
         }
     },
@@ -123,6 +129,11 @@ Template.vectorForm.events({
         event.preventDefault();
 
         Session.set("showManKeyEntry", true);
+    },
+    "click #manKeysNo" (event) {
+        event.preventDefault();
+
+        Session.set("showManKeyEntry", false);
     }
 });
 
@@ -196,7 +207,7 @@ checkDuplicates = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref) {
     return;
 }
 
-writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub, manKeyPri) {
+writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub) {
     // for the record I hate this approach, and will change it when I come up
     // with a better way.
     let duplicateName = Session.get("duplicateName");
@@ -216,7 +227,7 @@ writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, 
             console.log("At Write - IPv6 Address is: " + ip6Add);
             console.log("---   ***   ***   ***   ---");
             //    **** method call below is in /server/methods.js
-            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub, manKeyPri, function(err, result) {
+            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub, function(err, result) {
                 if (err) {
                     console.log("Error adding interface to db: " + err);
                     showSnackbar("Error Adding Interface", "red");

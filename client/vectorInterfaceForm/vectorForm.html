@@ -62,30 +62,27 @@
         </div>
     </div>
     {{#if $neq currentServerIP "No Server IP Found"}}
+        <div class="row">
+            <div class="col l6 m6 s12">
+                <a class="waves-effect waves-light btn autoIp" id="autoIp">autoIp</a>
+            </div>
+        </div>
+    {{/if}}
     <div class="row">
         <div class="col l6 m6 s12">
-            <a class="waves-effect waves-light btn autoIp" id="autoIp">autoIp</a>
+            {{#if $eq showManKeys true}}
+                <a pref="#" class="waves-effect waves-light btn manKeysNo" id="manKeysNo">Auto Generate My Public Key</a>
+            {{else}}
+                <a href="#" class="waves-effect waves-light btn manKeys" id="manKeys">Manually Enter My Public Key</a>
+            {{/if}}
         </div>
+        {{#if $eq showManKeys true}}
+            <div class="col s12 l4 m4 input-field">
+                <input type="text" class="manPubKey" id="manPubKey" />
+                <label for="manPubKey">Public Key</label>
+            </div>
+        {{/if}}
     </div>
-    {{/if}}
-
-    <div class="row">
-        <div class="col l6 m6 s12">
-            <a href="#" class="waves-effect waves-light btn manKeys" id="manKeys">I need to enter my own Keys</a>
-        </div>
-    </div>
-    {{#if $eq showManKeys true}}
-    <div class="row">
-        <div class="col s12 l4 m4 input-field">
-            <input type="text" class="manPriKey" id="manPriKey" />
-            <label for="manPriKey">Private Key</label>
-        </div>
-        <div class="col s12 l4 m4 input-field">
-            <input type="text" class="manPubKey" id="manPubKey" />
-            <label for="manPubKey">Public Key</label>
-        </div>
-    </div>
-    {{/if}}
     <div class="row">
         <div class="col l6 m12 s12">
             <a class="waves-effect waves-light orange btn cancelInterface" id="cancelInterface">Cancel</a>

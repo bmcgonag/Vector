@@ -110,8 +110,155 @@ then
     sudo add-apt-repository ppa:wireguard/wireguard
     sudo apt update
     sudo apt install wireguard -y
+else
+    echo ""
+    echo ""
+    echo "****    Wireguard appears to be installed - good!"
 fi
 
+########################################################################
+echo ""
+echo ""
+echo "Would you like to have the installation also create an NGinX Rerverse Proxy with LetsEncrypt Certificates? (Y/N) "
+read installNginx
+
+if [ $installNginx = "Y" ] || [ $installNginx = "y" ]
+then
+
+    ###############################
+    # Install NGinx as Rev Proxy  #
+    ###############################
+
+    echo "***************************************"
+    echo "*                                     *"
+    echo "*  NGinX is used as a reverse proxy   *"
+    echo "*    for the Vector install.          *"
+    echo "*                                     *"
+    echo "***************************************"
+
+    if ! which nginx > /dev/null 2>&1; then
+        echo ""
+        echo ""
+        echo "****    Ok, we will install NGinX"
+        echo ""
+        echo ""
+        sudo apt update
+        sudo apt install nginx -y
+    else
+        echo ""
+        echo ""
+        echo "****    NGinX appears to be installed - good!"
+    fi
+
+    ###############################
+    # Enable NGinX as a Service   #
+    ###############################
+
+    sudo service nginx start
+
+    ###############################
+    # Check the NGinX Status      #
+    ###############################
+
+    sudo service nginx status
+
+    sleep 5s
+
+    echo ""
+    echo ""
+    echo "****    Hopefully you don't see any errors above.  If you do"
+    echo "****    please determine what caused the issue with NGinX starting,"
+    echo""
+    echo ""
+    sleep 5s
+
+
+    ################################
+    # Install LetsEncrypt Certbot  #
+    ################################
+
+    if ! which certbot > /dev/null 2>&1; 
+    then
+        echo ""
+        echo ""
+        echo "****  Installing Certbot for LetsEncrypt Now."
+        sudo add-apt-repository ppa:certbot/certbot -y
+        sudo apt update
+        sudo apt install python-certbot-nginx
+    else
+        echo ""
+        echo ""
+        echo "****    Certbot appears to already be installed - good!"
+    fi
+
+    ################################
+    # Setup NGinx Reverse Proxy    #
+    ################################
+    
+    echo ""
+    echo ""
+    echo "In order for NGinX to work properly, and LetsEncrypt to get certificates for your site,"
+    echo "you need to provide an FQDN (Fully Qualified Domain Name).  This must be a domain you"
+    echo :own.  E.g. vector.my-great-domain.com, or just my-great-domain.com if this is your top"
+    echo "level server.  The donain must have dns to point to this server before continuing."
+    echo ""
+    echo "Please enter your domain name for this server: "
+    read userDomain
+    
+    echo ""
+    echo ""
+    echo "****  Creating the NGinX configuration file for this site."
+    echo ""
+    echo ""
+    
+    echo "server {" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "    listen 80;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "    server_name ${userDomain};" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "    location / {" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "        proxy_set_header  X-Forwarded-For $remote_addr;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "        proxy_set_header  Host $http_host;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "        proxy_past        http://127.0.0.1:5000;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "    }" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "}" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    
+    sleep 3s
+    
+    echo "****  Let's test our NGinX configuration."
+    sudo nginx -t
+    
+    sleep 5s
+    echo ""
+    echo ""
+    echo "****  The above should have given OK and Successful results."
+    echo ""
+    echo ""
+    sleep 2s
+    echo "****    Relad NGinX Configuration and service"
+    echo ""
+    echo ""
+    sudo service nginx reload
+    
+    sleep 2s
+    
+    echo "****    Now we'll get the LetsEncrypt certificate."
+    echo ""
+    echo "****    You'll be asked for your email address, and other information during the certificate creation."
+    echo ""
+    sleep 4s
+    
+    sudo certbot --nginx -d $userDomain
+    
+    echo ""
+    echo ""
+    echo :****    Now let's make sure certbot can autorenew."
+    echo ""
+    echo ""
+    sudo certbot renew --dry-run
+
+fi
+
+########################################################################
 #############################
 # install node js using NVM #
 #############################
@@ -129,6 +276,10 @@ then
 
     echo "source ~/.profile attempt 1"
     source ~/.profile
+else
+    echo ""
+    echo ""
+    echo "****    NVM appears to be installed - good!"
 fi
 
 # now install the proper node version with nvm
@@ -159,13 +310,13 @@ fi
 
 # install forever
 
-    if [ ! -d ~/.forever ]
-    then
-        echo "****  install forever from npm"
-        npm i forever -g
-    else
-        echo"**** forever already installed - skipping."
-    fi
+if [ ! -d ~/.forever ]
+then
+    echo "****  install forever from npm"
+    npm i forever -g
+else
+    echo"****    forever appears to be already installed - good."
+fi
 
 # install mongodb
 if [ ! -d ~/.mongorc.js ]
@@ -174,7 +325,7 @@ then
     sudo apt install -y mongodb
 else
     echo ""
-    echo "**** MongoDB appears to be installed - skipping."
+    echo "****    MongoDB appears to be installed - good."
     echo ""
 fi
 
@@ -186,7 +337,7 @@ then
     sudo apt install -y nmap
 else
     echo ""
-    echo "**** nmap appears to be installed - skipping."
+    echo "****    nmap appears to be installed - good."
     echo ""
 fi
 
@@ -222,7 +373,7 @@ export PORT=5000
 
 # start the server using forever
 
-    forever start -l forever.log -o output.log -e error.log main.js
+forever start -l forever.log -o output.log -e error.log main.js
 
     echo ""
     echo ""
