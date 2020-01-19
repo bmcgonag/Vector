@@ -1,5 +1,14 @@
 #!/bin/bash
 
+echo "Would you like to have the installation also create an NGinX Rerverse Proxy with LetsEncrypt Certificates? (Y/N) "
+read installNginx
+
+echo ""
+echo ""
+
+echo "Please enter your domain name for this server: "
+read userDomain
+
 echo "**********************************"
 echo "*                                *"
 echo "*    First we clean up a bit     *"
@@ -119,8 +128,6 @@ fi
 ########################################################################
 echo ""
 echo ""
-echo "Would you like to have the installation also create an NGinX Rerverse Proxy with LetsEncrypt Certificates? (Y/N) "
-read installNginx
 
 if [ $installNginx = "Y" ] || [ $installNginx = "y" ]
 then
@@ -168,7 +175,7 @@ then
     echo ""
     echo "****    Hopefully you don't see any errors above.  If you do"
     echo "****    please determine what caused the issue with NGinX starting,"
-    echo""
+    echo ""
     echo ""
     sleep 5s
 
@@ -199,11 +206,9 @@ then
     echo ""
     echo "In order for NGinX to work properly, and LetsEncrypt to get certificates for your site,"
     echo "you need to provide an FQDN (Fully Qualified Domain Name).  This must be a domain you"
-    echo :own.  E.g. vector.my-great-domain.com, or just my-great-domain.com if this is your top"
+    echo "own.  E.g. vector.my-great-domain.com, or just my-great-domain.com if this is your top"
     echo "level server.  The donain must have dns to point to this server before continuing."
     echo ""
-    echo "Please enter your domain name for this server: "
-    read userDomain
     
     echo ""
     echo ""
@@ -216,13 +221,16 @@ then
     echo "    server_name ${userDomain};" >> /etc/nginx/sites-enabled/${userDomain}.conf
     echo "" >> /etc/nginx/sites-enabled/${userDomain}.conf
     echo "    location / {" >> /etc/nginx/sites-enabled/${userDomain}.conf
-    echo "        proxy_set_header  X-Forwarded-For $remote_addr;" >> /etc/nginx/sites-enabled/${userDomain}.conf
-    echo "        proxy_set_header  Host $http_host;" >> /etc/nginx/sites-enabled/${userDomain}.conf
-    echo "        proxy_past        http://127.0.0.1:5000;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "        proxy_pass http://127.0.0.1:5000;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "           proxy_http_version 1.1;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "           proxy_set_header Upgrade \$http_upgrade;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "           proxy_set_header Connection 'upgrade';" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "           proxy_set_header Host \$host;" >> /etc/nginx/sites-enabled/${userDomain}.conf
+    echo "           proxy_cache_bypass \$http_upgrade;" >> /etc/nginx/sites-enabled/${userDomain}.conf
     echo "    }" >> /etc/nginx/sites-enabled/${userDomain}.conf
     echo "}" >> /etc/nginx/sites-enabled/${userDomain}.conf
     
-    sleep 3s
+    sleep 10s
     
     echo "****  Let's test our NGinX configuration."
     sudo nginx -t
@@ -251,7 +259,7 @@ then
     
     echo ""
     echo ""
-    echo :****    Now let's make sure certbot can autorenew."
+    echo "****    Now let's make sure certbot can autorenew."
     echo ""
     echo ""
     sudo certbot renew --dry-run
@@ -259,6 +267,7 @@ then
 fi
 
 ########################################################################
+
 #############################
 # install node js using NVM #
 #############################
@@ -315,7 +324,7 @@ then
     echo "****  install forever from npm"
     npm i forever -g
 else
-    echo"****    forever appears to be already installed - good."
+    echo "****    forever appears to be already installed - good."
 fi
 
 # install mongodb
@@ -396,4 +405,3 @@ forever start -l forever.log -o output.log -e error.log main.js
     echo ""
     echo ""
     echo " ********************************************************** "
-
