@@ -19,6 +19,11 @@ Template.myModal.helpers({
 
 Template.myModal.events({
     'click #continue' (event) {
+        let callingId = Session.get("callingId");
+        let callingModule = Session.get("callingModule");
+        let callingAction = Session.get("callingAction");
+
+        // now take the action for the id and module, and perform it.
         
     },
     'click #cancel' (event) {

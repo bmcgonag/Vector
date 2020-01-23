@@ -78,3 +78,7 @@ textarea {
 strong { 
     font-weight: bold; 
 }
+
+i {
+    cursor: pointer;
+}
