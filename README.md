@@ -234,3 +234,6 @@ I do run all of my public servers on Digital Ocean.
 <a id="contribute" name="contribute"></a>
 ## Contribute
 I'm always 100% open to contributions from anyone willing to help out, learn or otherwise.
+
+## Contributors:
+Thanks to @johnzzzzz for his help in testing new releases, feedback, and great ideas for enhancements.  
