@@ -22,8 +22,12 @@ Template.vectorGroupGrid.events({
     'click .deleteGroup' (event) {
         let groupId = this._id;
 
-        // send this to a dialog and ensure the user wants to 
-        // really delete the group.
+        Session.set("confirmationDialogTitle", "Confirm - Potentially Destructive Action");
+        Session.set("confirmationDialogContent", "You are about to delete an Interface Group.  This action will not remove groups from your current interfaces, but may result in an inability for your to view those interfaces.  It is highly recommeneded that you first change the assigned group of any interfaces in this group. Do you wish to continue?");
+        Session.set("eventConfirmCallBackFunction", "deleteInterfaceGroup");
+        Session.set("eventConfirmNecessaryId", groupId);
+
+        $("#genModal").modal('open');
 
     },
     'click .editGroup' (event) {
@@ -32,3 +36,14 @@ Template.vectorGroupGrid.events({
         Session.set("mode", "edit");
     }
 });
+
+deleteInterfaceGroup = function(groupId) {
+    Meteor.call("delete.group", groupId, function(err, result) {
+        if (err) {
+            showSnackbar("Error Occurred while Removing Group!", "red");
+            console.log("ERROR:    **** Error removing group: " + err);
+        } else {
+            showSnackbar("Group Successfully Removed!", "green");
+        }
+    });
+}

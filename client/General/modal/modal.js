@@ -10,20 +10,23 @@ Template.myModal.onRendered(function() {
 
 Template.myModal.helpers({
     modalHeader: function() {
-        return Session.get("modalHeader");
+        return Session.get("confirmationDialogTitle");
     },
     modalBody: function() {
-        return Session.get("modalBody");
+        return Session.get("confirmationDialogContent");
     }
 });
 
 Template.myModal.events({
     'click #continue' (event) {
-        let callingId = Session.get("callingId");
-        let callingModule = Session.get("callingModule");
-        let callingAction = Session.get("callingAction");
+        event.preventDefault();
 
-        // now take the action for the id and module, and perform it.
+        let callFunction = Session.get("eventConfirmCallBackFunction");
+        let functionPassId = Session.get("eventConfirmNecessaryId"); // <-- this can be an actual ID, an object, a function, whatever...
+
+        $("#genModal").modal('close');
+
+        window[callFunction](functionPassId); // <-- calls the function and passed the Id on confirm.
         
     },
     'click #cancel' (event) {
