@@ -6,7 +6,11 @@ import { WGInstalled } from '../imports/api/wgInstalled.js';
 
 Meteor.publish("myInterfaces", function() {
     try {
-        return Interfaces.find({ interfaceUserId: this.userId });
+        if (Roles.userIsInRole (this.userId, ['Admin'])) {
+            return Interfaces.find({});
+        } else {
+            return Interfaces.find({ interfaceUserId: this.userId });
+        }
     } catch (error) {
         console.log("Error publishing interfaces: " + error);
     }
@@ -22,7 +26,12 @@ Meteor.publish("configuration", function() {
 
 Meteor.publish("myGroups", function() {
     try {
-        return InterfaceGroups.find({});
+        if (Roles.userIsInRole(this.userId, ['Admin'])) {
+            return InterfaceGroups.find({});
+        } else {
+            return InterfaceGroups.find({ groupUserId: this.userId })
+        }
+        
     } catch(err) {
         console.log("Error publishing Groups: " + err);
     } 
