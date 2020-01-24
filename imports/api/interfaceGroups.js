@@ -1,6 +1,7 @@
 import { Meter } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
+import { Interfaces } from './interfaces.js';
 
 export const InterfaceGroups = new Mongo.Collection('interfaceGroups');
 
@@ -35,6 +36,20 @@ Meteor.methods({
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to edit interface groups, make sure you are logged in.');
         }
+
+        // first we need to update all the group names on the interfaces.
+        let origInfo = InterfaceGroups.findOne({ _id: groupId });
+
+        let origGroupName = origInfo.groupName;
+
+        Interfaces.update({ interfaceGroup: origGroupName }, {
+            $set: {
+                interfaceGroup: groupName,
+                groupNameUpdatedOn: new Date(),
+            }
+        }, {
+            multi: true
+        });
 
         return InterfaceGroups.update({ _id: groupId }, {
             $set: {

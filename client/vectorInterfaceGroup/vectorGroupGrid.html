@@ -10,12 +10,21 @@
                </thead>
                <tbody>
                    {{#each myGroups}}
-                   <tr>
-                       <td>{{groupName}}</td>
+                   <tr id="{{_id}}">
+                        {{#if $eq groupMode.mode "edit"}}
+                            <td><input id="groupNameEdit" class="groupNameEdit" type="text"></td>
+                        {{else}}
+                            <td>{{groupName}}</td>
+                        {{/if}}
                        <td>
+                        {{#if $eq groupMode.mode "edit"}}
+                            <a href="#" class="waves-effect waves-light green btn editGroupName" id="editGroupName">Save Edited Name</a>
+                            <a href="#" class="waves-effect waves-light orange btn cancelEditGroupName" id="cancelEditGroupName">Cancel</a>
+                        {{else}}
                             <i class="fa fa-trash fa-fw deleteGroup" aria-hidden="true"></i>
                             <i class="fa fa-edit fa-fw editGroup" areia-hidden="true"></i>
-                       </td>
+                        {{/if}}
+                        </td>
                    </tr>
                    {{/each}}
                </tbody>
