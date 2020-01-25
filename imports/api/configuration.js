@@ -12,12 +12,16 @@ Configuration.allow({
 });
 
 Meteor.methods({
-    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort) {
+    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
         check(emailSmtpServer, String);
         check(emailSmtpPort, String);
+        check(allowOthers, Boolean);
+        check(allowOwnNetwork, Boolean);
+        check(maxNumberInterfaces, Number);
+        check(maxNumberNetworks, Number);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup admin values, make sure you are logged in.');
@@ -29,17 +33,25 @@ Meteor.methods({
             emailPassword: emailPassword,
             emailSmtpServer: emailSmtpServer,
             emailSmtpPort: emailSmtpPort,
+            allowOthers: allowOthers,
+            maxNumberInterfaces: maxNumberInterfaces,
+            allowOwnNetwork: allowOwnNetwork,
+            maxNumberNetworks: maxNumberNetworks,
             addedOn: new Date(),
             addedBy: Meteor.user().emails[0].address,
             addedBy: this.userId,
         });
     },
-    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort) {
+    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
         check(emailSmtpServer, String);
         check(emailSmtpPort, String);
+        check(allowOthers, Boolean);
+        check(allowOwnNetwork, Boolean);
+        check(maxNumberInterfaces, Number);
+        check(maxNumberNetworks, Number);
 
 
         if (!this.userId) {
@@ -57,6 +69,10 @@ Meteor.methods({
                 emailPassword: emailPassword,
                 emailSmtpServer: emailSmtpServer,
                 emailSmtpPort: emailSmtpPort,
+                allowOthers: allowOthers,
+                maxNumberInterfaces: maxNumberInterfaces,
+                allowOwnNetwork: allowOwnNetwork,
+                maxNumberNetworks: maxNumberNetworks,
                 addedOn: new Date(),
                 addedBy: Meteor.user().emails[0].address,
             }

@@ -36,8 +36,24 @@ Template.adminConfig.events({
         let pass = $("#emailPass").val();
         let server = $("#emailServer").val();
         let portNo = $("#emailPort").val();
+        let allowOthers = $("#allowOthers").prop('checked');
+        let allowOwnNetwork = $("#allowOwnNetwork").prop('checked');
+        let maxNoInts = $("#maxInterfaces").val();
+        let maxNoNets = $("#maxNetworks").val();
 
-        Meteor.call("new.config", host, user, pass, server, portNo, function(err, result) {
+        if (maxNoInts == null || maxNoInts == "") {
+            maxNoInts = 0;
+        } else {
+            maxNoInts = parseInt(maxNoInts);
+        }
+
+        if (maxNoNets == null || maxNoNets == "") {
+            maxNoNets = 0;
+        } else {
+            maxNoNets = parseInt(maxNoNets);
+        }
+
+        Meteor.call("new.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, function(err, result) {
             if (err) {
                 console.log("Error adding email configuration: " + err);
                 showSnackbar("Error Adding Email Configuration!", "red");
@@ -55,8 +71,24 @@ Template.adminConfig.events({
         let pass = $("#emailPass").val();
         let server = $("#emailServer").val();
         let portNo = $("#emailPort").val();
+        let allowOthers = $("#allowOthers").prop('checked');
+        let allowOwnNetwork = $("#allowOwnNetwork").prop('checked');
+        let maxNoInts = $("#maxInterfaces").val();
+        let maxNoNets = $("#maxNetworks").val();
 
-        Meteor.call("edit.config", host, user, pass, server, portNo, function(err, result) {
+        if (maxNoInts == null || maxNoInts == "") {
+            maxNoInts = 0;
+        } else {
+            maxNoInts = parseInt(maxNoInts);
+        }
+
+        if (maxNoNets == null || maxNoNets == "") {
+            maxNoNets = 0;
+        } else {
+            maxNoNets = parseInt(maxNoNets);
+        }
+
+        Meteor.call("edit.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, function(err, result) {
             if (err) {
                 console.log("Error editing email configuration: " + err);
                 showSnackbar("Error Editing Email Configuration!", "red");

@@ -30,7 +30,7 @@
     </div>
     <div class="row">
         <div class="col l4 m4 s12 input-field">
-            <input type="text" class="ipAdd" id="ipAdd" value="{{suggestedIp}}" />
+            <input type="text" class="ipAdd" id="ipAdd" value="{{suggestedIp}}" disabled="{{#if isInRole 'allUsers'}}disabled{{/if}}" />
             <label for="ipAdd">IPv4 Address - Server IP Is: {{currentServerIP}}</label>
         </div>
         <div class="col l4 m4 s12 input-field">

@@ -1,4 +1,5 @@
 <template name="adminConfig">
+    {{#if Template.subscriptionsReady}}
     {{#if isInRole 'Admin'}}
         <h4>Administrative Configuration</h4>
         <div class="row">
@@ -34,17 +35,9 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col s6">
-                            <a id="cancelConfig" class="waves-effect waves-light orange btn cancelBtn">Cancel</a>
-                        </div>
-                        <div class="col s6">
+                        <div class="col s12">
                             {{#if $eq emailHost true}}
                                 <a class="waves-effect waves-light btn testEmail submitBtn" id="testEmail">Test Email</a>
-                            {{/if}}
-                            {{#if $eq configMode "edit"}}
-                                <a class="waves-effect waves-light btn green right saveChangeBtn submitBtn" id="saveChangedConfig">Save Changes</a>
-                            {{else}}
-                                <a class="waves-effect waves-light btn green right submitBtn" id="submitConfig">Save</a>
                             {{/if}}
                         </div>
                     </div>
@@ -52,7 +45,21 @@
                 </div>
               </div>
         </div>
+        {{> adminAllowOtherUsers}}
+        <div class="row">
+            <div class="col s6">
+                <a id="cancelConfig" class="waves-effect waves-light orange btn cancelBtn">Cancel</a>
+            </div>
+            <div class="col s6">
+                {{#if $eq configMode "edit"}}
+                    <a class="waves-effect waves-light btn green right saveChangeBtn submitBtn" id="saveChangedConfig">Save Changes</a>
+                {{else}}
+                    <a class="waves-effect waves-light btn green right submitBtn" id="submitConfig">Save</a>
+                {{/if}}
+            </div>
+        </div>
     {{else}}
         <p class="flow-text">You appear to have arrived at a page that does not exist, or that you do not have permissions for.  Please ensure that you are logged in, and re-check the URL you entered.</p>
+    {{/if}}
     {{/if}}
 </template>
