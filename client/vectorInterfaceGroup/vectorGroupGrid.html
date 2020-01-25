@@ -1,4 +1,15 @@
 <template name="vectorGroupGrid">
+    {{#if isInRole 'Admin'}}
+    <div class="row">
+        <div class="col s12">
+            {{#if $eq showAllGroups true}}
+                <a href="#" class="waves-effect waves-light btn showMyGroups" id="showMyGroups">Show Only My Groups</a>
+            {{else}}
+                <a href="#" class="waves-effect waves-light btn showAllGroups" id="showAllGroups">Show All Groups</a>
+            {{/if}}
+        </div>
+    </div>
+    {{/if}}
     <div class="row">
         <div class="col s12">
             <table class="highlight striped responsive-table">
@@ -9,24 +20,27 @@
                     </tr>
                </thead>
                <tbody>
-                   {{#each myGroups}}
-                   <tr id="{{_id}}">
-                        {{#if $eq groupMode.mode "edit"}}
-                            <td><input id="groupNameEdit" class="groupNameEdit" type="text"></td>
-                        {{else}}
-                            <td>{{groupName}}</td>
-                        {{/if}}
-                       <td>
-                        {{#if $eq groupMode.mode "edit"}}
-                            <a href="#" class="waves-effect waves-light green btn editGroupName" id="editGroupName">Save Edited Name</a>
-                            <a href="#" class="waves-effect waves-light orange btn cancelEditGroupName" id="cancelEditGroupName">Cancel</a>
-                        {{else}}
-                            <i class="fa fa-trash fa-fw deleteGroup" aria-hidden="true"></i>
-                            <i class="fa fa-edit fa-fw editGroup" areia-hidden="true"></i>
-                        {{/if}}
-                        </td>
-                   </tr>
-                   {{/each}}
+                    {{#each myGroups}}
+                    <tr id="{{_id}}">
+                            {{#if $eq groupMode.mode "edit"}}
+                                <td><input id="groupNameEdit" class="groupNameEdit" type="text"></td>
+                            {{else}}
+                                <td>{{groupName}}</td>
+                            {{/if}}
+                            {{#if isInRole 'Admin'}}
+                                <td>{{groupUser}}</td>
+                            {{/if}}
+                        <td>
+                            {{#if $eq groupMode.mode "edit"}}
+                                <a href="#" class="waves-effect waves-light green btn editGroupName" id="editGroupName">Save Edited Name</a>
+                                <a href="#" class="waves-effect waves-light orange btn cancelEditGroupName" id="cancelEditGroupName">Cancel</a>
+                            {{else}}
+                                <i class="fa fa-trash fa-fw deleteGroup" aria-hidden="true"></i>
+                                <i class="fa fa-edit fa-fw editGroup" areia-hidden="true"></i>
+                            {{/if}}
+                            </td>
+                    </tr>
+                    {{/each}}
                </tbody>
             </table>
         </div>

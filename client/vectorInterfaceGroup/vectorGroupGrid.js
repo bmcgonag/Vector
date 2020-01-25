@@ -6,12 +6,18 @@ Template.vectorGroupGrid.onCreated(function() {
 
 Template.vectorGroupGrid.onRendered(function() {
     Session.set("mode", "new");
+    Session.set("showAllGroups", false);
 });
 
 Template.vectorGroupGrid.helpers({
     myGroups: function() {
         let myId = Meteor.userId();
-        return InterfaceGroups.find({ groupUserId: myId });
+        let showAllGroups = Session.get("showAllGroups");
+        if (showAllGroups == true) {
+            return InterfaceGroups.find({});
+        } else {
+            return InterfaceGroups.find({ groupUserId: myId });
+        }
     },
     groupMode: function() {
         let mode = Session.get("mode");
@@ -21,6 +27,9 @@ Template.vectorGroupGrid.helpers({
             return modeInfo;
         }
     },
+    showAllGroups: function() {
+        return Session.get("showAllGroups");
+    }
 });
 
 Template.vectorGroupGrid.events({
@@ -60,6 +69,14 @@ Template.vectorGroupGrid.events({
         Session.set("eventConfirmNecessaryId", groupNameId);
 
         $("#genModal").modal('open');
+    },
+    "click #showAllGroups" (event) {
+        event.preventDefault();
+        Session.set("showAllGroups", true);
+    },
+    "click #showMyGroups" (event) {
+        event.preventDefault();
+        Session.set("showAllGroups", false);
     }
 });
 
