@@ -4,9 +4,9 @@
 
         {{#if currentUser}}
             <a href="#" class="navBtn userDash" id="userDash"><i class="fa fa-cloud-download fa-fw navBtn importQuestions" aria-hidden="true"></i>&nbsp; Client Interfaces</a>
-            
+            <a href="#" class="navBtn vectorGroup" id="vectorGroup"><i class="fa fa-object-group fa-fw navBtn vectorGroup" aria-hidden="true"></i>&nbsp; Interface Groups</a>
+
             {{#if isInRole 'Admin'}}
-                <a href="#" class="navBtn vectorGroup" id="vectorGroup"><i class="fa fa-object-group fa-fw navBtn vectorGroup" aria-hidden="true"></i>&nbsp; Interface Groups</a>
                 <a href="#" class="navBtn serverConfig" id="serverConfig"><i class="fa fa-server fa-fw navBtn serverConfig" aria-hidden="true"></i>&nbsp; VPN Server Config</a>
                 <a href="#" class="navBtn configSystem" id="configSystem"><i class="fa fa-gear fa-fw myNav configSystem" aria-hidden="true"></i>&nbsp; Configure System</a>
                 <a href="#" class="navBtn adminInfo" id="adminInfo"><i class="fa fa-gear fa-fw myNav adminInfo" aria-hidden="true"></i>&nbsp; Admin Data</a>
