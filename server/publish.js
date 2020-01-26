@@ -31,7 +31,6 @@ Meteor.publish("myGroups", function() {
         } else {
             return InterfaceGroups.find({ groupUserId: this.userId })
         }
-        
     } catch(err) {
         console.log("Error publishing Groups: " + err);
     } 
@@ -39,7 +38,11 @@ Meteor.publish("myGroups", function() {
 
 Meteor.publish("myServerInfo", function() {
     try {
-        return ServerInfo.find({});
+        if (Roles.userIsInRole(this.userId, ['Admin'])) {
+            return ServerInfo.find({});
+        } else {
+            return ServerInfo.find({ serverUserId: this.userId });
+        }
     } catch (err) {
         console.log("Error publishing Server Info: " + err);
     }

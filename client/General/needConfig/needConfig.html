@@ -1,10 +1,41 @@
 <template name="needConfig">
-    <div class="row red darken-2 white-text">
-        <div class="col s8 flow-text">
-            System configuration for defaults and email still needed.
+    {{#if isInRole 'Admin'}}
+        {{#if $eq wgInstall.wgInstalled false}}
+        <div class="row">
+            <div class="col s12 noWGWarning">
+                <p>It appears that Wireguard is not yet installed, you must install it, then restart this server. <a class="waves-effect waves-light btn fixWGInstall">Try to Install Wireguard</a></p>
+            </div>
         </div>
-        <div class="col s2">
-            <a class="waves-effect waves-light btn right" id="configSystem">Configure Now</a>
+        {{/if}}
+        {{#if $eq myConfig false}}
+        <div class="row noWGWarning">
+            <div class="col s8 flow-text">
+                System configuration for defaults and email still needed.
+            </div>
+            <div class="col s2">
+                <a class="waves-effect waves-light btn right" id="configSystem">Configure Now</a>
+            </div>
         </div>
-    </div>
+        {{/if}}
+        {{#if $eq myServerConfig false}}
+            {{#if $eq serverSetup false}}
+                <div class="row">
+                    <div class="col s12 noWGWarning">
+                        <p class="flow-text">Your Server Interface has not been setup using Vector. Some information for creating client interfaces depends on this information. <a class="waves-effect waves-light btn fixServer">Fix It</a></p>
+                    </div>
+                </div>
+            {{/if}}
+        {{/if}}
+    {{/if}}
+
+    <!-- Here we reverse our criteria in case teh admin allows normal users to setup their own server instance -->
+    {{#if $eq myServerConfig true}}
+        {{#if $eq serverSetup false}}
+            <div class="row">
+                <div class="col s12 noWGWarning">
+                    <p class="flow-text">Your Server Interface has not been setup using Vector. Some information for creating client interfaces depends on this information. <a class="waves-effect waves-light btn fixServer">Fix It</a></p>
+                </div>
+            </div>
+        {{/if}}
+    {{/if}}
 </template>

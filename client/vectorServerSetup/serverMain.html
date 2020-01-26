@@ -1,0 +1,9 @@
+<template name="serverMain">
+    {{#if Template.subscriptionsReady}}
+        {{#if $eq allowSetup true}}
+            {{> serverSetup}}
+        {{else}}
+            <p class="flow-text">You appear to have reached a page that does not exist, or that you do not have permission to access. Please make sure you are logged in, and re-enter your URL if needed.</p>
+        {{/if}}
+    {{/if}}
+</template>

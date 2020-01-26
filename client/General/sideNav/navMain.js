@@ -1,3 +1,19 @@
+import { Configuration } from '../../../imports/api/configuration.js';
+
+Template.navMain.onCreated(function() {
+    this.subscribe("configuration");
+});
+
+Template.navMain.onRendered(function() {
+
+});
+
+Template.navMain.helpers({
+    myConfig: function() {
+        return Configuration.findOne({});
+    },
+});
+
 Template.navMain.events({
     'click  .navBtn' (event) {
         event.preventDefault();
