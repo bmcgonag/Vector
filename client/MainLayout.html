@@ -1,16 +1,22 @@
 <template name="MainLayout">
-    {{> headerBar}}
-    <div class="main" id="main">
-        {{#if currentUser}}
-            {{> needConfig}}
-            <div class="container">
-                {{> Template.dynamic template=main}}
+    {{#if Template.subscriptionsReady}}
+        {{#if $eq myConfig true}}
+            {{> headerBar}}
+            <div class="main" id="main">
+                {{#if currentUser}}
+                    {{> needConfig}}
+                    <div class="container">
+                        {{> Template.dynamic template=main}}
+                    </div>
+                {{else}}
+                    {{> pleaseLogin}}
+                {{/if}}
+                {{> snackbar}}
+                {{> loginModal}}
+                {{> myModal}}
             </div>
         {{else}}
-            {{> pleaseLogin}}
+            <p class="flow-text">This Vector Instance for Wireguard VPN is not currently set to allow multiple users.  If you believe this is incorrect, please contact the system administrator for assistance.</p>
         {{/if}}
-        {{> snackbar}}
-        {{> loginModal}}
-        {{> myModal}}
-    </div>
+    {{/if}}
 </template>

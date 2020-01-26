@@ -41,6 +41,10 @@ Template.adminConfig.events({
         let maxNoInts = $("#maxInterfaces").val();
         let maxNoNets = $("#maxNetworks").val();
 
+        if (allowOwnNetwork == null || allowOthers == false) {
+            allowOwnNetwork = false;
+        }
+        
         if (maxNoInts == null || maxNoInts == "") {
             maxNoInts = 0;
         } else {
@@ -75,6 +79,10 @@ Template.adminConfig.events({
         let allowOwnNetwork = $("#allowOwnNetwork").prop('checked');
         let maxNoInts = $("#maxInterfaces").val();
         let maxNoNets = $("#maxNetworks").val();
+
+        if (allowOwnNetwork == null || allowOthers == false) {
+            allowOwnNetwork = false;
+        }
 
         if (maxNoInts == null || maxNoInts == "") {
             maxNoInts = 0;

@@ -18,7 +18,19 @@ Meteor.publish("myInterfaces", function() {
 
 Meteor.publish("configuration", function() {
     try {
-        return Configuration.find({});
+        if (Roles.userIsInRole(this.userId, ['Admin'])) {
+            return Configuration.find({});
+        } else {
+            return Configuration.find({}, {
+                fields: {
+                    _id: 1,
+                    allowOwnNetwork: 1,
+                    maxNumberNetworks: 1,
+                    allowOthers: 1,
+                    maxNumberInterfaces:1
+                }
+            });
+        }
     } catch(err) {
         console.log("Error publishing configuration: " + err);
     }
