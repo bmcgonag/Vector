@@ -37,7 +37,7 @@ Meteor.methods({
 
         if (privKey == null || privKey == "" || pubKey == null || pubKey == "") {
             // report the error, and go back.
-            console.log("    ****    ERROR: Unable to make Private / Public Key pari for Wireguard server.");
+            console.log("    ****    ERROR: Unable to make Private / Public Key pari for WireGuard server.");
             return;
         } else {
             // here we'll make the automated interface for the server.
@@ -51,7 +51,7 @@ Meteor.methods({
             ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> $HOME/" + interfaceName + ".conf");
     
             // now copy the file to /etc/wireguard (requires root / sudo access)
-            // if Wireguard is installed with apt, we need to put this in /etc/wireguard,
+            // if WireGuard is installed with apt, we need to put this in /etc/wireguard,
         
             if (installed.typeInstall == "apt") {
                 myWgLocation = "/etc/wireguard/";
@@ -149,7 +149,7 @@ Meteor.methods({
     
             if (typeof myPrivKey == "undefined" || myPrivKey == null || typeof myPubKey == "undefined" || myPubKey == null || myPubKey == "") {
                 // report the error, and go back.
-                console.log("    ****    ERROR: Unable to make Client Private / Public Key for Wireguard client " + deviceName);
+                console.log("    ****    ERROR: Unable to make Client Private / Public Key for WireGuard client " + deviceName);
                 return;
             } else {
                 Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", myId, checkOnline, function(err, result) {
