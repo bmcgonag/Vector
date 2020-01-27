@@ -44,7 +44,7 @@ apt install openresolv -y
 # Load Modules
 echo ''
 echo ''
-echo 'Load the Modules for Wireguard'
+echo 'Load the Modules for WireGuard'
 sleep 1
 
 echo '--> modprobe wireguard'
@@ -99,12 +99,12 @@ then
 fi
 
 ###############################
-# Install Wireguard with PPA  #
+# Install WireGuard with PPA  #
 ###############################
 
 echo "***************************************"
 echo "*                                     *"
-echo "*  Wireguard is necessary for Vector  *"
+echo "*  WireGuard is necessary for Vector  *"
 echo "*           to work for you.          *"
 echo "*                                     *"
 echo "***************************************"
@@ -122,7 +122,7 @@ then
 else
     echo ""
     echo ""
-    echo "****    Wireguard appears to be installed - good!"
+    echo "****    WireGuard appears to be installed - good!"
 fi
 
 ########################################################################

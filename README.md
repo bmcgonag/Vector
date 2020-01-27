@@ -3,7 +3,7 @@ Vector
 
 <br />
 
-## Vector - A Web UI for the Server side of Wireguard
+## Vector - A Web UI for the Server side of WireGuard
 #### Written with MeteorJS using NodeJS, HTML5, Javascript
 
 <a id="Vector-toc" name="Vector-toc"></a>
@@ -95,7 +95,7 @@ I do run all of my public servers on Digital Ocean.
 
     https://github.com/bmcgonag/Vector/releases/
 
-  5. There are two options:  The easiest is to get the bash script and run it. It attempts to install all of the associated softwre needed to run the server including: Vector, MongoDB, Wireguard, NodeJS, NPM, and Forever. If it fails, the end of the script will help you get it running.
+  5. There are two options:  The easiest is to get the bash script and run it. It attempts to install all of the associated softwre needed to run the server including: Vector, MongoDB, WireGuard, NodeJS, NPM, and Forever. If it fails, the end of the script will help you get it running.
 
   The other option is to do the setup manually, in which case you need to install the following:
   
@@ -106,7 +106,7 @@ I do run all of my public servers on Digital Ocean.
   - NodeJS 8.11.3 and the associated NPM version.
   - MongoDB
   - Forever (from npm, globally)
-  - Wireguard from the ppa (the snap version of Wireguard is not supported at this time)
+  - WireGuard from the ppa (the snap version of WireGuard is not supported at this time)
   - Finally, Vector
 
   6. Install NodeJS and NPM
@@ -147,7 +147,7 @@ I do run all of my public servers on Digital Ocean.
   This should install the forever package globally.
 
  
-  8.  Next we need to install Wireguard (the whole point of this server, of course)
+  8.  Next we need to install WireGuard (the whole point of this server, of course)
 
   Run the following commands to install wireguard.
 
@@ -157,7 +157,7 @@ I do run all of my public servers on Digital Ocean.
 
       sudo apt install wireguard -y
   
-  Now Wireguard should be installed. You can test it by running the `wg` command.
+  Now WireGuard should be installed. You can test it by running the `wg` command.
 
       wg
 
@@ -203,7 +203,7 @@ I do run all of my public servers on Digital Ocean.
 
       export MONGO_URL="mongodb://127.0.0.1:27017/vector"
 
-  Next, we need the Root URL (the main url where your Vector site can be reached).  It's very important that this be an FQDN, and that the server hostname be the same as the FQDN (e.g. vector.<my super great domain>.com, or something like that).  This FQDN is how vector is able to tell your client interface config where to connect to your Wireguard server.
+  Next, we need the Root URL (the main url where your Vector site can be reached).  It's very important that this be an FQDN, and that the server hostname be the same as the FQDN (e.g. vector.<my super great domain>.com, or something like that).  This FQDN is how vector is able to tell your client interface config where to connect to your WireGuard server.
 
       export ROOT_URL="http://vector.<my super great domain>.com"
 
