@@ -17,7 +17,7 @@ Meteor.methods({
     'test.shell' () {
         ShellJS.exec("echo 'test'");
     },
-    'createServer.Interface' (mode, ipv4, interfaceName, port) {
+    'createServer.Interface' (sudoUserPW, mode, ipv4, interfaceName, port) {
         // We need to create our Public and Private keys
         let installed = WGInstalled.findOne({});
 

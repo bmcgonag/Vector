@@ -14,7 +14,7 @@ Template.MainLayout.helpers({
         let config = Configuration.findOne({});
         let role = Roles.userIsInRole(userId, ['Admin']);
         console.log("Role = " + true + " and config.allowOthers = " + config.allowOthers);
-        if ((role == true && config.allowOthers == false) || (config.allowOthers == true)) {
+        if ((role == true && config.allowOthers == false) || (config.allowOthers == true) || (role == true && typeof config.allowOthers == 'undefined')) {
             return true;
         } else {
             return false;

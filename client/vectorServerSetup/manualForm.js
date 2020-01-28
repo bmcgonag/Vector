@@ -36,14 +36,23 @@ Template.manualForm.events({
         Session.set("interfaceName", interfaceName);
         Session.set("portNo", portNo);
 
-        // Meteor.call("createServer.Interface", "manual", ipv4, interfaceName, portNo, function(err, result) {
-        //     if (err) {
-        //         console.log("Error creating server interface file manually: " + err);
-        //         showSnackbar("Error Creating Server Interface!", "red");
-        //     } else {
-        //         showSnackbar("Creating Server Interface!", "green");
-        //         Session.set("showManualSetup", false);
-        //     }
-        // });
-    }
+        Session.set("setupType", "manual");
+        Session.set("ipv4Server", ipv4);
+        Session.set("serverIntName", interfaceName);
+        Session.set("serverListenPort", portNo);
+
+        $("#permModal").modal('open');
+    },
 });
+
+createServerManual = function(supw, setupType, ipv4Server, serverIntName, serverListenPort) {
+    Meteor.call("createServer.Interface", supw, setupType, ipv4Server, serverIntName, serverListenPort, function(err, result) {
+        if (err) {
+            console.log("Error creating server interface file manually: " + err);
+            showSnackbar("Error Creating Server Interface!", "red");
+        } else {
+            showSnackbar("Creating Server Interface!", "green");
+            Session.set("showManualSetup", false);
+        }
+    });
+}

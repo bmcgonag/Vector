@@ -38,16 +38,13 @@ Template.serverSetup.helpers({
 Template.serverSetup.events({
     "click #autoSetup" (event) {
         event.preventDefault();
-        // setup the wg0.conf file with default settings for a
-        // WireGuard server with full NAT through the server
-        Meteor.call("createServer.Interface", "auto", "10.100.100.1", "wg0", "51820", function(err, result) {
-            if (err) {
-                console.log("Error auto creating the server interface: " + err);
-                showSnackbar("Error Auto Creating Server Interface!", "red");
-            } else {
-                showSnackbar("Creating Server Interface!", "green");
-            }
-        });
+        
+        Session.set("setupType", "auto");
+        Session.set("ipv4Server", "10.100.100.1");
+        Session.set("serverIntName", "wg0");
+        Session.set("serverListenPort", "51820");
+        
+        $("#permModal").modal('open');
     },
     "click #manualSetup" (event) {
         event.preventDefault();
@@ -65,3 +62,14 @@ Template.serverSetup.events({
         Session.set("adjustServer", true);
     },
 });
+
+createServerConfirm = function(sudoUserPW, setupType, ipv4Server, serverIntName, serverListenPort) {
+    Meteor.call("createServer.Interface", sudoUserPW, setupType, ipv4Server, serverIntName, serverListenPort, function(err, result) {
+        if (err) {
+            console.log("Error auto creating the server interface: " + err);
+            showSnackbar("Error Auto Creating Server Interface!", "red");
+        } else {
+            showSnackbar("Creating Server Interface!", "green");
+        }
+    });
+}
