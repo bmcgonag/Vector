@@ -62,15 +62,15 @@ Meteor.methods({
             // console.log("About to copy the server interface file to /etc/wireguard/");
             // console.log("------------------------------------------");
             console.log("");
-            console.log("cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            console.log("echo '" + sudoUserPW + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
             console.log("");
-            ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
+            ShellJS.exec("echo '" + sudoUserPW + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
 
             // bring up the wireguard interface we just created.
             Meteor.setTimeout(function() {
                 console.log("**** ---- ---- ---- ---- ---- ****");
                 
-                ShellJS.exec("systemctl start wg-quick@" + interfaceName, function(code, stdout, stderr) {
+                ShellJS.exec("echo '" + sudoUserPW + "' | sudo -S systemctl start wg-quick@" + interfaceName, function(code, stdout, stderr) {
                     if (stderr) {
                         console.log("Error on systemctl start wg-quick: " + stderr);
                     } else if (stdout) {
@@ -78,7 +78,7 @@ Meteor.methods({
                     }
                 });
 
-                ShellJS.exec("systemctl enable wg-quick@" + interfaceName, function(code, stdout, stderr) {
+                ShellJS.exec("echo '" + sudoUserPW + "' | sudo -S systemctl enable wg-quick@" + interfaceName, function(code, stdout, stderr) {
                     if (stderr) {
                         console.log("Error on systemctl enable wg-quick: " + stderr);
                     } else if (stdout) {
@@ -86,8 +86,8 @@ Meteor.methods({
                     }
                 });
 
-                console.log("systemctl start wg-quick@" + interfaceName);
-                console.log("systemctl enable wg-quick@" + interfaceName);
+                console.log("echo '" + sudoUserPW + "' | sudo -S systemctl start wg-quick@" + interfaceName);
+                console.log("echo '" + sudoUserPW + "' | sudo -S systemctl enable wg-quick@" + interfaceName);
             }, 1500);
     
             Meteor.call("add.serverInfo", ipv4, interfaceName, port, myPrivKey, myPubKey, function(err, result) {
