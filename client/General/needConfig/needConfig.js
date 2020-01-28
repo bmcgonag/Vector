@@ -55,10 +55,10 @@ Template.needConfig.events({
         event.preventDefault();
         Meteor.call("install.wg", function(err, result) {
             if (err) {
-                conssole.log("Error while installing Wireguard: " + err);
-                showSnackbar("Error Installing Wireguard", "red");
+                conssole.log("Error while installing WireGuard: " + err);
+                showSnackbar("Error Installing WireGuard", "red");
             } else {
-                showSnackbar("Wireguard is being installed, please stand by.", "green");
+                showSnackbar("WireGuard is being installed, please stand by.", "green");
             }
         });
     },
