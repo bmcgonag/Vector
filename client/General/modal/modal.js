@@ -32,7 +32,6 @@ Template.myModal.events({
     'click #cancel' (event) {
         event.preventDefault();
 
-        var myCalledModal = document.getElementById('genModal');
-        myCalledModal.style.display = 'none';
+        $("#genModal").modal('close');
     },
 });
