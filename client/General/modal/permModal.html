@@ -1,0 +1,22 @@
+<template name="permModal">
+    <div id="permModal" class="modal mymodal">
+        <div class="mymodal-content">
+            <div class="mymodal-header">
+                <h4>{{modalHeader}}</h4>
+            </div>
+            <div class="mymodal-body">
+                <p class="flow-text">This action requires Super User / Root level permissions on the server.  Authenticate with a Super User password:</p>
+                <div class="row">
+                    <div class="col s12 m6 l6 input-field">
+                        <input type="password" id="supw" />
+                        <label for="supw">Super User Password</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mymodal-footer">
+                <a href="#" id="cancel" class="modal-close waves-effect waves-orange btn-flat white-text">Cancel</a>
+                <a href="#" id="continue" class="waves-effect waves-green btn-flat white-text">Continue</a>
+            </div>
+        </div>
+    </div>
+</template>

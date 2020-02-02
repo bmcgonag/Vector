@@ -186,7 +186,7 @@ I do run all of my public servers on Digital Ocean.
 
       cd ~/Vector-Production/bundle/programs/server
 
-      npm install --proeuction
+      npm install --production
 
   This will install all of the npm dependencies we need to run Vector.
 
