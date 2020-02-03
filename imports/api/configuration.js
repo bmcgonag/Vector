@@ -12,7 +12,7 @@ Configuration.allow({
 });
 
 Meteor.methods({
-    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks) {
+    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
@@ -22,6 +22,8 @@ Meteor.methods({
         check(allowOwnNetwork, Boolean);
         check(maxNumberInterfaces, Number);
         check(maxNumberNetworks, Number);
+        check(logMore, Boolean);
+        check(logLevel, String);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup admin values, make sure you are logged in.');
@@ -37,12 +39,14 @@ Meteor.methods({
             maxNumberInterfaces: maxNumberInterfaces,
             allowOwnNetwork: allowOwnNetwork,
             maxNumberNetworks: maxNumberNetworks,
+            logMore: logMore,
+            logLevel: logLevel,
             addedOn: new Date(),
             addedBy: Meteor.user().emails[0].address,
             addedBy: this.userId,
         });
     },
-    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks) {
+    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
@@ -52,6 +56,8 @@ Meteor.methods({
         check(allowOwnNetwork, Boolean);
         check(maxNumberInterfaces, Number);
         check(maxNumberNetworks, Number);
+        check(logMore, Boolean);
+        check(logLevel, String);
 
 
         if (!this.userId) {
@@ -73,6 +79,8 @@ Meteor.methods({
                 maxNumberInterfaces: maxNumberInterfaces,
                 allowOwnNetwork: allowOwnNetwork,
                 maxNumberNetworks: maxNumberNetworks,
+                logMore: logMore,
+                logLevel: logLevel,
                 addedOn: new Date(),
                 addedBy: Meteor.user().emails[0].address,
             }

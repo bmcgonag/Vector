@@ -40,6 +40,8 @@ Template.adminConfig.events({
         let allowOwnNetwork = $("#allowOwnNetwork").prop('checked');
         let maxNoInts = $("#maxInterfaces").val();
         let maxNoNets = $("#maxNetworks").val();
+        let logMore = $("#logMore").prop('checked');
+        let logLevel = $("#logLevel").val();
 
         if (allowOwnNetwork == null || allowOthers == false) {
             allowOwnNetwork = false;
@@ -57,7 +59,11 @@ Template.adminConfig.events({
             maxNoNets = parseInt(maxNoNets);
         }
 
-        Meteor.call("new.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, function(err, result) {
+        if (logMore == false) {
+            logLevel = "";
+        }
+
+        Meteor.call("new.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, logMore, logLevel, function(err, result) {
             if (err) {
                 console.log("Error adding email configuration: " + err);
                 showSnackbar("Error Adding Email Configuration!", "red");
@@ -79,6 +85,8 @@ Template.adminConfig.events({
         let allowOwnNetwork = $("#allowOwnNetwork").prop('checked');
         let maxNoInts = $("#maxInterfaces").val();
         let maxNoNets = $("#maxNetworks").val();
+        let logMore = $("#logMore").prop('checked');
+        let logLevel = $("#logLevel").val();
 
         if (allowOwnNetwork == null || allowOthers == false) {
             allowOwnNetwork = false;
@@ -96,7 +104,11 @@ Template.adminConfig.events({
             maxNoNets = parseInt(maxNoNets);
         }
 
-        Meteor.call("edit.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, function(err, result) {
+        if (logMore == false) {
+            logLevel = "";
+        }
+
+        Meteor.call("edit.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, logMore, logLevel, function(err, result) {
             if (err) {
                 console.log("Error editing email configuration: " + err);
                 showSnackbar("Error Editing Email Configuration!", "red");

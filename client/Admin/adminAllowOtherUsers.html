@@ -23,7 +23,7 @@
                         {{#if $eq allowOthers true}}
                             <div class="row">
                                 <div class="col s12 input-field">
-                                    <input type="number" class="maxInterfaces" id="maxInterfaces" />
+                                    <input type="number" class="maxInterfaces" id="maxInterfaces" value="{{configInfo.maxNumberInterfaces}}" />
                                     <label for="maxInterfaces">Max # of Interfaces / User</label>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                             {{#if $eq allowOwnNetwork true}}
                                 <div class="row">
                                     <div class="col s12 input-field">      
-                                        <input type="number" class="maxNetworks" id="maxNetworks" />
+                                        <input type="number" class="maxNetworks" id="maxNetworks" value="{{configInfo.maxNumberNetworks}}" />
                                         <label for="maxNetworks">Max # of Networks</label>
                                     </div>
                                 </div>
