@@ -9,7 +9,6 @@ Template.vectorMain.onCreated(function() {
 Template.vectorMain.onRendered(function() {
     $('.collapsible').collapsible();
     Session.set("showForm", false);
-    $('.collapsible').collapsible();
 });
 
 Template.vectorMain.helpers({

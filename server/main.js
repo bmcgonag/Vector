@@ -117,44 +117,49 @@ async function startPing() {
 }
 
 async function checkStatus() {
-  let onlineIds = [];
-  let results = {};
-  let serverIP = ServerInfo.findOne({});
-  let servIp = serverIP.ipAddress;
-  let ipParts = servIp.split(".");
-  let servIp3Oct = ipParts[0] + "." + ipParts[1] + "." + ipParts[2];
-  let Configs = Configuration.findOne({});
-
-  if (Configs.logLevel == "Verbose") {
-    console.log("INFO:   About to run Shell command.");
-    console.log("INFO:   3 oct = " + servIp3Oct);
-    console.log("----    ----    ----    ----   ----");
+  try {
+    let onlineIds = [];
+    let results = {};
+    let serverIP = ServerInfo.findOne({});
+    let servIp = serverIP.ipAddress;
+    let ipParts = servIp.split(".");
+    let servIp3Oct = ipParts[0] + "." + ipParts[1] + "." + ipParts[2];
+    let Configs = Configuration.findOne({});
+  
+    if (Configs.logLevel == "Verbose") {
+      console.log("INFO:   About to run Shell command.");
+      console.log("INFO:   3 oct = " + servIp3Oct);
+      console.log("----    ----    ----    ----   ----");
+    }
+  
+    var output = ShellJS.exec("nmap -n -sn " + servIp3Oct + ".0/24 -oG - | awk '/Up$/{print $2}'", function(code, stdout, stderr) {
+      if (Configs.logLevel == "Verbose") {
+        console.log("INFO:   Running nmap search now.");
+      }
+    });
+  
+    output.stdout.on("data", function(data) {
+      if (Configs.logLevel == "Verbose") {
+        console.log("SUCCESS:   Got data from stdout: ");
+        console.dir(data);
+      }
+  
+      let ipsarr = data.split("\n");
+      results.onlineIds = ipsarr;
+      insertResults(results);
+    });
+  
+    output.stderr.on("data", function(data) {
+      if (Configs.logLevel == "Verbose") {
+        console.log("---    ***    ---");
+        console.log("ERROR:   Error running nmap.");
+        console.dir(data);
+      }
+    });
+  } catch (err) {
+    console.log("ERROR:    " + err);
   }
-
-  var output = ShellJS.exec("nmap -n -sn " + servIp3Oct + ".0/24 -oG - | awk '/Up$/{print $2}'", function(code, stdout, stderr) {
-    if (Configs.logLevel == "Verbose") {
-      console.log("INFO:   Running nmap search now.");
-    }
-  });
-
-  output.stdout.on("data", function(data) {
-    if (Configs.logLevel == "Verbose") {
-      console.log("SUCCESS:   Got data from stdout: ");
-      console.dir(data);
-    }
-
-    let ipsarr = data.split("\n");
-    results.onlineIds = ipsarr;
-    insertResults(results);
-  });
-
-  output.stderr.on("data", function(data) {
-    if (Configs.logLevel == "Verbose") {
-      console.log("---    ***    ---");
-      console.log("ERROR:   Error running nmap.");
-      console.dir(data);
-    }
-  });
+  
 }
 
 async function startStatus() {
