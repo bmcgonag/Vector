@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import ShellJS from 'shelljs';
+import ShellJS, { config } from 'shelljs';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
 import { ServerInfo } from '../imports/api/serverInfo.js';
 import { Interfaces } from '../imports/api/interfaces.js';
@@ -114,7 +114,9 @@ Meteor.methods({
                 if (err) {
                     console.log("Error adding Server Info: " + err);
                 } else {
-                    console.log("Server Info added successfully!");
+                    if (Configs.logLevel == "Verbose") {
+                        console.log("Server Info added successfully!");
+                    } 
                 }
             });
         }  
@@ -215,21 +217,26 @@ Meteor.methods({
     },
     "remove.wgClient" (intPubKey, clientIntName) {
         let serverInfo = ServerInfo.findOne({});
+        let Configs = Configuration.findOne({});
 
         let intName = serverInfo.serverInterfaceName;
-        console.log("Running cmd: ");
-        console.log("wg set " + intName + " peer " + intPubKey + " remove");
-        console.log("");
-        console.log("----------------------------------------------------");
+        if (Configs.logLevel == "Verbose") {
+            console.log("Running cmd: ");
+            console.log("wg set " + intName + " peer " + intPubKey + " remove");
+            console.log("");
+            console.log("----------------------------------------------------");
+        }
         ShellJS.exec("wg set " + intName + " peer " + intPubKey + " remove", function(code, stdout, stderr) {
             if (stderr) {
-                console.log("Error running cmd to remove client interface: " + stderr);
+                if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
+                    console.log("Error running cmd to remove client interface: " + stderr);
+                }
             } else if (stdout) {
-                console.log("Output from running cmd to remove client interface: " + stdout);
+                if (Configs.logLevel == "Verbose") {
+                    console.log("Output from running cmd to remove client interface: " + stdout);
+                }
             }
         });
         return;
-
     }
 });
-
