@@ -38,13 +38,20 @@ Template.serverSetup.helpers({
 Template.serverSetup.events({
     "click #autoSetup" (event) {
         event.preventDefault();
-        
-        Session.set("setupType", "auto");
-        Session.set("ipv4Server", "10.100.100.1");
-        Session.set("serverIntName", "wg0");
-        Session.set("serverListenPort", "51820");
-        
-        $("#permModal").modal('open');
+
+        let setupType="auto";
+        let ipv4Server = "10.100.100.1";
+        let serverIntName = "wg0";
+        let serverListenPort = "51820";
+
+        Meteor.call("createServer.Interface", setupType, ipv4Server, serverIntName, serverListenPort, function(err, result) {
+            if (err) {
+                console.log("Error auto creating the server interface: " + err);
+                showSnackbar("Error Auto Creating Server Interface!", "red");
+            } else {
+                showSnackbar("Creating Server Interface!", "green");
+            }
+        });
     },
     "click #manualSetup" (event) {
         event.preventDefault();
@@ -62,14 +69,3 @@ Template.serverSetup.events({
         Session.set("adjustServer", true);
     },
 });
-
-createServerConfirm = function(sudoUserPW, setupType, ipv4Server, serverIntName, serverListenPort) {
-    Meteor.call("createServer.Interface", sudoUserPW, setupType, ipv4Server, serverIntName, serverListenPort, function(err, result) {
-        if (err) {
-            console.log("Error auto creating the server interface: " + err);
-            showSnackbar("Error Auto Creating Server Interface!", "red");
-        } else {
-            showSnackbar("Creating Server Interface!", "green");
-        }
-    });
-}
