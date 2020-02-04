@@ -5,7 +5,9 @@ Template.adminConfig.onCreated(function() {
 });
 
 Template.adminConfig.onRendered(function() {
-    $('.collapsible').collapsible();
+    setTimeout(function() {
+        $('.collapsible').collapsible();
+    }, 100);
 });
 
 Template.adminConfig.helpers({
