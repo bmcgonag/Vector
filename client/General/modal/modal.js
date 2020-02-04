@@ -24,10 +24,14 @@ Template.myModal.events({
         let callFunction = Session.get("eventConfirmCallBackFunction");
         let functionPassId = Session.get("eventConfirmNecessaryId"); // <-- this can be an actual ID, an object, a function, whatever...
 
-        $("#genModal").modal('close');
+        if (functionPassId == "disallowCom") {
+            $("#genModal").modal('close');
+            return;
+        } else {
+            $("#genModal").modal('close');
 
-        window[callFunction](functionPassId); // <-- calls the function and passed the Id on confirm.
-        
+            window[callFunction](functionPassId); // <-- calls the function and passed the Id on confirm.
+        }       
     },
     'click #cancel' (event) {
         event.preventDefault();
