@@ -1,11 +1,13 @@
 import { Interfaces } from '../../imports/api/interfaces.js';
 import { InterfaceGroups } from '../../imports/api/interfaceGroups.js';
 import { ServerInfo } from '../../imports/api/serverInfo.js';
+import { Configuration } from '../../imports/api/configuration.js';
 
 Template.vectorForm.onCreated(function() {
     this.subscribe("myInterfaces");
     this.subscribe("myGroups");
     this.subscribe("myServerInfo");
+    this.subscribe("configuration");
 });
 
 Template.vectorForm.onRendered(function() {
@@ -71,6 +73,9 @@ Template.vectorForm.events({
         let customDNS = $("#customDNS").val();
         let checkOnline = $("#checkOnlineStatus").prop('checked');
         let manPubKey = $("#manPubKey").val();
+        let validTil = $("#validTil").val();
+        let validTilFrame = $("#validTilFrame").val();
+        let makeTemporary = $("#makeTemporary").prop('checked');
 
         Session.set("duplicateIp", false);
         Session.set("duplicateName", false);
@@ -80,6 +85,13 @@ Template.vectorForm.events({
 
         // let's get the last interface entered so we can increment the IP apprpriately.
         let lastInterface = Interfaces.find({}).fetch();
+        
+        // let's handle the temporary enablement.
+        if (makeTemporary == true && (validTil == "" || validTilFrame == "")) {
+            showSnackbar("For Temporary interface, both fields must be filled.", "orange");
+            $("#validTilFrame").focus();
+            return;
+        }
 
         // let's handle the need for generated keys
         // out method expects a string, so we need to send it one, then check whether it's empty
@@ -101,10 +113,10 @@ Template.vectorForm.events({
                 // console.log("Creating an IP - not filled in.");
                 checkIP();
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey, validTil, validTilFrame);
             } else {
                 checkDuplicates(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref);
-                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey);
+                writeInterfaceData(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manPubKey, validTil, validTilFrame);
             }
         }
     },
@@ -207,9 +219,10 @@ checkDuplicates = function(deviceName, deviceOS, deviceGroup, ipAdd, dnsPref) {
     return;
 }
 
-writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub) {
+writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub,  validTil, validTilFrame) {
     // for the record I hate this approach, and will change it when I come up
     // with a better way.
+    let configs = Configuration.findOne({});
     let duplicateName = Session.get("duplicateName");
     let duplicateIp = Session.get("duplicateIp");
     ipAdd = Session.get("fullIp");
@@ -223,11 +236,13 @@ writeInterfaceData = function(deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, 
         return;
     } else {
         setTimeout(function() {
-            console.log("At Write - IP Address is: " + ipAdd);
-            console.log("At Write - IPv6 Address is: " + ip6Add);
-            console.log("---   ***   ***   ***   ---");
+            if (configs.logLevel == "Verbose") {
+                console.log("At Write - IP Address is: " + ipAdd);
+                console.log("At Write - IPv6 Address is: " + ip6Add);
+                console.log("---   ***   ***   ***   ---");
+            }
             //    **** method call below is in /server/methods.js
-            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub, function(err, result) {
+            Meteor.call('add.deviceInterface', deviceName, deviceOS, deviceGroup, ipAdd, ip6Add, dnsPref, customDNS, checkOnline, manKeyPub, validTil, validTilFrame, function(err, result) {
                 if (err) {
                     console.log("Error adding interface to db: " + err);
                     showSnackbar("Error Adding Interface", "red");

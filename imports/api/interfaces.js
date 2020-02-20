@@ -2,6 +2,7 @@ import { Meter } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 import { ServerInfo } from './serverInfo.js';
+import moment from 'moment';
 
 export const Interfaces = new Mongo.Collection('interfaces');
 
@@ -13,7 +14,7 @@ Interfaces.allow({
 });
 
 Meteor.methods({
-    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6, myId, checkOnline) {
+    'add.interface' (interfaceName, interfaceOS, interfaceGroup, interfaceIP, interfaceIPv6, interfacePrivateKey, interfacePublicKey, interfaceDNS, interfaceDNSv6, myId, checkOnline, validTil, validTilFrame) {
         check(interfaceName, String);
         check(interfaceOS, String);
         check(interfaceGroup, String);
@@ -30,6 +31,9 @@ Meteor.methods({
 
         let port = serverInfo.port;
 
+        let validTilDateTime = moment().add(validTil, validTilFrame).toISOString();
+        let validOn = moment().toISOString(new Date());
+        
         Interfaces.insert({
             interfaceName: interfaceName,
             interfaceOS: interfaceOS,
@@ -42,8 +46,17 @@ Meteor.methods({
             interfaceDNS: interfaceDNS,
             interfaceDNSv6: interfaceDNSv6,
             checkOnline: checkOnline,
+            validTil: validTil,
+            validTilFrame: validTilFrame,
+            validTilDateTime: validTilDateTime,
+            validOn: validOn,
             status: "offline",
             addedOn: new Date(),
+            disabledTil: -1,
+            disabledTilFrame: "",
+            disabledOn: "",
+            disabledTilDateTime: "",
+            disabledIntReason: "",
             interfaceUserId: myId,
         });
     },
@@ -162,4 +175,24 @@ Meteor.methods({
             }
         });
     },
+    'disable.interface' (intId, disabledTil, disabledTilFrame, disabledIntReason) {
+        check(intId, String);
+        check(disabledTil, Number);
+        check(disabledTilFrame, String);
+        check(disabledIntReason, String);
+
+        // need to add a momentjs calculation to a date time for below.
+        let disabledDateTime = moment().add(disabledTil, disabledTilFrame).toISOString();
+        let disabledOn = moment().toISOString(new Date());
+        
+        return Interfaces.update({ _id: intId }, {
+            $set: {
+                disabledTil: disabledTil,
+                disabledTilFrame: disabledTilFrame,
+                disabledIntReason: disabledIntReason, 
+                disabledOn: disabledOn,
+                disabledTilDateTime: disabledDateTime,
+            }
+        });
+    }
  });
