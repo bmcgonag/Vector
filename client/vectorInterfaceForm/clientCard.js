@@ -10,6 +10,9 @@ Template.clientCard.onCreated(function() {
 
 Template.clientCard.onRendered(function() {
     // get the hostname of the server
+    setTimeout(function() {
+        $("select").material_select();
+    }, 100);
     let myhost = location.hostname;
 });
 
@@ -77,5 +80,34 @@ Template.clientCard.events({
                 showSnackbar("Interface Updated Successfully!");
             }
         });
+    },
+    "click #disableInterface" (event) {
+        event.preventDefault();
+
+        let disabledTil = parseInt($("#disabledTil").val());
+        let disabledTilFrame = $("#disabledTilFrame").val();
+        let disabledIntReason = $("#disabledIntReason").val();
+
+        if (disabledTil == "" || disabledTil == null) {
+            showSnackbar("You must prvoide a time to disable til (0 = forever)", "orange");
+            $("#disabledTil").focus();
+            return;
+        } else if (disabledTilFrame == "" || disabledTilFrame == null) {
+            showSnackbar("You must provide a time frame type for disable, even if it's forever.", "orange");
+            $("#disabledTilFrame").focus();
+            return;
+        } else if (disabledIntReason == "" || disabledIntReason == null) {
+            showSnackbar("You need to provide a reason for disabling the interface.", "orange");
+            $("#disabledIntReason").focus();
+            return;
+        } else {
+            Meteor.call("disable.interface", this._id, disabledTil, disabledTilFrame, disabledIntReason, function(err, result) {
+                if (err) {
+                    showSnackbar("Error Disabling Interface!", "red");
+                } else {
+                    showSnackbar("Disabled successfully!", "green");
+                }
+            });
+        }
     }
 });

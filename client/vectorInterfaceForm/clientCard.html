@@ -65,6 +65,43 @@
                                     {{/if}}
                                 </div>
                             </div>
+                            {{#if isInRole 'Admin'}}
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="card">
+                                        <div class="card-content">
+                                          <span class="card-title">Temporarily Disable Interface</span>
+                                          <div class="row">
+                                              <div class="col s12 m6 l6 input-field">
+                                                  <input type="number" class="disabledTil" id="disabledTil" />
+                                                  <label for="disabledTil">Disabled For</label>
+                                              </div>
+                                              <div class="col s12 m6 l6 input-field">
+                                                  <select name="disabledTilFrame" id="disabledTilFrame" class="disabledTilFrame">
+                                                      <option value="" disabled selected></option>
+                                                      <option value="Hours">Hours</option>
+                                                      <option value="Days">Days</option>
+                                                      <option value="Weeks">Weeks</option>
+                                                      <option value="Months">Months</option>
+                                                      <option value="Years">Years</option>
+                                                  </select>
+                                                  <label for="disabledTilFrame">Time Frame</label>
+                                              </div>
+                                              <div class="col s12 l12 m12">
+                                                <label for="disabledIntReason">Reason Disabled</label>
+                                                <textarea name="disabledIntReason" id="disabledIntReason" rows="5"></textarea>
+                                              </div>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col s12">
+                                                  <a href="#" class="waves-light waves-effect btn orange disableInterface" id="disableInterface">Disable Interface</a>
+                                              </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                            {{/if}}
                         </div>
                         <div class="col s4">
                             <div id="QR{{_id}}">{{> qrcode text=clientQR size=150}}</div>

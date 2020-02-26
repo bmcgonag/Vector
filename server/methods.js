@@ -125,7 +125,7 @@ Meteor.methods({
             }
         }          
     },
-    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS, checkOnline, manKeyPub) {
+    'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS, checkOnline, manKeyPub, validTil, validTilFrame) {
         check(deviceName, String);
         check(deviceOS, String);
         check(deviceGroup, String);
@@ -134,6 +134,10 @@ Meteor.methods({
         check(dnsPref, String);
         check(customDNS, String);
         check(manKeyPub, String);
+        check(validTil, String);
+        check(validTilFrame, String);
+
+        validTil = parseInt(validTil);
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
@@ -142,6 +146,13 @@ Meteor.methods({
         // get a few bits of information we'll need for adding our peer.
         let serverInfo = ServerInfo.findOne({});
         let Configs = Configuration.findOne({});
+
+        if (Configs.logLeve == "Verbose") {
+            console.log("****----    Passed Arguements to Interface Write Method    ----****");
+            console.log("");
+            console.log("Valid Til:" + validTil);
+            console.log("Valid Til Frame: " + validTilFrame);
+        }
 
         let myId = Meteor.userId();
 
@@ -183,9 +194,9 @@ Meteor.methods({
                 }
                 return;
             } else {
-                Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", myId, checkOnline, function(err, result) {
+                Meteor.call('add.interface', deviceName, deviceOS, deviceGroup, ipv4, ipv6, myPrivKey, myPubKey, dnsPref, "0::0", myId, checkOnline, validTil, validTilFrame, function(err, result) {
                     if (err) {
-                        if (Configs.logLevel == "Error") {
+                        if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
                             console.log("Error adding client interface: " + err);
                         }
                     } else {
@@ -200,7 +211,7 @@ Meteor.methods({
                             }
                         });
                         Meteor.setTimeout(function() {
-                            // console.log('wg-quick save wg0');
+                            console.log('wg-quick save wg0');
                             ShellJS.exec('wg-quick save wg0', function(code, stdout, stderr) {
                                 if (stderr) {
                                     console.log("Error on wg-quick save: " + stderr);
