@@ -26,10 +26,6 @@ Meteor.methods({
         check(logLevel, String);
         check(disallowCom, Boolean);
 
-        if (!this.userId) {
-            throw new Meteor.Error('User is not allowed to setup admin values, make sure you are logged in.');
-        }
-
         return Configuration.insert({
             emailHost: emailHost,
             emailUser: emailUser,
@@ -44,8 +40,6 @@ Meteor.methods({
             logLevel: logLevel,
             disallowCom: disallowCom,
             addedOn: new Date(),
-            addedBy: Meteor.user().emails[0].address,
-            addedBy: this.userId,
         });
     },
     'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel, disallowCom) {
