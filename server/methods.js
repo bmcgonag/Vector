@@ -23,103 +23,107 @@ Meteor.methods({
         let installed = WGInstalled.findOne({});
         let Configs = Configuration.findOne({});
 
-        ShellJS.exec("umask 077");
-        ShellJS.exec("wg genkey | tee ~/privatekey | wg pubkey > ~/publickey");
-        let privKey = ShellJS.exec("cat ~/privatekey");
-        let pubKey = ShellJS.exec("cat ~/publickey");
-        let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
-        let myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
-
-        if (Configs.logLevel == "Verbose") {
-            console.log("=======================================================");
-            console.log("");
-            console.log(ipv4);
-            console.log("");
-            console.log("=======================================================");
-            console.log("");
-        }
-
-        if (privKey == null || privKey == "" || pubKey == null || pubKey == "") {
-            // report the error, and go back.
-            if (Configs.logLevel == "Verbose" || Configs.logLevel == "Error") {
-                console.log("    ****    ERROR: Unable to make Private / Public Key pari for WireGuard server.");
-            }
-            return;
+        if (typeof Configs.logLevel == "undefined") {
+            console.log("You must setup the system Configuration before creating your server interface!");
         } else {
-            // here we'll make the automated interface for the server.
-            ShellJS.exec("echo '[Interface]' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = " + ipv4 + "/24' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'SaveConfig = true' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'ListenPort = " + port + "' >> $HOME/" + interfaceName + ".conf");
-            ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> $HOME/" + interfaceName + ".conf");
+            ShellJS.exec("umask 077");
+            ShellJS.exec("wg genkey | tee ~/privatekey | wg pubkey > ~/publickey");
+            let privKey = ShellJS.exec("cat ~/privatekey");
+            let pubKey = ShellJS.exec("cat ~/publickey");
+            let myPrivKey = privKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
+            let myPubKey = pubKey.stdout.replace(/(\r\n|\n|\r)/gm, "");
     
-            // now copy the file to /etc/wireguard (requires root / sudo access)
-            // if WireGuard is installed with apt, we need to put this in /etc/wireguard,
-        
-            if (installed.typeInstall == "apt") {
-                myWgLocation = "/etc/wireguard/";
-            } else {
-                if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
-                    console.log("Error - WG Does not aappear to be installed.");
-                }
-            }
-
             if (Configs.logLevel == "Verbose") {
-                console.log("About to copy the server interface file to /etc/wireguard/");
-                console.log("------------------------------------------");
-
+                console.log("=======================================================");
                 console.log("");
-                console.log("echo '" + sudoUserPW + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+                console.log(ipv4);
+                console.log("");
+                console.log("=======================================================");
                 console.log("");
             }
-
-            ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
-
-            // bring up the WireGuard interface we just created.
-            Meteor.setTimeout(function() {
-                ShellJS.exec("systemctl start wg-quick@" + interfaceName, function(code, stdout, stderr) {
-                    if (stderr) {
-                        if (Configs.logLevel == "Verbose" || Configs.logLevel == "Error") {
-                            console.log("Error on systemctl start wg-quick: " + stderr);
-                        }
-                    } else if (stdout) {
-                        if (Configs.logLevel == "Verbose") {
-                            console.log("Output of systemctl start wg-quick: " + stdout);
-                        }
-                    }
-                });
-
-                ShellJS.exec("systemctl enable wg-quick@" + interfaceName, function(code, stdout, stderr) {
-                    if (stderr) {
-                        if (Configs.logLevel == "Verbose" || Configs.logLevel == "Error") {
-                            console.log("Error on systemctl enable wg-quick: " + stderr);
-                        }
-                    } else if (stdout) {
-                        if (Configs.logLevel == "Verbose") {
-                            console.log("Error on systemctl enable wg-quick: " + stdout);
-                        }
-                    }
-                });
-
-                if (Configs.logLevel == "Verbose") {
-                    console.log("systemctl start wg-quick@" + interfaceName);
-                    console.log("systemctl enable wg-quick@" + interfaceName);
-                }
-            }, 1500);
     
-            Meteor.call("add.serverInfo", ipv4, interfaceName, port, myPrivKey, myPubKey, function(err, result) {
-                if (err) {
-                    console.log("Error adding Server Info: " + err);
-                } else {
-                    if (Configs.logLevel == "Verbose") {
-                        console.log("Server Info added successfully!");
-                    } 
+            if (privKey == null || privKey == "" || pubKey == null || pubKey == "") {
+                // report the error, and go back.
+                if (Configs.logLevel == "Verbose" || Configs.logLevel == "Error") {
+                    console.log("    ****    ERROR: Unable to make Private / Public Key pari for WireGuard server.");
                 }
-            });
-        }  
+                return;
+            } else {
+                // here we'll make the automated interface for the server.
+                ShellJS.exec("echo '[Interface]' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'Address = " + ipv4 + "/24' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'Address = fd00::10:100:1/112' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'SaveConfig = true' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'ListenPort = " + port + "' >> $HOME/" + interfaceName + ".conf");
+                ShellJS.exec("echo 'PrivateKey = " + myPrivKey + "' >> $HOME/" + interfaceName + ".conf");
+        
+                // now copy the file to /etc/wireguard (requires root / sudo access)
+                // if WireGuard is installed with apt, we need to put this in /etc/wireguard,
+            
+                if (installed.typeInstall == "apt") {
+                    myWgLocation = "/etc/wireguard/";
+                } else {
+                    if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
+                        console.log("Error - WG Does not aappear to be installed.");
+                    }
+                }
+    
+                if (Configs.logLevel == "Verbose") {
+                    console.log("About to copy the server interface file to /etc/wireguard/");
+                    console.log("------------------------------------------");
+    
+                    console.log("");
+                    console.log("echo '" + sudoUserPW + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+                    console.log("");
+                }
+    
+                ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
+    
+                // bring up the WireGuard interface we just created.
+                Meteor.setTimeout(function() {
+                    ShellJS.exec("systemctl start wg-quick@" + interfaceName, function(code, stdout, stderr) {
+                        if (stderr) {
+                            if (Configs.logLevel == "Verbose" || Configs.logLevel == "Error") {
+                                console.log("Error on systemctl start wg-quick: " + stderr);
+                            }
+                        } else if (stdout) {
+                            if (Configs.logLevel == "Verbose") {
+                                console.log("Output of systemctl start wg-quick: " + stdout);
+                            }
+                        }
+                    });
+    
+                    ShellJS.exec("systemctl enable wg-quick@" + interfaceName, function(code, stdout, stderr) {
+                        if (stderr) {
+                            if (Configs.logLevel == "Verbose" || Configs.logLevel == "Error") {
+                                console.log("Error on systemctl enable wg-quick: " + stderr);
+                            }
+                        } else if (stdout) {
+                            if (Configs.logLevel == "Verbose") {
+                                console.log("Error on systemctl enable wg-quick: " + stdout);
+                            }
+                        }
+                    });
+    
+                    if (Configs.logLevel == "Verbose") {
+                        console.log("systemctl start wg-quick@" + interfaceName);
+                        console.log("systemctl enable wg-quick@" + interfaceName);
+                    }
+                }, 1500);
+        
+                Meteor.call("add.serverInfo", ipv4, interfaceName, port, myPrivKey, myPubKey, function(err, result) {
+                    if (err) {
+                        console.log("Error adding Server Info: " + err);
+                    } else {
+                        if (Configs.logLevel == "Verbose") {
+                            console.log("Server Info added successfully!");
+                        } 
+                    }
+                });
+            }
+        }          
     },
     'add.deviceInterface' (deviceName, deviceOS, deviceGroup, ipv4, ipv6, dnsPref, customDNS, checkOnline, manKeyPub) {
         check(deviceName, String);
