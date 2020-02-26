@@ -228,7 +228,7 @@ Meteor.methods({
     },
     "install.wg" () {
         // we will attempt to install WireGuard using a snap isntall first.
-        return ShellJS.exec("add-apt-repository ppa:wireguard/wireguard; apt install wireguard -y");
+        return ShellJS.exec("sudo add-apt-repository ppa:wireguard/wireguard && sudo apt install wireguard -y");
     },
     "remove.wgClient" (intPubKey, clientIntName) {
         let serverInfo = ServerInfo.findOne({});
