@@ -382,7 +382,7 @@ export PORT=5000
 
 # start the server using forever
 
-forever start -l forever.log -o output.log -e error.log main.js
+sudo forever start -l forever.log -o output.log -e error.log main.js
 
     echo ""
     echo ""
