@@ -6,6 +6,7 @@ import { WGInstalled } from '../imports/api/wgInstalled.js';
 import { ServerInfo } from '../imports/api/serverInfo.js';
 import { Interfaces } from '../imports/api/interfaces.js';
 import { Configuration } from '../imports/api/configuration.js';
+import { Control } from '../imports/api/control.js';
 
 Meteor.methods({
     'delete.User' (userId) {
@@ -22,6 +23,20 @@ Meteor.methods({
         // We need to create our Public and Private keys
         let installed = WGInstalled.findOne({});
         let Configs = Configuration.findOne({});
+        let Controls = Control.findOne({});
+
+        let myMachineUser;
+        let mysudopass = Controls.mpw;
+
+        // let's see which user I am.
+        ShellJS.exec("whoami", function(code, stdout, stderr) {
+            if (stdout) {
+                console.log("I am : " + stdout);
+                myMachineUser = stdout;
+            } else if (stderr) {
+                console.log("Error on whoamI cmd: " + stderr);
+            }
+        });
 
         if (typeof Configs.logLevel == "undefined") {
             console.log("You must setup the system Configuration before creating your server interface!");
@@ -79,7 +94,12 @@ Meteor.methods({
                     console.log("");
                 }
     
-                ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
+                // if (myMachineUser == "root") {
+                    ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
+                // } else {
+                //     ShellJS.exec("echo '" + mysudopass + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+                // }
+                
     
                 // bring up the WireGuard interface we just created.
                 Meteor.setTimeout(function() {

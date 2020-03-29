@@ -20,6 +20,15 @@ Meteor.startup(() => {
         }
       });
     }
+
+    // let's see which user I am.
+    ShellJS.exec("whoami", function(code, stdout, stderr) {
+        if (stdout) {
+            console.log("I am : " + stdout);
+        } else if (stderr) {
+            console.log("Error on whoamI cmd: " + stderr);
+        }
+    });
     
     // need to check to see if wireguard appears to be installed.
     let installed;
