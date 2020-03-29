@@ -12,7 +12,7 @@ Configuration.allow({
 });
 
 Meteor.methods({
-    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel, disallowCom) {
+    'new.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
@@ -24,7 +24,6 @@ Meteor.methods({
         check(maxNumberNetworks, Number);
         check(logMore, Boolean);
         check(logLevel, String);
-        check(disallowCom, Boolean);
 
         return Configuration.insert({
             emailHost: emailHost,
@@ -38,11 +37,10 @@ Meteor.methods({
             maxNumberNetworks: maxNumberNetworks,
             logMore: logMore,
             logLevel: logLevel,
-            disallowCom: disallowCom,
             addedOn: new Date(),
         });
     },
-    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel, disallowCom) {
+    'edit.config' (emailHost, emailUser, emailPassword, emailSmtpServer, emailSmtpPort, allowOthers, maxNumberInterfaces, allowOwnNetwork, maxNumberNetworks, logMore, logLevel) {
         check(emailHost, String);
         check(emailUser, String);
         check(emailPassword, String);
@@ -54,8 +52,6 @@ Meteor.methods({
         check(maxNumberNetworks, Number);
         check(logMore, Boolean);
         check(logLevel, String);
-        check(disallowCom, Boolean);
-
 
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup admin values, make sure you are logged in.');
@@ -78,7 +74,6 @@ Meteor.methods({
                 maxNumberNetworks: maxNumberNetworks,
                 logMore: logMore,
                 logLevel: logLevel,
-                disallowCom: disallowCom,
                 addedOn: new Date(),
                 addedBy: Meteor.user().emails[0].address,
             }

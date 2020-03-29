@@ -11,7 +11,7 @@ Meteor.startup(() => {
     let Configs = Configuration.findOne({});
 
     if (typeof Configs == 'undefined') {
-      Meteor.call('new.config', "", "", "", "", "", false, 0, false, 0, false, "", false, function(err, result) {
+      Meteor.call('new.config', "", "", "", "", "", false, 0, false, 0, false, "", function(err, result) {
         if (err) {
           console.log("Error setting initial configuration: " + err);
         } else {

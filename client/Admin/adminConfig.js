@@ -44,7 +44,6 @@ Template.adminConfig.events({
         let maxNoNets = $("#maxNetworks").val();
         let logMore = $("#logMore").prop('checked');
         let logLevel = $("#logLevel").val();
-        let disallowCom = $("#disallowCom").prop('checked');
 
         if (allowOwnNetwork == null || allowOthers == false) {
             allowOwnNetwork = false;
@@ -66,11 +65,7 @@ Template.adminConfig.events({
             logLevel = "";
         }
 
-        if (disallowCom == null || disallowCom == "") {
-            disallowCom = false;
-        }
-
-        Meteor.call("new.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, logMore, logLevel, disallowCom, function(err, result) {
+        Meteor.call("new.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, logMore, logLevel, function(err, result) {
             if (err) {
                 console.log("Error adding email configuration: " + err);
                 showSnackbar("Error Adding Email Configuration!", "red");
@@ -94,7 +89,6 @@ Template.adminConfig.events({
         let maxNoNets = $("#maxNetworks").val();
         let logMore = $("#logMore").prop('checked');
         let logLevel = $("#logLevel").val();
-        let disallowCom = $("#disallowCom").prop('checked');
 
         if (allowOwnNetwork == null || allowOthers == false) {
             allowOwnNetwork = false;
@@ -116,11 +110,7 @@ Template.adminConfig.events({
             logLevel = "";
         }
 
-        if (disallowCom == null || disallowCom == "") {
-            disallowCom = false;
-        }
-
-        Meteor.call("edit.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, logMore, logLevel, disallowCom, function(err, result) {
+        Meteor.call("edit.config", host, user, pass, server, portNo, allowOthers, maxNoInts, allowOwnNetwork, maxNoNets, logMore, logLevel, function(err, result) {
             if (err) {
                 console.log("Error editing email configuration: " + err);
                 showSnackbar("Error Editing Email Configuration!", "red");

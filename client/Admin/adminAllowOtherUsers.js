@@ -46,12 +46,4 @@ Template.adminAllowOtherUsers.events({
         console.log("allow own: " + allowOwnNetwork);
         Session.set("allowOwnNetwork", allowOwnNetwork);
     },
-    'click #disallowCom' (event) {
-        Session.set("confirmationDialogTitle", "NOTICE");
-        Session.set("confirmationDialogContent", "Changing the Disallow Inter-Communication value after clients have been created with a specific value set, will not update the functionality of existing clients!");
-        Session.set("eventConfirmCallBackFunction", "");
-        Session.set("eventConfirmNecessaryId", "disallowCom");
-
-        $("#genModal").modal('open');
-    }
 });
