@@ -50,7 +50,16 @@ Template.vectorForm.helpers({
     },
     showManKeys: function() {
         return Session.get("showManKeyEntry");
-    }
+    },
+    showTemp: function() {
+        let isTemp = Session.get("showTempFields");
+        console.log("Helper Temp = " + isTemp);
+        setTimeout(function() {
+            $("select").material_select();
+            Materialize.updateTextFields()
+        }, 200);
+        return isTemp;
+    },
 });
 
 Template.vectorForm.events({
@@ -146,7 +155,13 @@ Template.vectorForm.events({
         event.preventDefault();
 
         Session.set("showManKeyEntry", false);
-    }
+    },
+    "click .makeTemp" (event) {
+        console.log("Clicked the switch!");
+        let makeTemporary = $("#makeTemporary").prop('checked');
+        console.log("Temporary = " + makeTemporary);
+        Session.set("showTempFields", makeTemporary);
+    },
 });
 
 checkIP = function() {
