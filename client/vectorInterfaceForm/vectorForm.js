@@ -100,6 +100,9 @@ Template.vectorForm.events({
             showSnackbar("For Temporary interface, both fields must be filled.", "orange");
             $("#validTilFrame").focus();
             return;
+        } else if (makeTemporary == false) {
+            validTil = "";
+            validTilFrame = "";
         }
 
         // let's handle the need for generated keys

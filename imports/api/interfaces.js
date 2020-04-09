@@ -26,6 +26,9 @@ Meteor.methods({
         check(interfaceDNSv6, String);
         check(myId, String);
         check(checkOnline, Boolean);
+        check(validTil, String);
+        check(validTilFrame, String);
+        
 
         let serverInfo = ServerInfo.findOne({});
 
