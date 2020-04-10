@@ -44,7 +44,13 @@ Meteor.startup(() => {
     
     let typeInstall;
 
+    // start checking if machines are online
     startPing();
+
+    // start checking for interfaces that are temporary, or temporarily disabled
+    Meteor.setInterval(function() {
+      checkEnabledDisabled();
+    }, 300000);
 
     // ****    we wait for 200 milliseconds to give the command time to complete, then check
     // ****    and set the value appropriately
@@ -213,4 +219,26 @@ async function insertResults(results) {
       }
     }
   });
+}
+
+async function checkEnabledDisabled() {
+  let configs = Configuration.findOne({});
+
+  if (configs.logLevel == "Verbose") {
+    console.log("INFO:    In the checkEnabledDisabled method.");
+  }
+
+  // check to see if any interfaces are set to disabled, or are temporary
+  let disabledIntCount = Interfaces.find({ disabledTil: { $ne: null }, disabledTilFrame: { $ne: null }}).count();
+  let tempIntCount = Interfaces.find({ validTil: { $ne: "" }, validTilFrame: { $ne: "" }}).count();
+
+  // if any are disabled, see if they should be re-enabled yet
+  if (disabledIntCount != 0) {
+
+  }
+
+  // if any are temporary, see if they should be expired and removed yet
+  if (tempIntCount != 0) {
+
+  }
 }
