@@ -34,8 +34,16 @@ Meteor.methods({
 
         let port = serverInfo.port;
 
-        let validTilDateTime = moment().add(validTil, validTilFrame).toISOString();
-        let validOn = moment().toISOString(new Date());
+        if (validTil == "" || validTil == null) {
+            let isTemp = false;
+            let validTilDateTime = null;
+            let validTilFrame = null;
+        } else {
+            let isTemp = true;
+            let validTilDateTime = moment().add(validTil, validTilFrame).toISOString();
+            let validOn = moment().toISOString(new Date());
+        }
+        
         
         Interfaces.insert({
             interfaceName: interfaceName,
@@ -53,6 +61,7 @@ Meteor.methods({
             validTilFrame: validTilFrame,
             validTilDateTime: validTilDateTime,
             validOn: validOn,
+            isTemp: isTemp,
             status: "offline",
             addedOn: new Date(),
             disabledTil: -1,
@@ -60,6 +69,7 @@ Meteor.methods({
             disabledOn: "",
             disabledTilDateTime: "",
             disabledIntReason: "",
+            isDisabled: false,
             interfaceUserId: myId,
         });
     },
@@ -191,6 +201,7 @@ Meteor.methods({
         return Interfaces.update({ _id: intId }, {
             $set: {
                 disabledTil: disabledTil,
+                isDisabled: true,
                 disabledTilFrame: disabledTilFrame,
                 disabledIntReason: disabledIntReason, 
                 disabledOn: disabledOn,

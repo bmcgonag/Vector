@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Configuration } from '../imports/api/configuration.js';
-import ShellJS from 'shelljs';
+import ShellJS, { config } from 'shelljs';
 import { WGInstalled } from '../imports/api/wgInstalled.js';
 import { Interfaces } from '../imports/api/interfaces.js';
 import { ServerInfo } from '../imports/api/serverInfo.js';
@@ -223,22 +223,86 @@ async function insertResults(results) {
 
 async function checkEnabledDisabled() {
   let configs = Configuration.findOne({});
+  let serverInfo = ServerInfo.findOne({});
 
   if (configs.logLevel == "Verbose") {
     console.log("INFO:    In the checkEnabledDisabled method.");
   }
 
   // check to see if any interfaces are set to disabled, or are temporary
-  let disabledIntCount = Interfaces.find({ disabledTil: { $ne: null }, disabledTilFrame: { $ne: null }}).count();
-  let tempIntCount = Interfaces.find({ validTil: { $ne: "" }, validTilFrame: { $ne: "" }}).count();
+  let disabledIntCount = Interfaces.find({ isDisabled: true }).count();
+  let tempIntCount = Interfaces.find({ isTemp: true }).count();
 
   // if any are disabled, see if they should be re-enabled yet
   if (disabledIntCount != 0) {
+    let disabledInts = Interfaces.find({ isDisabled: true }).fetch();
+    for (i=0; i < disabledIntCount; i++) {
+      // check to see if the temp disabled date is passed, and if so, re-enable the interface.
+      let thisCheck = new Date();
+      if (thisCheck >= disabledInts[i].disabledTilDateTime) {
+        let intName = serverInfo.serverInterfaceName;
+        let intPubKey = disabledInts[i].interfacePublicKey;
+        let ipv4 = disabledInts[i].interfaceIP;
 
+        ShellJS.exec('wg set wg0 peer ' + myPubKey + ' allowed-ips ' + ipv4 + '/32', function(code, stdout, stderr) {
+          if (stderr) {
+              console.log("error on wg set peer: " + stderr);
+          } else if (stdout) {
+              console.log("output from wg set peer: " + stdout);
+          }
+        });
+        Meteor.setTimeout(function() {
+            console.log('wg-quick save wg0');
+            ShellJS.exec('wg-quick save wg0', function(code, stdout, stderr) {
+                if (stderr) {
+                    console.log("Error on wg-quick save: " + stderr);
+                } else if (stdout) {
+                    console.log("Output from wg-quick save: " + stdout);
+                }
+            });
+        }, 250);
+      } else {
+        if (config.logLevel == "Verbose") {
+          console.log("INFO:    " + disabledInts[i].interfaceName + " is not due for re-enablement.");
+        }
+      }
+    }
+    return;
   }
 
   // if any are temporary, see if they should be expired and removed yet
   if (tempIntCount != 0) {
+    let tempInts = Interfaces.find({ isTemp: true }).fetch();
+    for (i=0; i<tempIntCount; i++) {
+      // check to see if the temporary interface should be removed according to the current date/time.
+      let checkTempNow = new Date();
+      if (checkTempNow >= tempInts[i].validTilDateTime) {
+        let intName = serverInfo.serverInterfaceName;
+        let intPubKey = tempInts[i].interfacePublicKey;
 
+        if (configs.logLevel == "Verbose") {
+            console.log("Running cmd: ");
+            console.log("wg set " + intName + " peer " + intPubKey + " remove");
+            console.log("");
+            console.log("----------------------------------------------------");
+        }
+        ShellJS.exec("wg set " + intName + " peer " + intPubKey + " remove", function(code, stdout, stderr) {
+            if (stderr) {
+                if (configs.logLevel == "Error" || configs.logLevel == "Verbose") {
+                    console.log("Error running cmd to remove client interface: " + stderr);
+                }
+            } else if (stdout) {
+                if (configs.logLevel == "Verbose") {
+                    console.log("Output from running cmd to remove client interface: " + stdout);
+                }
+            }
+        });
+      } else {
+        if (config.logLevel == "Verbose") {
+          console.log("INFO:    " + tempInts[i].interfaceName + " has not expired yet.");
+        }
+      }
+    }
+    return;
   }
 }
