@@ -89,7 +89,7 @@ Meteor.methods({
                     console.log("------------------------------------------");
     
                     console.log("");
-                    console.log("echo '" + sudoUserPW + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
+                    console.log("cp ~/" + interfaceName + ".conf /etc/wireguard/");
                     console.log("");
                 }
     

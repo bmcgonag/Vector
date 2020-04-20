@@ -28,20 +28,26 @@ Meteor.methods({
         check(checkOnline, Boolean);
         check(validTil, Number);
         check(validTilFrame, String);
-        
 
         let serverInfo = ServerInfo.findOne({});
 
         let port = serverInfo.port;
 
+        let isTemp;
+        let validOn;
+        let validTilDateTime;
+
         if (validTil == null || validTil <= 0) {
-            let isTemp = false;
-            let validTilDateTime = null;
-            let validTilFrame = null;
+            console.log("interface not temp.");
+            isTemp = false;
+            validTilDateTime = null;
+            validTilFrame = null;
+            validOn = moment().toISOString(new Date());
         } else {
-            let isTemp = true;
-            let validTilDateTime = moment().add(validTil, validTilFrame).toISOString();
-            let validOn = moment().toISOString(new Date());
+            console.log("setting temp interface.");
+            isTemp = true;
+            validTilDateTime = moment().add(validTil, validTilFrame).toISOString();
+            validOn = moment().toISOString(new Date());
         }
         
         

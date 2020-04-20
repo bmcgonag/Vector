@@ -234,12 +234,20 @@ async function checkEnabledDisabled() {
   let disabledIntCount = Interfaces.find({ isDisabled: true }).count();
   let tempIntCount = Interfaces.find({ isTemp: true }).count();
 
+  if (configs.logLevel == "Verbose") {
+    console.log("");
+    console.log("VALIDATION:    Disabled Interface Count:    " + disabledIntCount);
+    console.log("VALIDATION:    Temporary Interface Count:   " + tempIntCount);
+    console.log("");
+  }
+
   // if any are disabled, see if they should be re-enabled yet
   if (disabledIntCount != 0) {
     let disabledInts = Interfaces.find({ isDisabled: true }).fetch();
     for (i=0; i < disabledIntCount; i++) {
       // check to see if the temp disabled date is passed, and if so, re-enable the interface.
-      let thisCheck = new Date();
+      let thisCheckIt = new Date();
+      let thisCheck = moment().toISOString(thisCheckIt);
       if (thisCheck >= disabledInts[i].disabledTilDateTime) {
         let intName = serverInfo.serverInterfaceName;
         let intPubKey = disabledInts[i].interfacePublicKey;
@@ -276,7 +284,8 @@ async function checkEnabledDisabled() {
     let tempInts = Interfaces.find({ isTemp: true }).fetch();
     for (i=0; i<tempIntCount; i++) {
       // check to see if the temporary interface should be removed according to the current date/time.
-      let checkTempNow = new Date();
+      let checkTemp = new Date();
+      let checkTempNow = moment().toISOString(checkTemp);
       if (checkTempNow >= tempInts[i].validTilDateTime) {
         let intName = serverInfo.serverInterfaceName;
         let intPubKey = tempInts[i].interfacePublicKey;
@@ -299,7 +308,7 @@ async function checkEnabledDisabled() {
             }
         });
       } else {
-        if (config.logLevel == "Verbose") {
+        if (configs.logLevel == "Verbose") {
           console.log("INFO:    " + tempInts[i].interfaceName + " has not expired yet.");
         }
       }
