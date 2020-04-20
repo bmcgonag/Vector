@@ -23,13 +23,14 @@ Template.clientCard.helpers({
     clientQR: function() {
         let interfaceId = this._id;
         let thisInterface;
+        let qrBlob = "";
 
         let myhost = location.hostname;
 
         let interfaceInfo = Interfaces.findOne({ _id: interfaceId });
         let serverInfo = ServerInfo.findOne({});
 
-        let qrBlob = "[Interface]\nPrivateKey = " + interfaceInfo.interfacePrivateKey + "\nDNS = " + interfaceInfo.interfaceDNS + "\n" + "Address = " + interfaceInfo.interfaceIP + "/22," + interfaceInfo.interfaceIPv6 +"/112\n\n[Peer]\nPublicKey = " + serverInfo.publicKey + "\nEndpoint = " + myhost + ":" + interfaceInfo.interfacePort + "\nAllowedIPs = 0.0.0.0/0, ::/0";
+        qrBlob = "[Interface]\nPrivateKey = " + interfaceInfo.interfacePrivateKey + "\nDNS = " + interfaceInfo.interfaceDNS + "\n" + "Address = " + interfaceInfo.interfaceIP + "/22," + interfaceInfo.interfaceIPv6 +"/112\n\n[Peer]\nPublicKey = " + serverInfo.publicKey + "\nEndpoint = " + myhost + ":" + interfaceInfo.interfacePort + "\nAllowedIPs = 0.0.0.0/0, ::/0";
 
         return qrBlob;
     },

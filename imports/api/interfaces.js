@@ -26,7 +26,7 @@ Meteor.methods({
         check(interfaceDNSv6, String);
         check(myId, String);
         check(checkOnline, Boolean);
-        check(validTil, String);
+        check(validTil, Number);
         check(validTilFrame, String);
         
 
@@ -34,7 +34,7 @@ Meteor.methods({
 
         let port = serverInfo.port;
 
-        if (validTil == "" || validTil == null) {
+        if (validTil == null || validTil <= 0) {
             let isTemp = false;
             let validTilDateTime = null;
             let validTilFrame = null;

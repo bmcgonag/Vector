@@ -49,6 +49,7 @@ Meteor.startup(() => {
 
     // start checking for interfaces that are temporary, or temporarily disabled
     Meteor.setInterval(function() {
+      // console.log("Starting Enabled / Disabled Checking...")
       checkEnabledDisabled();
     }, 300000);
 
