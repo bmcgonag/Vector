@@ -26,7 +26,6 @@ Meteor.methods({
         let Controls = Control.findOne({});
 
         let myMachineUser;
-        let mysudopass = Controls.mpw;
 
         // let's see which user I am.
         ShellJS.exec("whoami", function(code, stdout, stderr) {
@@ -94,13 +93,8 @@ Meteor.methods({
                     console.log("");
                 }
     
-                // if (myMachineUser == "root") {
-                    ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
-                // } else {
-                //     ShellJS.exec("echo '" + mysudopass + "' | sudo -S cp ~/" + interfaceName + ".conf /etc/wireguard/");
-                // }
+                ShellJS.exec("cp ~/" + interfaceName + ".conf /etc/wireguard/");
                 
-    
                 // bring up the WireGuard interface we just created.
                 Meteor.setTimeout(function() {
                     ShellJS.exec("systemctl start wg-quick@" + interfaceName, function(code, stdout, stderr) {
