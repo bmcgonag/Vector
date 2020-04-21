@@ -14,7 +14,7 @@ Template.serverMain.helpers({
         let config = Configuration.findOne({});
         let role = Roles.userIsInRole(userId, ['Admin']);
         
-        if ((role == true && config.allowOwnNetwork == false) || (role == false && config.allowOwnNetwork == true)) {
+        if (role == true || config.allowOwnNetwork == true) {
             console.log("Found true");
             return true;
         } else {
