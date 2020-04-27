@@ -11,7 +11,7 @@ Template.clientCard.onCreated(function() {
 Template.clientCard.onRendered(function() {
     // get the hostname of the server
     setTimeout(function() {
-        $("select").material_select();
+        $('select').formSelect();
     }, 100);
     let myhost = location.hostname;
 });

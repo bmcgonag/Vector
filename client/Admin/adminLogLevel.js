@@ -5,7 +5,7 @@ Template.adminLogLevel.onCreated(function() {
 });
 
 Template.adminLogLevel.onRendered(function() {
-    $("select").material_select();
+    $('select').formSelect();
 });
 
 Template.adminLogLevel.helpers({
@@ -36,7 +36,7 @@ Template.adminLogLevel.events({
         }
 
         setTimeout(function() {
-            $("select").material_select();
+            $('select').formSelect();
             Materialize.updateTextFields()
         }, 150);
     }

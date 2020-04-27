@@ -11,9 +11,9 @@ Template.vectorForm.onCreated(function() {
 });
 
 Template.vectorForm.onRendered(function() {
-    $("select").material_select();
+    $('select').formSelect();
     setTimeout(function() {
-        $("select").material_select();
+        $('select').formSelect();
         Materialize.updateTextFields()
     }, 200);
     Session.set("fullIp", "");
@@ -55,7 +55,7 @@ Template.vectorForm.helpers({
         let isTemp = Session.get("showTempFields");
         console.log("Helper Temp = " + isTemp);
         setTimeout(function() {
-            $("select").material_select();
+            $('select').formSelect();
             Materialize.updateTextFields()
         }, 200);
         return isTemp;
