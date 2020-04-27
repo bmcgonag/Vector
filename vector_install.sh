@@ -276,7 +276,7 @@ if [ ! -d ~/.nvm ]
 then
     echo ""
     echo "****  install nvm and node js"
-    curl -sSL https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
+    curl -sSL https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh | bash
     sleep 3s
     echo ""
     echo ""
@@ -296,14 +296,21 @@ fi
     echo ""
     echo ""
     source ~/.profile
-    echo "****    Attempt to install NodeJS 8.11.3 usign NVM"
-    nvm install 8.11.3
+    echo "****    "
+    echo "****    "
+    echo "****    NOTE: NodeJS for this project is updated from 8.11.3 to 12.16.1"
+    echo "****    "
+    echo "****    "
+    sleep 5s
+
+    echo "****    Attempting to install NodeJS 12.16.1 usign NVM"
+    nvm install 12.16.1
     echo ""
     echo ""
 
     sleep 2s
     # now tell nvm to use the latest installed version
-    nvm use 8.11.3
+    nvm use 12.16.1
     echo ""
     echo ""
     sleep 1s
