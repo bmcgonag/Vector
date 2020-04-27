@@ -21,17 +21,17 @@
       {{#if currentUser}}
         <ul id="slide-out" class="sidenav">
           <li><a class="sidenav-close" href="#!"><i class="material-icons right">close</i></a></li>
-          <li><a href="#" class="navBtn userDash sidenav-close" id="userDash"><i class="material-icons">cloud</i>Client Interfaces</a></li>
-          <li><a href="#" class="navBtn vectorGroup sidenav-close" id="vectorGroup">Client Groups</a></li>
+          <li><a href="#" class="navBtn userDash sidenav-close" id="userDash"><i class="material-icons">vpn_key</i>Client Interfaces</a></li>
+          <li><a href="#" class="navBtn vectorGroup sidenav-close" id="vectorGroup"><i class="material-icons">group_work</i>Client Groups</a></li>
           {{#if $eq myConfig.allowOwnNetwork true}}
-              <li><a href="#" class="navBtn serverConfig sidenav-close" id="serverConfig">Server Setup</a></li>
+              <li><a href="#" class="navBtn serverConfig sidenav-close" id="serverConfig"><i class="material-icons">computer</i>Server Setup</a></li>
           {{/if}}
 
           {{#if isInRole 'Admin'}}
             <li><div class="divider"></div></li>
             <li><a class="subheader">Administrative</a></li>
-            <li><a href="#" class="navBtn serverConfig sidenav-close" id="serverConfig">Server Setup</a></li>
-            <li><a href="#" class="navBtn configSystem sidenav-close" id="configSystem">System Configuration</a></li>
+            <li><a href="#" class="navBtn serverConfig sidenav-close" id="serverConfig"><i class="material-icons">computer</i>Server Setup</a></li>
+            <li><a href="#" class="navBtn configSystem sidenav-close" id="configSystem"><i class="material-icons">settings</i>System Configuration</a></li>
           {{/if}}
           <li><div class="divider"></div></li>
           <li><a href="#" class="navBtn signOut sidenav-close" id="signOut">Sign Out</a></li>
