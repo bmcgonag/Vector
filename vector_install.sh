@@ -295,6 +295,7 @@ fi
 
     echo ""
     echo ""
+    . ~/.nvm/nvm.sh
     source ~/.profile
     echo "****    "
     echo "****    "
@@ -362,7 +363,7 @@ echo "**** download Vector release from github."
 echo ""
 sleep 2s 
 # get the tar file from github
-wget https://github.com/bmcgonag/Vector/releases/download/0.4.0/Vector.tar.gz
+wget https://github.com/bmcgonag/Vector/releases/download/0.5.0/Vector.tar.gz
 
 echo "**** extracting Vector into Vector-Production"
 echo ""
@@ -389,7 +390,7 @@ export PORT=5000
 
 # start the server using forever
 
-sudo forever start -l forever.log -o output.log -e error.log main.js
+forever start -l forever.log -o output.log -e error.log main.js
 
     echo ""
     echo ""
@@ -402,9 +403,9 @@ sudo forever start -l forever.log -o output.log -e error.log main.js
     echo ""
     echo "source ~/.profile"
     echo ""
-    echo "nvm install 8.11.3"
+    echo "nvm install 12.16.1"
     echo ""
-    echo "nvm use 8.11.3"
+    echo "nvm use 12.16.1"
     echo ""
     echo "npm i forever -g"
     echo ""
@@ -412,3 +413,7 @@ sudo forever start -l forever.log -o output.log -e error.log main.js
     echo ""
     echo ""
     echo " ********************************************************** "
+    echo ""
+    echo ""
+    echo ""
+    
