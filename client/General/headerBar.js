@@ -5,7 +5,10 @@ Template.headerBar.onCreated(function() {
 });
 
 Template.headerBar.onRendered(function() {
-	$('.sidenav').sidenav();
+    $('.sidenav').sidenav();
+    setTimeout(function() {
+        $('.sidenav').sidenav();
+    }, 100)
 });
 
 Template.headerBar.helpers({
@@ -27,7 +30,6 @@ Template.headerBar.events({
             FlowRouter.go('/');
         } else {
             FlowRouter.go('/' + clickedTarget);
-            document.getElementById("mySidenav").style.width = "0";
         }
     },
     'click .signIn': () => {
