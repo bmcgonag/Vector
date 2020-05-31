@@ -44,11 +44,15 @@
                                                 </div>
                                                 <br />
                                                 <div class="row">
-                                                    <div class="col s12">
-                                                        {{#if $eq emailHost true}}
-                                                            <a class="waves-effect waves-light btn testEmail submitBtn" id="testEmail">Test Email</a>
-                                                        {{/if}}
+                                                    {{#if $eq emailHost true}}
+                                                    <div class="col s6 input-field">
+                                                        <input type="text" class="recipientEmail" id="recipientEmail" />
+                                                        <label for="recipientEmail">Enter a Recipient Email Address:</label>
                                                     </div>
+                                                    <div class="col s6">
+                                                        <a class="waves-effect waves-light btn testEmail submitBtn" id="testEmail">Test Email</a>
+                                                    </div>
+                                                    {{/if}}
                                                 </div>
                                               </div>
                                             </div>

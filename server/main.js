@@ -119,7 +119,7 @@ Meteor.methods({
         }
         process.env.MAIL_URL = 'smtp://' + encodeURIComponent(smtp.username) + ':' + encodeURIComponent(smtp.password) + '@' + encodeURIComponent(smtp.server) + ':' + smtp.port;
         if (Configs.logLevel == "Verbose") {
-          console.log("INFO:    " + process.env.MAIL_URL);
+          console.log("INFO:    Environment Variable - MAIL_URL set to: " + process.env.MAIL_URL);
         }
     }
   }

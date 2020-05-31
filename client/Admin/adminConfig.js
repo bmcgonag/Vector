@@ -132,8 +132,30 @@ Template.adminConfig.events({
     "click #testEmail" (event) {
         event.preventDefault();
 
+        let recipient = $("#recipientEmail").val();
+
+        if (recipient == null || recipient == "") {
+            showSnackbar("You must enter a recipient for your test email.", "red");
+            return;
+        }
+
+        let Config = Configuration.findOne({});
+        
+        if (typeof Config.emailHost == 'undefined' || Config.emailHost == "" || Config.emailHost == null ) {
+            showSnackbar("Confiuration for Email Host has not been found.  Please enter an Email Host!", "red");
+        } else {
+            Meteor.call("emailTest", recipient, function(err, result) {
+                if (err) {
+                    showSnackbar("Error Testing Email!", "red");
+                    console.log("Error Testing Email: " + err);
+                } else {
+                    showSnackbar("Email Attempting to Send!", "green");
+                }
+            });
+        }
+
         // send a test email using the saved creds.
-        console.log("Email Test clicked");
+        // console.log("Email Test clicked");
         // first see if creds exist.
 
     },

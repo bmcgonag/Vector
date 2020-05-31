@@ -19,6 +19,30 @@ Meteor.methods({
     'test.shell' () {
         ShellJS.exec("echo 'test'");
     },
+    'emailTest' (recipient) {
+        let configCheck = Configuration.findOne({});
+  
+        if (typeof configCheck == 'undefined') {
+            console.log("Configuration was undefined.");
+        } else {
+            if (configCheck.emailUser == "" || configCheck.emailUser == null || configCheck.emailPassword == "" || configCheck.emailPassword == null || configCheck.emailSmtpServer == "" || configCheck.emailSmtpServer == null || configCheck.emailSmtpPort == "" || configCheck.emailSmtpPort == null) {
+              let toUser = urlInfo.emailAddress;  
+              
+              console.log("Email Info is not setup - not sending email.");
+            } else {
+                let fromUser = configCheck.emailUser;
+                let emailSubject = "Testing Email from Vector";
+                let emailBody = "Your Vector Server email settings appear to be setup properly. You can now take advantage of any current or future email capabilities added to the Vector code base.";
+  
+                Email.send({
+                    to: recipient,
+                    from: fromUser,
+                    subject: emailSubject,
+                    html: emailBody
+                });
+            }
+        }
+    },
     'createServer.Interface' (mode, ipv4, interfaceName, port) {
         // We need to create our Public and Private keys
         let installed = WGInstalled.findOne({});
