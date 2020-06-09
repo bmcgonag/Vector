@@ -191,7 +191,7 @@ then
         echo "****  Installing Certbot for LetsEncrypt Now."
         sudo add-apt-repository ppa:certbot/certbot -y
         sudo apt update
-        sudo apt install python-certbot-nginx
+        sudo apt install python3-certbot-nginx
     else
         echo ""
         echo ""
