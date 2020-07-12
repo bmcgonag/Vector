@@ -1,6 +1,14 @@
 Vector
 ============
 
+### NOTE: Important!
+
+I have recently found that while the setup still seems to work correctly and Wireguard server can be created from my application, I am unable to ping the server from a connected client, nor to run any traffic through the server to the internet.  
+
+I am investigating this issue, but currently do not know what the fix is or might be.
+
+If you are able to help me solve this problem, it is greatly appreciated.
+
 <br />
 
 ## Vector - A Web UI for the Server side of WireGuard
