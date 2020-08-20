@@ -7,6 +7,7 @@ import { ServerInfo } from '../imports/api/serverInfo.js';
 import { Interfaces } from '../imports/api/interfaces.js';
 import { Configuration } from '../imports/api/configuration.js';
 import { Control } from '../imports/api/control.js';
+import { exec } from 'child_process';
 
 Meteor.methods({
     'delete.User' (userId) {
@@ -291,5 +292,47 @@ Meteor.methods({
             }
         });
         return;
-    }
+    },
+    "restartVector" () {
+        let Configs = Configuration.findOne({});
+        let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
+        if (Configs.logLevel == "Verbose") {
+            console.log("INFO:   ----    Is Installed: " + isInstalled.stdout);
+        }
+        
+        let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
+        if (Configs.logLevel == "Verbose") {
+            console.log("INFO:    " + isthere);
+        }
+        
+        let typeInstall;
+
+        // ****    we wait for 200 milliseconds to give the command time to complete, then check
+        // ****    and set the value appropriately
+        Meteor.setTimeout(function() {
+            if (isthere == "Directory found") {
+                console.log("WireGuard Installed");
+                installed = true;
+
+                let yourscript = exec('pwd', (error, stdout, stderr) => {
+                    console.log(stdout);
+                    console.log(stderr);
+                    if (error !== null) {
+                        console.log(`exec error: ${error}`);
+                    }
+                });
+
+                // ShellJS.exec("./restartVector.sh" , function(code, stdout, stderr) {
+                //     if (stdout) {
+                //         console.log("Restarted vector...");
+                //     } else if (stderr) {
+                //         console.log("ERROR:    Something went wrong running the restart script: " + stderr);
+                //     }
+                // });
+            } else {
+                console.log("WireGuard Not Installed");
+                installed = false;
+            }
+        }, 1000);
+    },
 });

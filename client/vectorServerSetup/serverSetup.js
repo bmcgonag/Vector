@@ -42,7 +42,7 @@ Template.serverSetup.events({
         let setupType="auto";
         let ipv4Server = "10.100.100.1";
         let serverIntName = "wg0";
-        let serverListenPort = "51820";
+        let serverListenPort = "51820"
 
         Meteor.call("createServer.Interface", setupType, ipv4Server, serverIntName, serverListenPort, function(err, result) {
             if (err) {

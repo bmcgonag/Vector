@@ -64,7 +64,9 @@ Meteor.startup(() => {
       
       if (isthere == "Directory found") {
         typeInstall = "apt";
+        console.log("INFO:    Found installed with APT");
       } else {
+        console.log("INFO:    Wireguard not found installed.");
         typeInstall = "none";
       }
   
