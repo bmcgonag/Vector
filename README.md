@@ -1,13 +1,9 @@
 Vector
 ============
-
 ### NOTE: Important!
+I am no longer working on this project. I haven't worked on it in a while, and find thta the Mistborn project is far superior, and the person running it has a great setup going.  I highly recommend you look at that project if you are looking for a good server-side Wireguard gui.
 
-I have recently found that while the setup still seems to work correctly and Wireguard server can be created from my application, I am unable to ping the server from a connected client, nor to run any traffic through the server to the internet.  
-
-I am investigating this issue, but currently do not know what the fix is or might be.
-
-If you are able to help me solve this problem, it is greatly appreciated.
+https://gitlab.com/cyber5k/mistborn
 
 <br />
 
