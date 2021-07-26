@@ -335,4 +335,27 @@ Meteor.methods({
             }
         }, 1000);
     },
+    'install.wireguard' (os_version) {
+        check(os_version, String);
+
+        if (!this.userId) {
+            throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
+        }
+
+        switch(os_version) {
+            case "Ubuntu 20.04":
+                ShellJS.exec("apt-get update && apt-get install wireguard wireguard-tools -y", function(code, stdout, stderr) {
+                    if (stderr) {
+                        if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
+                            console.log("ERROR running cmd to install WireGuard via apt: " + stderr);
+                        }
+                    } else if (stdout) {
+                        if (Configs.logLevel == "Verbose") {
+                            console.log("WireGuard and WireGuard Tools should now be installed: " + stdout);
+                        }
+                    }
+                });
+                break;
+        }
+    },
 });
