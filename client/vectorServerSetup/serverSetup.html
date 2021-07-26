@@ -44,6 +44,15 @@
         {{/if}}
     {{/if}}
 
+    {{#if $eq wireguardInstalled "Installed"}}
+    <div class="row">
+        <div class="col l12 m12 s12">
+            <p class="flow-text">You don't appear to have WireGuard installed on this machine.  Would you like to install it now?</p>
+        </div>
+    </div>
+        <a class="waves-effect waves-light btn installWireguard" id="installWireguard">Install Wireguard on this Server</a>
+    {{/if}}
+
     {{#if $eq serverExists true}}
         <hr />
         <br />

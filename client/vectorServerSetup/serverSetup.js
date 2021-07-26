@@ -1,7 +1,9 @@
 import { ServerInfo } from '../../imports/api/serverInfo.js';
+import { WGInstalled } from '../../imports/api/wgInstalled.js';
 
 Template.serverSetup.onCreated(function() {
     this.subscribe("myServerInfo");
+    this.subscribe("wgInstall");
 });
 
 Template.serverSetup.onRendered(function() {
@@ -32,6 +34,14 @@ Template.serverSetup.helpers({
     },
     adjustServer: function() {
         return Session.get("adjustServer");
+    },
+    wireguardInstalled: function() {
+        let installed = WGInstalled.findOne({});
+        if (installed.typeInstall != "apt") {
+            return "Not Installed";
+        } else {
+            return "Installed";
+        }
     },
 });
 
@@ -67,5 +77,16 @@ Template.serverSetup.events({
     "click #adjustServer" (event) {
         event.preventDefault();
         Session.set("adjustServer", true);
+    },
+    "click #installWireguard" (event) {
+        event.preventDefault();
+
+        Meteor.call('install.wireguard', "ubuntu 20.04", function(err, result) {
+            if (err) {
+                console.log("Error calling install.wireguard method in server/methods.js: " + err);
+            } else {
+                console.log("Wireguard install called.");
+            }
+        });
     },
 });
