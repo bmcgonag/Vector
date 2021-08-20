@@ -81,7 +81,7 @@ Template.serverSetup.events({
     "click #installWireguard" (event) {
         event.preventDefault();
 
-        Meteor.call('install.wireguard', "ubuntu 20.04", function(err, result) {
+        Meteor.call('install.wireguard', "Ubuntu 20.04", function(err, result) {
             if (err) {
                 console.log("Error calling install.wireguard method in server/methods.js: " + err);
             } else {

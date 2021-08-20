@@ -265,7 +265,7 @@ Meteor.methods({
             }
         }, 250);
     },
-    "install.wg" () {
+    "install.wireguard" () {
         // we will attempt to install WireGuard using a snap isntall first.
         return ShellJS.exec("sudo add-apt-repository ppa:wireguard/wireguard && sudo apt install wireguard -y");
     },
@@ -344,7 +344,7 @@ Meteor.methods({
 
         switch(os_version) {
             case "Ubuntu 20.04":
-                ShellJS.exec("apt-get update && apt-get install wireguard wireguard-tools -y", function(code, stdout, stderr) {
+                ShellJS.exec("sudo apt-get update && apt-get install wireguard wireguard-tools -y", function(code, stdout, stderr) {
                     if (stderr) {
                         if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
                             console.log("ERROR running cmd to install WireGuard via apt: " + stderr);
@@ -355,6 +355,9 @@ Meteor.methods({
                         }
                     }
                 });
+                break;
+            default:
+                console.log("Didn't get it done.")
                 break;
         }
     },
