@@ -43,6 +43,9 @@ Template.serverSetup.helpers({
             return "Installed";
         }
     },
+    editServerShow: function() {
+        return Session.get("editServerShow");
+    },
 });
 
 Template.serverSetup.events({
@@ -89,4 +92,7 @@ Template.serverSetup.events({
             }
         });
     },
+    "click #cancelEditServer" (event) {
+        Session.set("editServerShow", false);
+    }
 });

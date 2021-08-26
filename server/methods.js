@@ -265,10 +265,6 @@ Meteor.methods({
             }
         }, 250);
     },
-    "install.wireguard" () {
-        // we will attempt to install WireGuard using a snap isntall first.
-        return ShellJS.exec("sudo add-apt-repository ppa:wireguard/wireguard && sudo apt install wireguard -y");
-    },
     "remove.wgClient" (intPubKey, clientIntName) {
         let serverInfo = ServerInfo.findOne({});
         let Configs = Configuration.findOne({});
@@ -337,28 +333,40 @@ Meteor.methods({
     },
     'install.wireguard' (os_version) {
         check(os_version, String);
-
+        
         if (!this.userId) {
             throw new Meteor.Error('User is not allowed to setup interfaces, make sure you are logged in.');
         }
 
-        switch(os_version) {
-            case "Ubuntu 20.04":
-                ShellJS.exec("sudo apt-get update && apt-get install wireguard wireguard-tools -y", function(code, stdout, stderr) {
+        let Configs = Configuration.findOne({});
+
+        let isInstalled = ShellJS.exec("[ -d /etc/wireguard ] && echo 'Directory found' || echo 'Directory /etc/wireguard not found'");
+        if (Configs.logLevel == "Verbose") {
+            console.log("INFO:   ----    Is Installed: " + isInstalled.stdout);
+        }
+
+        let isthere = isInstalled.stdout.replace(/(\r\n|\n|\r)/gm, "");
+
+        Meteor.setTimeout(function() {
+            if (isthere != "Directory found") {
+                ShellJS.exec("echo <password> | sudo -S apt-get update && echo <password> | sudo -S apt-get install wireguard wireguard-tools -y", function(code, stdout, stderr) {
                     if (stderr) {
                         if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
                             console.log("ERROR running cmd to install WireGuard via apt: " + stderr);
                         }
-                    } else if (stdout) {
+                    }
+                    if (stdout) {
                         if (Configs.logLevel == "Verbose") {
                             console.log("WireGuard and WireGuard Tools should now be installed: " + stdout);
                         }
                     }
+                    if (code) {
+                        console.log("Code: " + code);
+                    }
                 });
-                break;
-            default:
-                console.log("Didn't get it done.")
-                break;
-        }
+            } else {
+                console.log("Wireguard appears to already be installed.");
+            }
+        }, 3000);
     },
 });

@@ -14,47 +14,43 @@
                                 <li>
                                     <div class="row">
                                         <div class="col s12">
-                                            <div class="card">
-                                              <div class="card-content">
-                                                <div class="row">
-                                                    <div class="input-field col s6">
-                                                        <input type="text" class="emailHost" id="emailHost" value="{{#if $eq configMode 'edit'}}{{configExists.emailHost}}{{/if}}" />
-                                                        <label for="emailHost" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Host Description</label>
-                                                    </div>
-                                                </div> 
-                                                <div class="row">
-                                                    <div class="input-field col s6">
-                                                        <input type="text" class="emailUser" id="emailUser" value="{{#if $eq configMode 'edit'}}{{configExists.emailUser}}{{/if}}" />
-                                                        <label for="emailUser" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email User Name</label>
-                                                    </div>
-                                                    <div class="input-field col s6">
-                                                        <input type="password" class="emailPass" id="emailPass" value="{{#if $eq configMode 'edit'}}{{configExists.emailPassword}}{{/if}}" />
-                                                        <label for="emailPass" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Password</label>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="input-field col s6">
+                                                    <input type="text" class="emailHost" id="emailHost" value="{{#if $eq configMode 'edit'}}{{configExists.emailHost}}{{/if}}" />
+                                                    <label for="emailHost" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Host Description</label>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="input-field col s6">
-                                                        <input type="text" class="emailServer" id="emailServer" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpServer}}{{/if}}" />
-                                                        <label for="emailServer" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP URI</label>
-                                                    </div>
-                                                    <div class="input-field col s6">
-                                                        <input type="text" class="emailPort" id="emailPort" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpPort}}{{/if}}" />
-                                                        <label for="emailPort" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP Port</label>
-                                                    </div>
+                                            </div> 
+                                            <div class="row">
+                                                <div class="input-field col s6">
+                                                    <input type="text" class="emailUser" id="emailUser" value="{{#if $eq configMode 'edit'}}{{configExists.emailUser}}{{/if}}" />
+                                                    <label for="emailUser" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email User Name</label>
                                                 </div>
-                                                <br />
-                                                <div class="row">
-                                                    {{#if $eq emailHost true}}
-                                                    <div class="col s6 input-field">
-                                                        <input type="text" class="recipientEmail" id="recipientEmail" />
-                                                        <label for="recipientEmail">Enter a Recipient Email Address:</label>
-                                                    </div>
-                                                    <div class="col s6">
-                                                        <a class="waves-effect waves-light btn testEmail submitBtn" id="testEmail">Test Email</a>
-                                                    </div>
-                                                    {{/if}}
+                                                <div class="input-field col s6">
+                                                    <input type="password" class="emailPass" id="emailPass" value="{{#if $eq configMode 'edit'}}{{configExists.emailPassword}}{{/if}}" />
+                                                    <label for="emailPass" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Password</label>
                                                 </div>
-                                              </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s6">
+                                                    <input type="text" class="emailServer" id="emailServer" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpServer}}{{/if}}" />
+                                                    <label for="emailServer" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP URI</label>
+                                                </div>
+                                                <div class="input-field col s6">
+                                                    <input type="text" class="emailPort" id="emailPort" value="{{#if $eq configMode 'edit'}}{{configExists.emailSmtpPort}}{{/if}}" />
+                                                    <label for="emailPort" class="{{#if $eq configMode 'edit'}}active{{/if}}">Email Server SMTP Port</label>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                {{#if $eq emailHost true}}
+                                                <div class="col s6 input-field">
+                                                    <input type="text" class="recipientEmail" id="recipientEmail" />
+                                                    <label for="recipientEmail">Enter a Recipient Email Address:</label>
+                                                </div>
+                                                <div class="col s6">
+                                                    <a class="waves-effect waves-light btn testEmail submitBtn" id="testEmail">Test Email</a>
+                                                </div>
+                                                {{/if}}
                                             </div>
                                           </div>
                                     </div>

@@ -5,7 +5,7 @@ Template.serverInfoCard.onCreated(function() {
 });
 
 Template.serverInfoCard.onRendered(function() {
-
+    Session.set("editServerShow", false);
 });
 
 Template.serverInfoCard.helpers({
@@ -15,5 +15,8 @@ Template.serverInfoCard.helpers({
 });
 
 Template.serverInfoCard.events({
-
+    'click #editServerInfoLink' (event) {
+        event.preventDefault();
+        Session.set("editServerShow", true);
+    },
 });

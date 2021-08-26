@@ -18,10 +18,6 @@ Template.headerBar.helpers({
 });
 
 Template.headerBar.events({
-	"click #signIn": function() {
-		var signInModal = document.getElementById('signInModal');
-		signInModal.style.display = "block";
-	},
 	'click  .navBtn' (event) {
         event.preventDefault();
         var clickedTarget = event.target.id;
@@ -31,10 +27,6 @@ Template.headerBar.events({
         } else {
             FlowRouter.go('/' + clickedTarget);
         }
-    },
-    'click .signIn': () => {
-        var signInModal = document.getElementById('signInModal');
-        signInModal.style.display = "block";
     },
     'click .signOut': () => {
         FlowRouter.go('/');

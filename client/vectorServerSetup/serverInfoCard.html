@@ -4,17 +4,17 @@
             <div class="card-image">
                 <img src="https://img.icons8.com/carbon-copy/2x/server.png">
             </div>
-            <div class="card-stacked">
+            <div class="card-stacked light-blue darken-4">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12">
                             <h4>{{serverData.serverInterfaceName}}</h4>
                         </div>
                         <div class="col s12.m6.l6">
-                            {{serverData.ipAddress}}
+                            <strong>IP Address: </strong> {{serverData.ipAddress}}
                         </div>
                         <div class="col s12 m6 l6">
-                            {{serverData.port}}
+                            <strong>Port Number:</strong> {{serverData.port}}
                         </div>
                         <div class="col s12">
                             <strong>Public Key:</strong> {{serverData.publicKey}}
@@ -23,6 +23,7 @@
                 </div>
                 <div class="card-action">
                     <a href="#">Download Interface File</a>
+                    <a href="#" id="editServerInfoLink">Edit Server Configuration</a>
                 </div>
             </div>
         </div>

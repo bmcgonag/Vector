@@ -1,21 +1,26 @@
 <template name="serverSetup">
     {{#if $eq serverExists true}}
-        <div class="row">
-            <div style="background: red; color: white;" class="col l12 m12 s12">
-                <p class="flow-text">
-                    Server Appears to Exist - Changing server interface data can have serious consequences!
-                </p>
-                <p class="flow-text">Are you sure you want to adjust your server interface settings?</p>
-                <div class="row">
-                    <div class="col l6 m6s12">
-                        <a class="waves-effect waves-light btn adjustServer" id="adjustServer">Yes, Continue to Adjust</a>
-                    </div>
-                    <div class="col l6 m6 s12">
-                        <a class="waves-effect waves-light btn right recreateServer" id="recreateServer">Re-create My Current Server</a>
+        {{#if $eq editServerShow true}}
+            <div class="row">
+                <div style="background: rgb(205, 207, 42); color: rgb(53, 7, 7);" class="col l12 m12 s12">
+                    <p class="flow-text">
+                        Server Appears to Exist - Changing server interface data can have serious consequences!
+                    </p>
+                    <p class="flow-text">Are you sure you want to adjust your server interface settings?</p>
+                    <div class="row">
+                        <div class="col l4 m4 s12">
+                            <a class="waves-effect waves-light btn cancelEditServer orange" id="cancelEditServer">No, Cancel Editing</a>
+                        </div>
+                        <div class="col l4 m4 s12">
+                            <a class="waves-effect waves-light btn adjustServer" id="adjustServer">Yes, Continue to Adjust</a>
+                        </div>
+                        <div class="col l4 m4 s12">
+                            <a class="waves-effect waves-light btn right recreateServer" id="recreateServer">Re-create My Current Server</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {{/if}}
     {{/if}}
 
     {{#if $eq adjustServer true}}
@@ -44,7 +49,7 @@
         {{/if}}
     {{/if}}
 
-    {{#if $eq wireguardInstalled "Installed"}}
+    {{#if $neq wireguardInstalled "Installed"}}
     <div class="row">
         <div class="col l12 m12 s12">
             <p class="flow-text">You don't appear to have WireGuard installed on this machine.  Would you like to install it now?</p>

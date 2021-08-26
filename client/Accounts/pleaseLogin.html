@@ -1,6 +1,9 @@
 <template name="pleaseLogin">
-    <div class="container">
-        <h5>Please Login to Continue</h5>
-        <p>Please login to continue to Vector.</p>
-    </div>
+    {{#if $not currentUser}}
+        <div id="signInForm">
+            <div class="container">
+                {{> atForm}}
+            </div>
+        </div>
+    {{/if}}
 </template>
