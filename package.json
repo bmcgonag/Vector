@@ -11,6 +11,6 @@
     "meteor-node-stubs": "^0.3.2",
     "moment": "^2.24.0",
     "save": "^2.4.0",
-    "shelljs": "^0.8.2"
+    "shelljs": "^0.8.5"
   }
 }
