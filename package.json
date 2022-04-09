@@ -9,7 +9,7 @@
     "bcrypt": "^5.0.0",
     "file-saver": "^2.0.2",
     "meteor-node-stubs": "^0.3.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "save": "^2.4.0",
     "shelljs": "^0.8.2"
   }
