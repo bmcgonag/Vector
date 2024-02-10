@@ -1,0 +1,26 @@
+version: '3.0'
+
+services:
+  Vector:
+    container_name: vector
+    restart: always
+    image: vector
+    build: .
+    ports:
+      - "80:3000"    # you can change the left side to a less common port number if needed
+    healthcheck:
+      test: curl --fail -s http://localhost:3000/ || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    restart: unless-stopped
+  mongo:
+    container_name: vector-mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db    # this will store the application data in the same directory where you have the docker-compose.yml file.
+    restart: unless-stopped

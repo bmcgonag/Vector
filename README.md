@@ -3,8 +3,6 @@ Vector
 ### NOTE: Important!
 I am no longer working on this project. I haven't worked on it in a while, and find thta the Mistborn project is far superior, and the person running it has a great setup going.  I highly recommend you look at that project if you are looking for a good server-side Wireguard gui.
 
-https://gitlab.com/cyber5k/mistborn
-
 <br />
 
 ## Vector - A Web UI for the Server side of WireGuard
@@ -68,8 +66,6 @@ Or something very similar.
 ### User Basics
 Now you can navigate to localhost:3000 as indicated to see the page.  Use the Menu icon in the upper left of the screen to get to the Vector Screen.  Register if you don't have an account already, then sign in.
 
-
-
 <a id="config" name="config"></a>
 ### Configuration
 
@@ -80,7 +76,7 @@ Now you can navigate to localhost:3000 as indicated to see the page.  Use the Me
 
 <a id="prod-mode" name="prod-mode"></a>
 ### Production Use
-To run this project in a production environment, you'll want to get a few things installed.  I'm going to use instructions for a Linux / Ubuntu 18.04 LTS server.
+To run this project in a production environment, you'll want to get a few things installed.  I'm going to use instructions for a Linux / Ubuntu 22.04 LTS server.
 
 I do run all of my public servers on Digital Ocean.
 
@@ -99,15 +95,19 @@ I do run all of my public servers on Digital Ocean.
 
     https://github.com/bmcgonag/Vector/releases/
 
-  5. There are two options:  The easiest is to get the bash script and run it. It attempts to install all of the associated softwre needed to run the server including: Vector, MongoDB, WireGuard, NodeJS, NPM, and Forever. If it fails, the end of the script will help you get it running.
+  5. There are two options:  The easiest is to use Docker and Docker Compose. I have two docker-compose files in the repo.  You can simply copy the file called "docker-compose.yml.prod"to your server, rename it to "docker-compose.yml" and then run the command
 
-  The other option is to do the setup manually, in which case you need to install the following:
+      docker-compose up -d
+
+    The benefits of using docker are that you create the application in a container. All pre-requisite dependencies are already included in the image, as well as the connection to the mongo database.
+
+  The other option, for those who prefer to do things the manual way, in which case you need to install the following:
   
   https://youtu.be/M5ChwB-JD2c
   
   A Video Where I run through the install using the script below.
 
-  - NodeJS 8.11.3 and the associated NPM version.
+  - NodeJS 14.x.x and the associated NPM version.
   - MongoDB
   - Forever (from npm, globally)
   - WireGuard from the ppa (the snap version of WireGuard is not supported at this time)
@@ -119,19 +119,19 @@ I do run all of my public servers on Digital Ocean.
 
   run the following
 
-      curl -sSL https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
+      curl -sSL https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 
-  After install, you need to tell the eystem to use the nvm module:
+  After install, you need to tell the system to use the nvm module:
 
       source ~/.profile
 
   Now you can use NVM to install NodeJS
 
-      nvm install 8.11.3
+      nvm install 14.x.x
 
-  then tell nvm to use node 8.11.3
+  then tell nvm to use node 14.x.x
 
-      nvm use 8.11.3
+      nvm use 14.x.x
 
   You should get no errors on this, but if you do, just log out, and back in, then try those last 2 commands again.  
 
@@ -139,7 +139,7 @@ I do run all of my public servers on Digital Ocean.
 
       node -v
 
-  You should get 8.11.3
+  You should get 14.x.x
 
 
   7.  Now we can install Forever, which keeps the node service up and running for (except after a reboot). 
@@ -178,7 +178,7 @@ I do run all of my public servers on Digital Ocean.
 
   10.  Finally, we need to install Vector.
 
-  Get the latest release from https://github.com/bmcgoang/vector/releases
+  Get the latest release from https://gitlab.com/bmcgoang/vector/releases
 
   Download the tar.gz of the latest build.  NOTE: this build is for Linux x64 architecture only (today).  
 
@@ -231,13 +231,14 @@ I do run all of my public servers on Digital Ocean.
 <a id="to-do-still" name="to-do-still"></a>
 ## To Do Still 
 
-- I want to add an option to the install script to install Pi-hole as the DNS, and make sure it's an option for Custom in the Vector project.
-- Add the ability to have NginX and LetsEncrypt setup with the script.
-- [x] Offer to show Online / Offline for client machines based on a ping every minute to each IP.
+- [] Simplify the user interface.
+- [] Setup easier Routing
+- [] Setup ACL options for machine communication
+- [] Setup the ability to use 3rd pararty IdP (dream level aspiration here)
+
 
 <a id="contribute" name="contribute"></a>
 ## Contribute
 I'm always 100% open to contributions from anyone willing to help out, learn or otherwise.
 
-## Contributors:
-Thanks to @johnzzzzz for his help in testing new releases, feedback, and great ideas for enhancements.  
+## Contributors: 
