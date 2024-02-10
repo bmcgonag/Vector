@@ -349,7 +349,7 @@ Meteor.methods({
 
         Meteor.setTimeout(function() {
             if (isthere != "Directory found") {
-                ShellJS.exec("echo <password> | sudo -S apt-get update && echo <password> | sudo -S apt-get install wireguard wireguard-tools -y", function(code, stdout, stderr) {
+                ShellJS.exec("echo <password> | sudo -S apt-get update && echo <password> | sudo -S apt-get install wireguard-tools -y", function(code, stdout, stderr) {
                     if (stderr) {
                         if (Configs.logLevel == "Error" || Configs.logLevel == "Verbose") {
                             console.log("ERROR running cmd to install WireGuard via apt: " + stderr);
